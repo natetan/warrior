@@ -1,6 +1,8 @@
 let Discord = require('discord.io');
 let logger = require('winston');
 let auth = require('./auth.json');
+let warrior = require('./resources/warrior-quotes.json');
+
 // Configure logger settings
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
@@ -41,10 +43,14 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         })
         break;
       case 'warrior':
-      bot.sendMessage({
-        to: channelID,
-        message: `Sorry ${user}, but this is not implemented yet.`
-      })
+        let quotes = warrior.quotes;
+        let length = quotes.length;
+        let randomQuote = quotes[Math.floor(Math.random() * length)];
+        bot.sendMessage({
+          to: channelID,
+          //message: `Sorry ${user}, but this is not implemented yet.`
+          message: randomQuote
+        })
       break;
     }
   }
