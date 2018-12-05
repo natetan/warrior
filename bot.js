@@ -88,7 +88,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
               msg = 'Need a role';
             } else {
               RaidEvent.roster.add(user, role);
-              msg = RaidEvent.roster.showRoster();
+              msg = RaidHelper.printRaid(RaidEvent, RaidEvent.roster);
             }
           }
           bot.sendMessage({
@@ -99,7 +99,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
           let msg = 'No raid available';
           if (RaidEvent !== undefined) {
             RaidEvent.roster.remove(user);
-            msg = RaidEvent.roster.showRoster();
+            msg = RaidHelper.printRaid(RaidEvent, RaidEvent.roster);
           }
           bot.sendMessage({
             to: channelID,
@@ -108,7 +108,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         } else if (raidCommand === 'roster') {
           let msg = 'No raid available';
           if (RaidEvent !== undefined) {
-            msg = RaidEvent.roster.showRoster();
+            msg = RaidHelper.printRaid(RaidEvent, RaidEvent.roster);
           }
           bot.sendMessage({
             to: channelID,
