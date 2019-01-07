@@ -1,8 +1,11 @@
 let Discord = require('discord.io');
 let logger = require('winston');
+let translate = require('google-translate-api');
+
 let auth = require('./auth.json');
 let warrior = require('./resources/warrior-quotes.json');
 let RaidHelper = require('./helpers/RaidHelper');
+let languages = require('./translate/TranslateHelper');
 
 var RaidEvent = undefined;
 
@@ -70,7 +73,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
           // Don't create if one exists
           if (RaidEvent !== undefined) {
             msg = `There is already an event: Raid ${RaidEvent.title} @ ${RaidEvent.time}.`
-          // Only create if give a title and time
+            // Only create if give a title and time
           } else if (title !== undefined || time !== undefined) {
             let newRoster = RaidHelper.createRoster();
             RaidEvent = RaidHelper.createRaid(title, time, newRoster);
@@ -130,7 +133,24 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             message: 'Available commands:\n- <create> [name] [time]\n- <join> [role]\n- <drop>\n- <roster>\n- <delete>'
           })
         }
+        break;
+      case 'translate':
+        // syntax: command targetLang text
+        let targetLang = args[0]
+        if (targetLang.toLowerCase() == 'chinese') {
+          targetLang = 'chinese-simplified';
+        }
+        args.shift();
+        let textToTranslate = args.join(' ');
 
+        translate(textToTranslate, { to: languages.getCode(targetLang) }).then(res => {
+          bot.sendMessage({
+            to: channelID,
+            message: res.text
+          })
+        }).catch(err => {
+          console.error(err);
+        });
         break;
     }
   }
