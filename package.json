@@ -8,6 +8,7 @@
     "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
     "google-translate-api": "^2.3.0",
     "lodash": "^4.17.11",
+    "safe-eval": "^0.4.1",
     "winston": "^3.1.0"
   }
 }
