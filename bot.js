@@ -6,6 +6,7 @@ let auth = require('./auth.json');
 let warrior = require('./resources/warrior-quotes.json');
 let RaidHelper = require('./helpers/RaidHelper');
 let languages = require('./translate/TranslateHelper');
+let define = require('./define/define');
 
 var RaidEvent = undefined;
 
@@ -26,7 +27,7 @@ bot.on('ready', (evt) => {
   logger.info('Logged in as: ');
   logger.info(bot.username + ' - (' + bot.id + ')');
 });
-bot.on('message', function (user, userID, channelID, message, evt) {
+bot.on('message', async (user, userID, channelID, message, evt) => {
   // Our bot needs to know if it will execute a command
   // It will listen for messages that will start with `!`
   const prefix = '!';
@@ -151,6 +152,15 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         }).catch(err => {
           console.error(err);
         });
+        break;
+      case 'define':
+        let word = args[0];
+        let defObject = await define.getDefinition(word);
+        defObject = defObject.results[0].id
+        bot.sendMessage({
+          to: channelID,
+          message: JSON.stringify(defObject, null, 2)
+        })
         break;
     }
   }
