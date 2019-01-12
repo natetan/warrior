@@ -156,10 +156,15 @@ bot.on('message', async (user, userID, channelID, message, evt) => {
       case 'define':
         let word = args[0];
         let defObject = await define.getDefinition(word);
-        defObject = defObject.results[0].id
+        let message;
+        if (defObject.error) {
+          message = `Error ${defObject.error}: ${defObject.errorMessage}`;
+        } else {
+          message = defObject.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0];
+        }
         bot.sendMessage({
           to: channelID,
-          message: JSON.stringify(defObject, null, 2)
+          message: JSON.stringify(message, null, 2)
         })
         break;
     }

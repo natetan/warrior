@@ -12,7 +12,14 @@ async function getDefinition(term) {
     }
   }
   let res = await fetch(`${oxfordBaseUrl}/${term}`, options);
-  return res.json();
+  if (res.status === 200) {
+    return res.json();
+  } else {
+    return {
+      'error': res.status,
+      'errorMessage': res.statusText
+    }
+  }
 }
 
 module.exports = {
