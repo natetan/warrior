@@ -6,6 +6,7 @@
   "author": "Fu Snail",
   "dependencies": {
     "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
+    "discord.js": "^11.4.2",
     "google-translate-api": "^2.3.0",
     "lodash": "^4.17.11",
     "safe-eval": "^0.4.1",
