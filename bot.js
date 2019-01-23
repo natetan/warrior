@@ -82,7 +82,7 @@ bot.on('message', async (message) => {
 
   // Tells you who you are
   if (command === 'whoami') {
-    await message.channel.send(`You are ${message.author} and your username is ${message.author.displayName}`);
+    await message.channel.send(`You are ${message.author} and your username is ${message.author.username}`);
   }
 
   /**
