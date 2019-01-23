@@ -76,17 +76,35 @@ bot.on('message', async (message) => {
   }
 
   if (command === 'roles') {
-    // assuming role.id is an actual ID of a valid role:
     let channel = message.channel;
-    if (message.member.roles) {
+    if (args[0] === 'all') {
       let results = {};
-      message.member.roles.forEach((v, k) => {
-        results[k] = v;
+      message.guild.roles.forEach((v) => {
+        let members = v.members.map((m) => {
+          return m.displayName;
+        });
+        if (v.name !== '@everyone') {
+          results[v.name] = members;
+        }
       });
       results = JSON.stringify(results, null, 2);
       await channel.send('```JSON' + `\n${results}\n` + '```');
+    } else if (command === 'count') {
+      let results = {};
+      message.guild.roles.forEach((v) => {
+        results[v.name] = v.members.keys.length;
+      })
     } else {
-      await channel.send(`${message.author}, you have no roles`);
+      if (message.member.roles) {
+        let results = {};
+        message.member.roles.forEach((v, k) => {
+          results[k] = v.name;
+        });
+        results = JSON.stringify(results, null, 2);
+        await channel.send('```JSON' + `\n${results}\n` + '```');
+      } else {
+        await channel.send(`${message.author}, you have no roles`);
+      }
     }
   }
 
@@ -103,10 +121,7 @@ bot.on('message', async (message) => {
     let quotes = warrior.quotes;
     let length = quotes.length;
     let randomQuote = quotes[Math.floor(Math.random() * length)];
-    bot.sendMessage({
-      to: channelID,
-      message: randomQuote
-    })
+    message.channel.send(randomQuote);
   }
 
   if (command === 'raid') {
@@ -192,10 +207,7 @@ bot.on('message', async (message) => {
     let textToTranslate = args.join(' ');
 
     translate(textToTranslate, { to: languages.getCode(targetLang) }).then(res => {
-      bot.sendMessage({
-        to: channelID,
-        message: res.text
-      })
+      message.channel.send(res.text);
     }).catch(err => {
       console.error(err);
     });
@@ -204,20 +216,19 @@ bot.on('message', async (message) => {
   if (command === 'define') {
     let word = args[0];
     let defObject = await define.getDefinition(word);
-    let message;
+    let definition;
     if (defObject.error) {
-      message = `Error ${defObject.error}: ${defObject.errorMessage}`;
+      definition = `Error ${defObject.error}: ${defObject.errorMessage}`;
     } else {
-      message = defObject.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0];
+      definition = defObject.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0];
     }
-    bot.sendMessage({
-      to: channelID,
-      message: JSON.stringify(message, null, 2)
-    })
+    message.channel.send(JSON.stringify(definition, null, 2));
   }
 });
 
 bot.on('messageReactionAdd', async (reaction, user) => {
+  // Makes sure that this event only occurs on certain messages.
+  if (!reaction.message.content.includes('Pretend this is a roster for a run:')) return;
   let player = user.username;
   if (!user.bot) {
 
@@ -230,19 +241,20 @@ bot.on('messageReactionAdd', async (reaction, user) => {
     }
 
     // TODO: Use this in conjunction with the RaidHelper
-    await reaction.message.edit(`Pretend this is a roster for a run:\n ${roster.toString()}`); 
+    await reaction.message.edit(`Pretend this is a roster for a run:\n ${roster.toString()}`);
     // await bot.emit('messageReactionRemove', reaction, user);
   }
 });
 
 bot.on('messageReactionRemove', async (reaction, user) => {
+  if (!reaction.message.content.includes('Pretend this is a roster for a run:')) return;
   let player = user.username;
   if (!user.bot) {
     if (roster.includes(player)) {
       roster = roster.filter((name) => name !== player);
     }
     // TODO: Use this in conjunction with the RaidHelper
-    await reaction.message.edit(`Pretend this is a roster for a run:\n ${roster.toString()}`); 
+    await reaction.message.edit(`Pretend this is a roster for a run:\n ${roster.toString()}`);
     // await bot.emit('messageReactionRemove', reaction, user);
   }
 });
