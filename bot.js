@@ -63,13 +63,11 @@ bot.on('message', async (message) => {
   let command = args.shift().toLowerCase();
 
   if (command === 'help') {
-    console.log(message);
     await message.channel.send('Git Gud');
   }
 
   if (command === 'ping') {
     const channelMessage = await message.channel.send('Ping?');
-    console.log(channelMessage);
     channelMessage.edit(`Pong! Latency is ${channelMessage.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
   }
 
@@ -243,7 +241,6 @@ bot.on('messageReactionRemove', async (reaction, user) => {
     if (roster.includes(player)) {
       roster = roster.filter((name) => name !== player);
     }
-    console.log(roster);
     // TODO: Use this in conjunction with the RaidHelper
     await reaction.message.edit(`Pretend this is a roster for a run:\n ${roster.toString()}`); 
     // await bot.emit('messageReactionRemove', reaction, user);
