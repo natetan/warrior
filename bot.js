@@ -18,7 +18,7 @@ logger.add(new logger.transports.Console, {
 // Keeps track of the RaidEvent
 var RaidEvent = undefined;
 
-// testing some stuff here that will be refactored later
+// REMOVE LATER: testing some stuff here that will be refactored later
 var roster = [];
 
 // Initialize Discord Bot
@@ -27,6 +27,9 @@ const bot = new Discord.Client();
 // Logs in with the given token
 bot.login(auth.token);
 
+/**
+ * The setup for when the bot launches 
+ */
 bot.on('ready', () => {
   logger.info('Connected');
   logger.info('Logged in as: ');
@@ -35,14 +38,18 @@ bot.on('ready', () => {
   bot.user.setActivity(`Serving ${bot.guilds.size} servers`);
 });
 
+/**
+ * This event triggers when the bot joins a guild.
+ */
 bot.on("guildCreate", guild => {
-  // This event triggers when the bot joins a guild.
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
   bot.user.setActivity(`Serving ${bot.guilds.size} servers`);
 });
 
+/**
+ * This event triggers when the bot is removed from a guild.
+ */
 bot.on("guildDelete", guild => {
-  // this event triggers when the bot is removed from a guild.
   console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
   bot.user.setActivity(`Serving ${bot.guilds.size} servers`);
 });
@@ -62,27 +69,39 @@ bot.on('message', async (message) => {
   let args = message.content.slice(prefix.length).trim().split(/ +/g);
   let command = args.shift().toLowerCase();
 
+  // Snail's first command lmao
   if (command === 'help') {
     await message.channel.send('Git Gud');
   }
 
+  // Calculates the ping 
   if (command === 'ping') {
     const channelMessage = await message.channel.send('Ping?');
     channelMessage.edit(`Pong! Latency is ${channelMessage.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
   }
 
+  // Tells you who you are
   if (command === 'whoami') {
-    await message.channel.send(`User: ${message.author}`);
+    await message.channel.send(`You are ${message.author} and your username is ${message.author.displayName}`);
   }
 
+  /**
+   * Handles the roles of the members of the server
+   * 
+   * @arg all - gets all the roles and shows every user in those roles
+   * @arg count - gets all the roles and the counts of how many people are in those roles
+   * @arg default - gets the message sender's roles
+   */
   if (command === 'roles') {
     let channel = message.channel;
+
     if (args[0] === 'all') {
       let results = {};
       message.guild.roles.forEach((v) => {
         let members = v.members.map((m) => {
           return m.displayName;
         });
+        // Ignore the @everyone tag since that can have a lot of users
         if (v.name !== '@everyone') {
           results[v.name] = members;
         }
@@ -108,6 +127,9 @@ bot.on('message', async (message) => {
     }
   }
 
+  /**
+   * THIS IS A TEST
+   */
   if (command === 'react') {
     let m = await message.channel.send(`Pretend this is a roster for a run:\n ${roster.toString()}`);
     m.react('🇹');
@@ -117,6 +139,9 @@ bot.on('message', async (message) => {
     m.react('❌');
   }
 
+  /**
+   * Upon popular demand, this will randomly display a quote from the warrior
+   */
   if (command === 'warrior') {
     let quotes = warrior.quotes;
     let length = quotes.length;
@@ -124,6 +149,10 @@ bot.on('message', async (message) => {
     message.channel.send(randomQuote);
   }
 
+  /**
+   * TODO: Raid commands that will be refactored to use emoji reactions
+   * TODO: Have different roles based on the trial
+   */
   if (command === 'raid') {
     // First argument
     let raidCommand = args[0];
@@ -141,10 +170,7 @@ bot.on('message', async (message) => {
         RaidEvent = RaidHelper.createRaid(title, time, newRoster);
         msg = RaidHelper.printRaid(RaidEvent, newRoster);
       }
-      bot.sendMessage({
-        to: channelID,
-        message: msg
-      })
+      message.channel.send(msg);
     } else if (raidCommand === 'join') {
       let msg = 'No raid available';
       if (RaidEvent !== undefined) {
@@ -156,39 +182,27 @@ bot.on('message', async (message) => {
           msg = RaidHelper.printRaid(RaidEvent, RaidEvent.roster);
         }
       }
-      bot.sendMessage({
-        to: channelID,
-        message: msg
-      })
+      message.channel.send(msg);
     } else if (raidCommand === 'drop') {
       let msg = 'No raid available';
       if (RaidEvent !== undefined) {
         RaidEvent.roster.remove(user);
         msg = RaidHelper.printRaid(RaidEvent, RaidEvent.roster);
       }
-      bot.sendMessage({
-        to: channelID,
-        message: msg
-      })
+      message.channel.send(msg);
     } else if (raidCommand === 'roster') {
       let msg = 'No raid available';
       if (RaidEvent !== undefined) {
         msg = RaidHelper.printRaid(RaidEvent, RaidEvent.roster);
       }
-      bot.sendMessage({
-        to: channelID,
-        message: msg
-      })
+      message.channel.send(msg);
     } else if (raidCommand === 'delete') {
       let msg = 'No raid available';
       if (RaidEvent !== undefined) {
         msg = `Raid ${RaidEvent.title} @ ${RaidEvent.time} deleted`
         RaidEvent = undefined;
       }
-      bot.sendMessage({
-        to: channelID,
-        message: msg
-      })
+      message.channel.send(msg);
     } else if (raidCommand === 'help') {
       bot.sendMessage({
         to: channelID,
@@ -197,6 +211,12 @@ bot.on('message', async (message) => {
     }
   }
 
+  /**
+   * Uses the google translate api to translate text
+   * 
+   * @arg targetLang - target language to translate to
+   * @arg textToTranslate - text that will be translated
+   */
   if (command === 'translate') {
     // syntax: command targetLang text
     let targetLang = args[0]
@@ -213,6 +233,11 @@ bot.on('message', async (message) => {
     });
   }
 
+  /**
+   * Uses the Oxford dictionary API to define words
+   * 
+   * @arg word - the word to define
+   */
   if (command === 'define') {
     let word = args[0];
     let defObject = await define.getDefinition(word);
@@ -226,6 +251,10 @@ bot.on('message', async (message) => {
   }
 });
 
+/**
+ * This is the event handler for when users add emoji reactions to a message.
+ * The goal for this is to allow users to sign up for a roster by reacting
+ */
 bot.on('messageReactionAdd', async (reaction, user) => {
   // Makes sure that this event only occurs on certain messages.
   if (!reaction.message.content.includes('Pretend this is a roster for a run:')) return;
@@ -246,6 +275,10 @@ bot.on('messageReactionAdd', async (reaction, user) => {
   }
 });
 
+/**
+ * This is the event handler for when users remove emoji reactions to a message.
+ * The goal for this is to remove users from a roster by removing their emoji
+ */
 bot.on('messageReactionRemove', async (reaction, user) => {
   if (!reaction.message.content.includes('Pretend this is a roster for a run:')) return;
   let player = user.username;
