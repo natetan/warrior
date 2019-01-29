@@ -1,6 +1,229 @@
 {
+  "vAA": {
+    "name": "Aetherian Archive",
+    "location": "Craglorn",
+    "options": ["HM"],
+    "isMini": false,
+    "comp": {
+      "mt": 1,
+      "ot": 0,
+      "healer": 2,
+      "stam": 4,
+      "mag": 5
+    },
+    "cp": [
+      {
+        "type": "Regular",
+        "points": {
+          "Elemental Defender": 64,
+          "Hardy": 0,
+          "Thick Skinned": 61,
+          "Iron Clad": 81,
+          "Spell Shield": 53,
+          "Quick Recovery": 11
+        }
+      }
+    ]
+  },
   "vAS": {
-    "comp": ["MT", "OT", "Healer", "Healer", "1", "2", "3", "4", "5", "6", "7", "8"],
-    "emotes": ["🇹", "🇴", "🇭", ":one:", ":two:", ":three:"]
+    "name": "Asylum Sanctorium",
+    "location": "The Clockwork City",
+    "options": ["+0", "+1", "+2"],
+    "isMini": true,
+    "comp": {
+      "mt": 1,
+      "ot": 1,
+      "healer": 2,
+      "stam": 0,
+      "mag": 8
+    },
+    "cp": [
+      {
+        "type": "Regular",
+        "points": {
+          "Elemental Defender": 75,
+          "Hardy": 27,
+          "Thick Skinned": 0,
+          "Iron Clad": 81,
+          "Spell Shield": 76,
+          "Quick Recovery": 11
+        }
+      },
+      {
+        "type": "Lightning Kiter",
+        "points": {
+          "Elemental Defender": 75,
+          "Hardy": 0,
+          "Thick Skinned": 56,
+          "Iron Clad": 81,
+          "Spell Shield": 38,
+          "Quick Recovery": 11,
+          "Bastion": 20
+        }
+      }
+    ]
+  },
+  "vCR": {
+    "name": "Cloudrest",
+    "location": "Summerset",
+    "options": ["+0", "+1", "+2", "+3"],
+    "isMini": true,
+    "comp": {
+      "mt": 1,
+      "ot": 2,
+      "healer": 2,
+      "stam": 0,
+      "mag": 7
+    },
+    "cp": [
+      {
+        "type": "Regular-red",
+        "points": {
+          "Elemental Defender": 56,
+          "Hardy": 0,
+          "Thick Skinned": 56,
+          "Iron Clad": 56,
+          "Spell Shield": 70,
+          "Quick Recovery": 32
+        }
+      },
+      {
+        "type": "Regular-green",
+        "points": {
+          "Sprinter": 56,
+          "Warlord": 20,
+          "Shadow Ward": 34,
+          "Tumbling": 52,
+          "Arcanist": 64,
+          "Tenacity": 24
+        }
+      }
+    ]
+  },
+  "vHoF": {
+    "name": "Halls of Fabrication",
+    "location": "Vvardenfell",
+    "options": ["HM"],
+    "isMini": false,
+    "comp": {
+      "mt": 1,
+      "ot": 1,
+      "healer": 2,
+      "stam": 4,
+      "mag": 4
+    },
+    "cp": [
+      {
+        "type": "Regular",
+        "points": {
+          "Elemental Defender": 56,
+          "Hardy": 56,
+          "Thick Skinned": 56,
+          "Iron Clad": 61,
+          "Spell Shield": 30,
+          "Quick Recovery": 11
+        }
+      },
+      {
+        "type": "HM",
+        "points": {
+          "Elemental Defender": 64,
+          "Hardy": 49,
+          "Thick Skinned": 56,
+          "Iron Clad": 66,
+          "Spell Shield": 24,
+          "Quick Recovery": 11
+        }
+      }
+    ]
+  },
+  "vHRC": {
+    "name": "Hel Ra Citadel",
+    "location": "Craglorn",
+    "options": ["HM"],
+    "isMini": false,
+    "comp": {
+      "mt": 1,
+      "ot": 1,
+      "healer": 2,
+      "stam": 4,
+      "mag": 4
+    },
+    "cp": [
+      {
+        "type": "Regular",
+        "points": {
+          "Elemental Defender": 56,
+          "Hardy": 56,
+          "Thick Skinned": 56,
+          "Iron Clad": 72,
+          "Spell Shield": 19,
+          "Quick Recovery": 11
+        }
+      }
+    ]
+  },
+  "vMoL": {
+    "name": "Maw of Lorkhaj",
+    "location": "Reaper's March",
+    "options": ["HM"],
+    "isMini": false,
+    "comp": {
+      "mt": 1,
+      "ot": 1,
+      "healer": 2,
+      "stam": 4,
+      "mag": 4
+    },
+    "cp": [
+      {
+        "type": "Regular",
+        "points": {
+          "Elemental Defender": 49,
+          "Hardy": 49,
+          "Thick Skinned": 48,
+          "Iron Clad": 81,
+          "Spell Shield": 32,
+          "Quick Recovery": 11
+        }
+      },
+      {
+        "type": "Hardmode",
+        "points": {
+          "Elemental Defender": 64,
+          "Hardy": 0,
+          "Thick Skinned": 61,
+          "Iron Clad": 81,
+          "Spell Shield": 53,
+          "Quick Recovery": 11
+        }
+      }
+    ]
+  },
+  "vSO": {
+    "name": "Sanctum Ophidia",
+    "location": "Craglorn",
+    "options": ["HM"],
+    "isMini": false,
+    "comp": {
+      "mt": 1,
+      "ot": 1,
+      "healer": 2,
+      "stam": 4,
+      "mag": 4
+    },
+    "cp": [
+      {
+        "type": "Regular",
+        "points": {
+          "Elemental Defender": 43,
+          "Hardy": 64,
+          "Thick Skinned": 61,
+          "Iron Clad": 61,
+          "Spell Shield": 30,
+          "Quick Recovery": 11
+        }
+      }
+    ]
   }
 }
