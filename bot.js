@@ -5,7 +5,7 @@ let logger = require('winston');
 
 let auth = require('./auth.json');
 let warrior = require('./resources/warrior-quotes.json');
-let RaidHelper = require('./helpers/RaidHelper');
+let RaidHelper = require('./raid/RaidHelper');
 let languages = require('./translate/TranslateHelper');
 let define = require('./define/define');
 
@@ -130,13 +130,10 @@ bot.on('message', async (message) => {
   /**
    * THIS IS A TEST
    */
-  if (command === 'react') {
-    let m = await message.channel.send(`Pretend this is a roster for a run:\n ${roster.toString()}`);
-    m.react('🇹');
-    m.react('🇭');
-    m.react('🇲');
-    m.react('🇸');
-    m.react('❌');
+  if (command === 'test') {
+    let m = await message.channel.send('TESTING:');
+    m.channel.send(bot.emojis.first());
+    // m.react(bot.emoji);
   }
 
   /**
@@ -171,12 +168,16 @@ bot.on('message', async (message) => {
         msg = RaidHelper.printRaid(RaidEvent, newRoster);
       }
       let m = await message.channel.send(msg);
-      m.react('🇹');
-      m.react('🇴');
-      m.react('🇭');
-      m.react('🇲');
-      m.react('🇸');
-      m.react('❌');
+      try {
+        await m.react('🇹');
+        await m.react('🇴');
+        await m.react('🇭');
+        await m.react('🇸');
+        await m.react('🇲');
+        await m.react('❌');
+      } catch (err) {
+        console.error('One of the emojis failed to react.');
+      }
     } 
 
     if (raidCommand === 'delete') {
@@ -235,7 +236,7 @@ bot.on('message', async (message) => {
  */
 bot.on('messageReactionAdd', async (reaction, user) => {
   // Makes sure that this event only occurs on certain messages.
-  if (!reaction.message.content.includes('RaidEvent')) return;
+  if (!reaction.message.content.includes('RaidEvent') || !RaidEvent) return;
   let player = user.username;
   if (!user.bot) {
 
@@ -255,10 +256,15 @@ bot.on('messageReactionAdd', async (reaction, user) => {
     if (reaction.emoji.name === '🇭') {
       RaidEvent.roster.add(user.username, 'healer');
     }
+    
+    // stam
+    if (reaction.emoji.name === '🇸') {
+      RaidEvent.roster.add(user.username, 'stam');
+    }
 
-    // dps
-    if (reaction.emoji.name === '🇲' || reaction.emoji.name === '🇸') {
-      RaidEvent.roster.add(user.username, 'dps');
+    // mag
+    if (reaction.emoji.name === '🇲') {
+      RaidEvent.roster.add(user.username, 'mag');
     }
 
     // cancel
