@@ -13,7 +13,7 @@ function createRaid(title, time, roster) {
 
 // Prints the raid in a good format for discord
 function printRaid(raid, roster) {
-  let result = `${raid.title} @ ${raid.time}\n${roster.showRoster()}`;
+  let result = `RaidEvent\n${raid.title} @ ${raid.time}\n${roster.showRoster()}`;
   return result;
 }
 

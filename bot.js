@@ -170,44 +170,22 @@ bot.on('message', async (message) => {
         RaidEvent = RaidHelper.createRaid(title, time, newRoster);
         msg = RaidHelper.printRaid(RaidEvent, newRoster);
       }
-      message.channel.send(msg);
-    } else if (raidCommand === 'join') {
-      let msg = 'No raid available';
-      if (RaidEvent !== undefined) {
-        let role = args[0];
-        if (role === undefined) {
-          msg = 'Need a role';
-        } else {
-          RaidEvent.roster.add(user, role);
-          msg = RaidHelper.printRaid(RaidEvent, RaidEvent.roster);
-        }
-      }
-      message.channel.send(msg);
-    } else if (raidCommand === 'drop') {
-      let msg = 'No raid available';
-      if (RaidEvent !== undefined) {
-        RaidEvent.roster.remove(user);
-        msg = RaidHelper.printRaid(RaidEvent, RaidEvent.roster);
-      }
-      message.channel.send(msg);
-    } else if (raidCommand === 'roster') {
-      let msg = 'No raid available';
-      if (RaidEvent !== undefined) {
-        msg = RaidHelper.printRaid(RaidEvent, RaidEvent.roster);
-      }
-      message.channel.send(msg);
-    } else if (raidCommand === 'delete') {
+      let m = await message.channel.send(msg);
+      m.react('🇹');
+      m.react('🇴');
+      m.react('🇭');
+      m.react('🇲');
+      m.react('🇸');
+      m.react('❌');
+    } 
+
+    if (raidCommand === 'delete') {
       let msg = 'No raid available';
       if (RaidEvent !== undefined) {
         msg = `Raid ${RaidEvent.title} @ ${RaidEvent.time} deleted`
         RaidEvent = undefined;
       }
       message.channel.send(msg);
-    } else if (raidCommand === 'help') {
-      bot.sendMessage({
-        to: channelID,
-        message: 'Available commands:\n- <create> [name] [time]\n- <join> [role]\n- <drop>\n- <roster>\n- <delete>'
-      })
     }
   }
 
@@ -257,37 +235,40 @@ bot.on('message', async (message) => {
  */
 bot.on('messageReactionAdd', async (reaction, user) => {
   // Makes sure that this event only occurs on certain messages.
-  if (!reaction.message.content.includes('Pretend this is a roster for a run:')) return;
+  if (!reaction.message.content.includes('RaidEvent')) return;
   let player = user.username;
   if (!user.bot) {
 
-    if (!roster.includes(player) && reaction.emoji.name !== '❌') {
-      roster.push(player);
+    // check for each emoji to add either tank, healer, or dps
+
+    // MT
+    if (reaction.emoji.name === '🇹') {
+      RaidEvent.roster.add(user.username, 'main');
     }
 
+    // OT
+    if (reaction.emoji.name === '🇴') {
+      RaidEvent.roster.add(user.username, 'off');
+    }
+
+    // healer
+    if (reaction.emoji.name === '🇭') {
+      RaidEvent.roster.add(user.username, 'healer');
+    }
+
+    // dps
+    if (reaction.emoji.name === '🇲' || reaction.emoji.name === '🇸') {
+      RaidEvent.roster.add(user.username, 'dps');
+    }
+
+    // cancel
     if (reaction.emoji.name === '❌') {
-      roster = roster.filter((name) => name !== player);
+      RaidEvent.roster.remove(user.username);
     }
+    let msg = RaidHelper.printRaid(RaidEvent, RaidEvent.roster);
 
     // TODO: Use this in conjunction with the RaidHelper
-    await reaction.message.edit(`Pretend this is a roster for a run:\n ${roster.toString()}`);
-    // await bot.emit('messageReactionRemove', reaction, user);
-  }
-});
-
-/**
- * This is the event handler for when users remove emoji reactions to a message.
- * The goal for this is to remove users from a roster by removing their emoji
- */
-bot.on('messageReactionRemove', async (reaction, user) => {
-  if (!reaction.message.content.includes('Pretend this is a roster for a run:')) return;
-  let player = user.username;
-  if (!user.bot) {
-    if (roster.includes(player)) {
-      roster = roster.filter((name) => name !== player);
-    }
-    // TODO: Use this in conjunction with the RaidHelper
-    await reaction.message.edit(`Pretend this is a roster for a run:\n ${roster.toString()}`);
-    // await bot.emit('messageReactionRemove', reaction, user);
+    await reaction.message.edit(msg);
+    await reaction.remove(user);
   }
 });
