@@ -6,8 +6,11 @@ let logger = require('winston');
 let auth = require('./auth.json');
 let warrior = require('./resources/warrior-quotes.json');
 let RaidHelper = require('./raid/RaidHelper');
+let raidInfo = require('./raid/RaidInfo.json');
 let languages = require('./translate/TranslateHelper');
 let define = require('./define/define');
+let emojis = require('./resources/emojis');
+let logos = require('./resources/logos.json');
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -165,20 +168,41 @@ bot.on('message', async (message) => {
       } else if (title !== undefined || time !== undefined) {
         let newRoster = RaidHelper.createRoster();
         RaidEvent = RaidHelper.createRaid(title, time, newRoster);
-        msg = RaidHelper.printRaid(RaidEvent, newRoster);
+
+        msg = new Discord.RichEmbed()
+          .setColor('#0099ff')
+          .setTitle(`${RaidEvent.title} @ ${RaidEvent.time}`)
+          .setDescription(JSON.stringify(raidInfo["vHRC"]["cp"][0]["points"]), null, 2)
+          .setThumbnail(logos["2"])
+          .addBlankField()
+          .addField('MT', '--')
+          .addField('OT', '--')
+          .addField('Healer', '--', true)
+          .addField('Healer', '--', true)
+          .addField('Stam-dps', '--', true)
+          .addField('Stam-dps', '--', true)
+          .addField('Stam-dps', '--', true)
+          .addField('Stam-dps', '--', true)
+          .addField('Mag-dps', '--', true)
+          .addField('Mag-dps', '--', true)
+          .addField('Mag-dps', '--', true)
+          .addField('Mag-dps', '--', true);
+        
+        //msg = RaidHelper.printRaid(RaidEvent, newRoster);
       }
       let m = await message.channel.send(msg);
+      let examples = emojis.examples;
       try {
-        await m.react('🇹');
-        await m.react('🇴');
-        await m.react('🇭');
-        await m.react('🇸');
-        await m.react('🇲');
-        await m.react('❌');
+        await m.react(examples.mt);
+        await m.react(examples.ot);
+        await m.react(examples.heals);
+        await m.react(examples.stam);
+        await m.react(examples.mag);
+        await m.react(examples.cancel);
       } catch (err) {
         console.error('One of the emojis failed to react.');
       }
-    } 
+    }
 
     if (raidCommand === 'delete') {
       let msg = 'No raid available';
@@ -234,6 +258,7 @@ bot.on('message', async (message) => {
  * This is the event handler for when users add emoji reactions to a message.
  * The goal for this is to allow users to sign up for a roster by reacting
  */
+
 bot.on('messageReactionAdd', async (reaction, user) => {
   // Makes sure that this event only occurs on certain messages.
   if (!reaction.message.content.includes('RaidEvent') || !RaidEvent) return;
@@ -256,7 +281,7 @@ bot.on('messageReactionAdd', async (reaction, user) => {
     if (reaction.emoji.name === '🇭') {
       RaidEvent.roster.add(user.username, 'healer');
     }
-    
+
     // stam
     if (reaction.emoji.name === '🇸') {
       RaidEvent.roster.add(user.username, 'stam');
@@ -273,8 +298,9 @@ bot.on('messageReactionAdd', async (reaction, user) => {
     }
     let msg = RaidHelper.printRaid(RaidEvent, RaidEvent.roster);
 
-    // TODO: Use this in conjunction with the RaidHelper
     await reaction.message.edit(msg);
     await reaction.remove(user);
   }
+  
 });
+
