@@ -1,6 +1,7 @@
 {
-  "vAA": {
+  "vaa": {
     "name": "Aetherian Archive",
+    "short_name": "vAA",
     "location": "Craglorn",
     "options": ["HM"],
     "isMini": false,
@@ -25,8 +26,9 @@
       }
     ]
   },
-  "vAS": {
+  "vas": {
     "name": "Asylum Sanctorium",
+    "short_name": "vAS",
     "location": "The Clockwork City",
     "options": ["+0", "+1", "+2"],
     "isMini": true,
@@ -63,8 +65,9 @@
       }
     ]
   },
-  "vCR": {
+  "vcr": {
     "name": "Cloudrest",
+    "short_name": "vCR",
     "location": "Summerset",
     "options": ["+0", "+1", "+2", "+3"],
     "isMini": true,
@@ -100,8 +103,9 @@
       }
     ]
   },
-  "vHoF": {
+  "vhof": {
     "name": "Halls of Fabrication",
+    "short_name": "vHoF",
     "location": "Vvardenfell",
     "options": ["HM"],
     "isMini": false,
@@ -137,8 +141,9 @@
       }
     ]
   },
-  "vHRC": {
+  "vhrc": {
     "name": "Hel Ra Citadel",
+    "short_name": "vHRC",
     "location": "Craglorn",
     "options": ["HM"],
     "isMini": false,
@@ -163,8 +168,9 @@
       }
     ]
   },
-  "vMoL": {
+  "vmol": {
     "name": "Maw of Lorkhaj",
+    "short_name": "vMoL",
     "location": "Reaper's March",
     "options": ["HM"],
     "isMini": false,
@@ -200,8 +206,9 @@
       }
     ]
   },
-  "vSO": {
+  "vso": {
     "name": "Sanctum Ophidia",
+    "short_name": "vSO",
     "location": "Craglorn",
     "options": ["HM"],
     "isMini": false,

@@ -1,7 +1,7 @@
 let Discord = require('discord.js');
-
 let translate = require('google-translate-api');
 let logger = require('winston');
+let _ = require('lodash');
 
 let auth = require('./auth.json');
 let warrior = require('./resources/warrior-quotes.json');
@@ -11,6 +11,7 @@ let languages = require('./translate/TranslateHelper');
 let define = require('./define/define');
 let emojis = require('./resources/emojis');
 let logos = require('./resources/logos.json');
+let EmbedCreator = require('./raid/EmbedCreator');
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -168,30 +169,19 @@ bot.on('message', async (message) => {
       } else if (title !== undefined || time !== undefined) {
         let newRoster = RaidHelper.createRoster();
         RaidEvent = RaidHelper.createRaid(title, time, newRoster);
-
-        msg = new Discord.RichEmbed()
-          .setColor('#0099ff')
-          .setTitle(`${RaidEvent.title} @ ${RaidEvent.time}`)
-          .setDescription(JSON.stringify(raidInfo["vHRC"]["cp"][0]["points"]), null, 2)
-          .setThumbnail(logos["2"])
-          .addBlankField()
-          .addField('MT', '--')
-          .addField('OT', '--')
-          .addField('Healer', '--', true)
-          .addField('Healer', '--', true)
-          .addField('Stam-dps', '--', true)
-          .addField('Stam-dps', '--', true)
-          .addField('Stam-dps', '--', true)
-          .addField('Stam-dps', '--', true)
-          .addField('Mag-dps', '--', true)
-          .addField('Mag-dps', '--', true)
-          .addField('Mag-dps', '--', true)
-          .addField('Mag-dps', '--', true);
         
         //msg = RaidHelper.printRaid(RaidEvent, newRoster);
+        roster = EmbedCreator.createRoster(EmbedCreator.getRaidInfo(title));
+        msg = EmbedCreator.createEmbed(RaidEvent.title, RaidEvent.time, roster);
+        if (msg === null) {
+          message.channel.send(`Trial not found: ${RaidEvent.title}`);
+          RaidEvent = undefined;
+          return;
+        }
       }
       let m = await message.channel.send(msg);
       let examples = emojis.examples;
+
       try {
         await m.react(examples.mt);
         await m.react(examples.ot);
@@ -261,44 +251,54 @@ bot.on('message', async (message) => {
 
 bot.on('messageReactionAdd', async (reaction, user) => {
   // Makes sure that this event only occurs on certain messages.
-  if (!reaction.message.content.includes('RaidEvent') || !RaidEvent) return;
+  if (reaction.message.embeds.length <= 0 || !RaidEvent) return;
   let player = user.username;
   if (!user.bot) {
 
     // check for each emoji to add either tank, healer, or dps
 
     // MT
-    if (reaction.emoji.name === '🇹') {
-      RaidEvent.roster.add(user.username, 'main');
+    if (reaction.emoji.name === '🇹' && roster.mt.count > roster.mt.players.length && !roster.mt.players.includes(player)) {
+      //RaidEvent.roster.add(user.username, 'main');
+      roster.mt.players.push(player);
     }
 
     // OT
-    if (reaction.emoji.name === '🇴') {
-      RaidEvent.roster.add(user.username, 'off');
+    if (reaction.emoji.name === '🇴' && roster.ot.count > roster.ot.players.length && !roster.ot.players.includes(player)) {
+      // RaidEvent.roster.add(player, 'off');
+      roster.ot.players.push(player);
     }
 
     // healer
-    if (reaction.emoji.name === '🇭') {
-      RaidEvent.roster.add(user.username, 'healer');
+    if (reaction.emoji.name === '🇭' && roster.healer.count > roster.healer.players.length && !roster.healer.players.includes(player)) {
+      // RaidEvent.roster.add(player, 'healer');
+      roster.healer.players.push(player);
     }
 
     // stam
-    if (reaction.emoji.name === '🇸') {
-      RaidEvent.roster.add(user.username, 'stam');
+    if (reaction.emoji.name === '🇸' && roster.stam.count > roster.stam.players.length && !roster.stam.players.includes(player)) {
+      // RaidEvent.roster.add(player, 'stam');
+      roster.stam.players.push(player);
     }
 
     // mag
-    if (reaction.emoji.name === '🇲') {
-      RaidEvent.roster.add(user.username, 'mag');
+    if (reaction.emoji.name === '🇲' && roster.mag.count > roster.mag.players.length && !roster.mag.players.includes(player)) {
+      // RaidEvent.roster.add(player, 'mag');
+      roster.mag.players.push(player);
     }
 
     // cancel
     if (reaction.emoji.name === '❌') {
-      RaidEvent.roster.remove(user.username);
+      // RaidEvent.roster.remove(player);
+      Object.keys(roster).forEach((role) => {
+        _.remove(roster[role].players, (p) => {
+          return p === player;
+        });
+      });
     }
     let msg = RaidHelper.printRaid(RaidEvent, RaidEvent.roster);
 
-    await reaction.message.edit(msg);
+    await reaction.message.edit(EmbedCreator.createEmbed(RaidEvent.title, RaidEvent.time, roster));
     await reaction.remove(user);
   }
   
