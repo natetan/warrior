@@ -166,13 +166,14 @@ bot.on('message', async (message) => {
         RaidEvent = RaidHelper.createRaid(title, time, newRoster);
 
         //msg = RaidHelper.printRaid(RaidEvent, newRoster);
-        roster = EmbedCreator.createRoster(EmbedCreator.getRaidInfo(title));
-        msg = EmbedCreator.createEmbed(RaidEvent.title, RaidEvent.time, roster);
-        if (msg === null) {
+        let raid = EmbedCreator.getRaidInfo(title);
+        if (raid === undefined) {
           message.channel.send(`Trial not found: ${RaidEvent.title}`);
           RaidEvent = undefined;
           return;
         }
+        roster = EmbedCreator.createRoster(EmbedCreator.getRaidInfo(title));
+        msg = EmbedCreator.createEmbed(RaidEvent.title, RaidEvent.time, roster);
       }
       let m = await message.channel.send(msg);
       let examples = emojis.examples;
