@@ -98,9 +98,8 @@ bot.on('message', async (message) => {
    */
   if (command === 'roles') {
     let channel = message.channel;
-
+    let results = {};
     if (args[0] === 'all') {
-      let results = {};
       message.guild.roles.forEach((v) => {
         let members = v.members.map((m) => {
           return m.displayName;
@@ -110,25 +109,21 @@ bot.on('message', async (message) => {
           results[v.name] = members;
         }
       });
-      results = JSON.stringify(results, null, 2);
-      await channel.send('```JSON' + `\n${results}\n` + '```');
-    } else if (command === 'count') {
-      let results = {};
+      results = EmbedCreator.createRoleEmbed(results, 'ALL');
+    } else if (args[0] === 'count') {
       message.guild.roles.forEach((v) => {
-        results[v.name] = v.members.keys.length;
-      })
+        results[v.name] = v.members.keyArray().length;
+      });
+      results = EmbedCreator.createRoleEmbed(results, 'COUNT');
     } else {
-      if (message.member.roles) {
-        let results = {};
-        message.member.roles.forEach((v, k) => {
-          results[k] = v.name;
-        });
-        results = JSON.stringify(results, null, 2);
-        await channel.send('```JSON' + `\n${results}\n` + '```');
-      } else {
-        await channel.send(`${message.author}, you have no roles`);
-      }
+      message.member.roles.forEach((v, k) => {
+        results[k] = v.name;
+      });
+      results = EmbedCreator.createRoleEmbed(results, message.author.username);
     }
+    // results = JSON.stringify(results, null, 2);
+    // await channel.send('```JSON' + `\n${results}\n` + '```');
+    await channel.send(results);
   }
 
   /**
@@ -169,7 +164,7 @@ bot.on('message', async (message) => {
       } else if (title !== undefined || time !== undefined) {
         let newRoster = RaidHelper.createRoster();
         RaidEvent = RaidHelper.createRaid(title, time, newRoster);
-        
+
         //msg = RaidHelper.printRaid(RaidEvent, newRoster);
         roster = EmbedCreator.createRoster(EmbedCreator.getRaidInfo(title));
         msg = EmbedCreator.createEmbed(RaidEvent.title, RaidEvent.time, roster);
@@ -301,6 +296,6 @@ bot.on('messageReactionAdd', async (reaction, user) => {
     await reaction.message.edit(EmbedCreator.createEmbed(RaidEvent.title, RaidEvent.time, roster));
     await reaction.remove(user);
   }
-  
+
 });
 

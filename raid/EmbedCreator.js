@@ -33,9 +33,8 @@ function createEmbed(title, time, roster) {
   });
 
   let embed = new Discord.RichEmbed()
-  .setColor('#0099ff')
+  .setColor('#ff6600')
   .setTitle(`${raid['short_name']} @ ${time}`)
-  .setDescription(cpDisplay)
   .setThumbnail(logos['2']);
 
   let roles = Object.keys(roster);
@@ -46,14 +45,45 @@ function createEmbed(title, time, roster) {
       if (roster[role].players[i]) {
         player = roster[role].players[i];
       }
-      embed.addField(role.toUpperCase(), player, true);
+      embed.addField(`${role.toUpperCase()}`, player, true);
     }
   });
+  embed.addField('CP', cpDisplay, true);
+  return embed;
+}
+
+function createRoleEmbed(data, type) {
+  let embed = new Discord.RichEmbed()
+  .setColor('#ff6600')
+  .setTitle(`Roles: ${type}`)
+  .setThumbnail(logos['2']);
+
+  if (type.toLowerCase() === 'all') {
+    Object.keys(data).forEach((role) => {
+      if (role !== '@everyone') {
+        embed.addField(role, data[role].length > 0 ? data[role] : '--', true);
+      }
+    });
+  } else if (type.toLowerCase() === 'count') {
+    Object.keys(data).forEach((role) => {
+      embed.addField(role, data[role], true);
+    });
+  } else {
+    let results = '';
+    Object.values(data).forEach((role) => {
+      if (role !== '@everyone') {
+        results += `${role}\n`;
+      }
+    });
+    embed.addField('Roles', results, true);
+  }
+
   return embed;
 }
 
 module.exports = {
   getRaidInfo,
   createRoster,
-  createEmbed: createEmbed
+  createEmbed: createEmbed,
+  createRoleEmbed: createRoleEmbed
 }
