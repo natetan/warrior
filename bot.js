@@ -159,8 +159,8 @@ bot.on('message', async (message) => {
 
       // Don't create if one exists
       if (RaidEvent !== undefined) {
-        msg = `There is already an event: Raid ${RaidEvent.title} @ ${RaidEvent.time}.`
-        // Only create if give a title and time
+        message.channel.send(`There is already an event: Raid ${RaidEvent.title} @ ${RaidEvent.time}.`);
+        return;
       } else if (title !== undefined || time !== undefined) {
         let newRoster = RaidHelper.createRoster();
         RaidEvent = RaidHelper.createRaid(title, time, newRoster);
