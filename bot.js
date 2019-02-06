@@ -239,11 +239,11 @@ bot.on('message', async (message) => {
     let defObject = await define.getDefinition(word);
     let definition;
     if (defObject.error) {
-      definition = `Error ${defObject.error}: ${defObject.errorMessage}`;
+      definition = `Error ${defObject.error}: **${defObject.errorMessage}**`;
     } else {
       definition = defObject.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0];
     }
-    message.channel.send(JSON.stringify(definition, null, 2));
+    message.channel.send(`*${definition}*`);
   }
 });
 

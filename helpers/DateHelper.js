@@ -24,8 +24,9 @@ function getNextDay(day) {
     return new Error(`\`${day}\` is not a day. Please correct yourself.`);
   }
   let date = new Date();
+  // Gets the next day of the week
   date.setDate(date.getDate() + (7 + x - date.getDay()) % 7);
-  return date.toDateString();
+  return date.toDateString().substring(0, 10);
 }
 
 module.exports = {
