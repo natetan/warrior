@@ -6,11 +6,9 @@ let _ = require('lodash');
 let auth = require('./auth.json');
 let warrior = require('./resources/warrior-quotes.json');
 let RaidHelper = require('./raid/RaidHelper');
-let raidInfo = require('./raid/RaidInfo.json');
 let languages = require('./translate/TranslateHelper');
 let define = require('./define/define');
 let emojis = require('./resources/emojis');
-let logos = require('./resources/logos.json');
 let EmbedCreator = require('./raid/EmbedCreator');
 
 // Configure logger settings
@@ -21,6 +19,9 @@ logger.add(new logger.transports.Console, {
 
 // Keeps track of the RaidEvent
 var RaidEvent = undefined;
+
+// Keeps track of the Raid message
+var RaidMessage = undefined;
 
 // REMOVE LATER: testing some stuff here that will be refactored later
 var roster = [];
@@ -131,8 +132,7 @@ bot.on('message', async (message) => {
    */
   if (command === 'test') {
     let m = await message.channel.send('TESTING:');
-    m.channel.send(bot.emojis.first());
-    // m.react(bot.emoji);
+    m.delete();
   }
 
   /**
@@ -175,16 +175,16 @@ bot.on('message', async (message) => {
         roster = EmbedCreator.createRoster(EmbedCreator.getRaidInfo(title));
         msg = EmbedCreator.createEmbed(RaidEvent.title, RaidEvent.time, roster);
       }
-      let m = await message.channel.send(msg);
+      RaidMessage = await message.channel.send(msg);
       let examples = emojis.examples;
 
       try {
-        await m.react(examples.mt);
-        await m.react(examples.ot);
-        await m.react(examples.heals);
-        await m.react(examples.stam);
-        await m.react(examples.mag);
-        await m.react(examples.cancel);
+        await RaidMessage.react(examples.mt);
+        await RaidMessage.react(examples.ot);
+        await RaidMessage.react(examples.heals);
+        await RaidMessage.react(examples.stam);
+        await RaidMessage.react(examples.mag);
+        await RaidMessage.react(examples.cancel);
       } catch (err) {
         console.error('One of the emojis failed to react.');
       }
@@ -195,6 +195,8 @@ bot.on('message', async (message) => {
       if (RaidEvent !== undefined) {
         msg = `Raid ${RaidEvent.title} @ ${RaidEvent.time} deleted`
         RaidEvent = undefined;
+        await RaidMessage.delete();
+        RaidMessage = undefined;
       }
       message.channel.send(msg);
     }
@@ -292,10 +294,13 @@ bot.on('messageReactionAdd', async (reaction, user) => {
         });
       });
     }
-    let msg = RaidHelper.printRaid(RaidEvent, RaidEvent.roster);
 
-    await reaction.message.edit(EmbedCreator.createEmbed(RaidEvent.title, RaidEvent.time, roster));
-    await reaction.remove(user);
+    try { 
+      reaction.message.edit(EmbedCreator.createEmbed(RaidEvent.title, RaidEvent.time, roster));
+      reaction.remove(user);
+    } catch (err) {
+      console.log(`Error with message edit or remove: ${err}`);
+    }
   }
 
 });

@@ -41,15 +41,17 @@ function createEmbed(title, time, roster) {
   roles.forEach((role) => {
     let results = '';
     let roleCount = roster[role].count;
-    for (let i = 0; i < roleCount; i++) {
-      let player = '--';
-      if (roster[role].players[i]) {
-        player = roster[role].players[i];
+    if (roleCount > 0) {
+      for (let i = 0; i < roleCount; i++) {
+        let player = '--';
+        if (roster[role].players[i]) {
+          player = roster[role].players[i];
+        }
+        results += `${player}\n`;
+        // embed.addField(`${role.toUpperCase()}`, player, true);
       }
-      results += `${player}\n`;
-      // embed.addField(`${role.toUpperCase()}`, player, true);
+      embed.addField(role.toUpperCase(), results, true);
     }
-    embed.addField(role.toUpperCase(), results, true);
   });
   embed.addField('CP', cpDisplay, true);
   return embed;
