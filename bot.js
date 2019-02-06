@@ -5,7 +5,6 @@ let _ = require('lodash');
 
 let auth = require('./auth.json');
 let warrior = require('./resources/warrior-quotes.json');
-let RaidHelper = require('./raid/RaidHelper');
 let languages = require('./translate/TranslateHelper');
 let define = require('./define/define');
 let emojis = require('./resources/emojis');
@@ -154,26 +153,32 @@ bot.on('message', async (message) => {
     let raidCommand = args[0];
     args.shift();
     if (raidCommand === 'create') {
-      let [title, time] = args;
-      let msg = 'Cannot create raid event. Required arguments: <title> <time>. Example: !raid create vMoL 730est';
+      let [day, time, title] = args;
+      let msg = '';
 
       // Don't create if one exists
       if (RaidEvent !== undefined) {
-        message.channel.send(`There is already an event: Raid ${RaidEvent.title} @ ${RaidEvent.time}.`);
+        message.channel.send('There is already an event going on. Please delete it before creating a new one: \`!raid delete\`');
         return;
-      } else if (title !== undefined || time !== undefined) {
-        let newRoster = RaidHelper.createRoster();
-        RaidEvent = RaidHelper.createRaid(title, time, newRoster);
-
-        //msg = RaidHelper.printRaid(RaidEvent, newRoster);
+      } else if (day !== undefined && title !== undefined && time !== undefined) {
+        RaidEvent = {
+          day: day,
+          time: time,
+          title: title
+        };
         let raid = EmbedCreator.getRaidInfo(title);
-        if (raid === undefined) {
-          message.channel.send(`Trial not found: ${RaidEvent.title}`);
+        if (raid instanceof Error) {
+          message.channel.send(raid.message);
           RaidEvent = undefined;
           return;
         }
-        roster = EmbedCreator.createRoster(EmbedCreator.getRaidInfo(title));
-        msg = EmbedCreator.createEmbed(RaidEvent.title, RaidEvent.time, roster);
+        roster = EmbedCreator.createRoster(raid);
+        msg = EmbedCreator.createEmbed(day, time, title, roster);
+      }
+      if (msg instanceof Error) {
+        await message.channel.send(msg.message);
+        RaidEvent = undefined;
+        return;
       }
       RaidMessage = await message.channel.send(msg);
       let examples = emojis.examples;
@@ -193,7 +198,7 @@ bot.on('message', async (message) => {
     if (raidCommand === 'delete') {
       let msg = 'No raid available';
       if (RaidEvent !== undefined) {
-        msg = `Raid ${RaidEvent.title} @ ${RaidEvent.time} deleted`
+        msg = `Raid ${RaidEvent.title} deleted`
         RaidEvent = undefined;
         await RaidMessage.delete();
         RaidMessage = undefined;
@@ -296,7 +301,7 @@ bot.on('messageReactionAdd', async (reaction, user) => {
     }
 
     try { 
-      reaction.message.edit(EmbedCreator.createEmbed(RaidEvent.title, RaidEvent.time, roster));
+      reaction.message.edit(EmbedCreator.createEmbed(RaidEvent.day, RaidEvent.time, RaidEvent.title, roster));
       reaction.remove(user);
     } catch (err) {
       console.log(`Error with message edit or remove: ${err}`);

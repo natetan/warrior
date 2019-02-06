@@ -3,9 +3,13 @@ let _ = require('lodash');
 
 let RaidInfo = require('./RaidInfo.json');
 let logos = require('../resources/logos.json');
+let DateHelper = require('../helpers/DateHelper');
 
 function getRaidInfo(raidName) {
   raidName = raidName.toLowerCase();
+  if (!RaidInfo[raidName]) {
+    return new Error(`Raid \`${raidName}\` does not exist, you scrub.`);
+  }
   return RaidInfo[raidName];
 }
 
@@ -22,10 +26,11 @@ function createRoster(raid) {
   return roster;
 }
 
-function createEmbed(title, time, roster) {
+function createEmbed(day, time, title, roster) {
   let raid = getRaidInfo(title);
-  if (raid === undefined) {
-    return null;
+  let date = DateHelper.getNextDay(day);
+  if (date instanceof Error) {
+    return date;
   }
   let cpDisplay = '';
   raid.cp.forEach((setup) => {
@@ -33,9 +38,9 @@ function createEmbed(title, time, roster) {
   });
 
   let embed = new Discord.RichEmbed()
-  .setColor('#ff6600')
-  .setTitle(`${raid['short_name']} @ ${time}`)
-  .setThumbnail(logos['2']);
+    .setColor('#ff6600')
+    .setTitle(`${DateHelper.getNextDay(day)} @ ${time} ${raid['short_name']}`)
+    .setThumbnail(logos['2']);
 
   let roles = Object.keys(roster);
   roles.forEach((role) => {
@@ -59,9 +64,9 @@ function createEmbed(title, time, roster) {
 
 function createRoleEmbed(data, type) {
   let embed = new Discord.RichEmbed()
-  .setColor('#ff6600')
-  .setTitle(`Roles: ${type}`)
-  .setThumbnail(logos['2']);
+    .setColor('#ff6600')
+    .setTitle(`Roles: ${type}`)
+    .setThumbnail(logos['2']);
 
   if (type.toLowerCase() === 'all') {
     Object.keys(data).forEach((role) => {
