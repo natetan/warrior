@@ -1,9 +1,9 @@
 {
-  "name": "greeter-bot",
+  "name": "arcane-vortex-bot",
   "version": "1.0.0",
-  "description": "Arcane Vortex",
+  "description": "Discord bot that manages rosters",
   "main": "bot.js",
-  "author": "Fu Snail",
+  "author": "Aerovertics",
   "dependencies": {
     "discord.io": "^2.5.3",
     "discord.js": "^11.4.2",
@@ -16,5 +16,8 @@
   },
   "devDependencies": {
     "nodemon": "^1.18.9"
+  },
+  "engines": {
+    "node": "9.11.1"
   }
 }
