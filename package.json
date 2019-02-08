@@ -4,6 +4,12 @@
   "description": "Discord bot that manages rosters",
   "main": "bot.js",
   "author": "Aerovertics",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "engines": {
+    "node": "9.11.1"
+  },
   "dependencies": {
     "discord.io": "^2.5.3",
     "discord.js": "^11.4.2",
@@ -16,8 +22,5 @@
   },
   "devDependencies": {
     "nodemon": "^1.18.9"
-  },
-  "engines": {
-    "node": "9.11.1"
   }
 }
