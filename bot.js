@@ -145,8 +145,7 @@ bot.on('message', async (message) => {
   }
 
   /**
-   * TODO: Raid commands that will be refactored to use emoji reactions
-   * TODO: Have different roles based on the trial
+   * Raid command that handles sign-up
    */
   if (command === 'raid') {
     // First argument

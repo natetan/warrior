@@ -5,6 +5,12 @@ let RaidInfo = require('./RaidInfo.json');
 let logos = require('../resources/logos.json');
 let DateHelper = require('../helpers/DateHelper');
 
+/**
+ * Returns the json object related to the raid
+ * 
+ * @param {String} raidName - name of the raid 
+ * @returns {Object}
+ */
 function getRaidInfo(raidName) {
   raidName = raidName.toLowerCase();
   if (!RaidInfo[raidName]) {
@@ -13,6 +19,12 @@ function getRaidInfo(raidName) {
   return RaidInfo[raidName];
 }
 
+/**
+ * Creates a roster based on the raid
+ * 
+ * @param {String} raid - Raid name
+ * @returns {Object}
+ */
 function createRoster(raid) {
   let comp = raid.comp;
   let roles = Object.keys(comp);
@@ -26,6 +38,14 @@ function createRoster(raid) {
   return roster;
 }
 
+/**
+ * Creates a Discord embed for sign-ups
+ * 
+ * @param {String} day - day of the week
+ * @param {String} time - time
+ * @param {String} title - raidName
+ * @param {Object} roster - Roster object
+ */
 function createEmbed(day, time, title, roster) {
   let raid = getRaidInfo(title);
   let date = DateHelper.getNextDay(day);
@@ -62,6 +82,13 @@ function createEmbed(day, time, title, roster) {
   return embed;
 }
 
+/**
+ * Create a Discord embed for roles
+ * 
+ * @param {Object} - Discord's role object 
+ * @param {String} - The type of role categorization 
+ * @returns {RichEmbed}
+ */
 function createRoleEmbed(data, type) {
   let embed = new Discord.RichEmbed()
     .setColor('#ff6600')
@@ -87,7 +114,6 @@ function createRoleEmbed(data, type) {
     });
     embed.addField('Roles', results, true);
   }
-
   return embed;
 }
 

@@ -8,6 +8,12 @@ let days = {
   6: ["sat", "saturday"]
 }
 
+/**
+ * Given a day string, return its associated int
+ * 
+ * @param {String} day - day of the week string
+ * @returns {int}
+ */
 function getDayNum(day) {
   let result = null;
   Object.keys(days).forEach((n) => {
@@ -18,6 +24,12 @@ function getDayNum(day) {
   return result;
 }
 
+/**
+ * Gets the next day of the week
+ * 
+ * @param {string} day - day of the week
+ * @returns {Date}
+ */
 function getNextDay(day) {
   let x = getDayNum(day);
   if (!x) {
