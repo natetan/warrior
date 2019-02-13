@@ -1,13 +1,14 @@
 let Discord = require('discord.js');
-
 let translate = require('google-translate-api');
 let logger = require('winston');
+let _ = require('lodash');
 
 let auth = require('./auth.json');
 let warrior = require('./resources/warrior-quotes.json');
-let RaidHelper = require('./helpers/RaidHelper');
 let languages = require('./translate/TranslateHelper');
 let define = require('./define/define');
+let emojis = require('./resources/emojis');
+let EmbedCreator = require('./raid/EmbedCreator');
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -17,6 +18,9 @@ logger.add(new logger.transports.Console, {
 
 // Keeps track of the RaidEvent
 var RaidEvent = undefined;
+
+// Keeps track of the Raid message
+var RaidMessage = undefined;
 
 // REMOVE LATER: testing some stuff here that will be refactored later
 var roster = [];
@@ -94,9 +98,8 @@ bot.on('message', async (message) => {
    */
   if (command === 'roles') {
     let channel = message.channel;
-
+    let results = {};
     if (args[0] === 'all') {
-      let results = {};
       message.guild.roles.forEach((v) => {
         let members = v.members.map((m) => {
           return m.displayName;
@@ -106,37 +109,29 @@ bot.on('message', async (message) => {
           results[v.name] = members;
         }
       });
-      results = JSON.stringify(results, null, 2);
-      await channel.send('```JSON' + `\n${results}\n` + '```');
-    } else if (command === 'count') {
-      let results = {};
+      results = EmbedCreator.createRoleEmbed(results, 'ALL');
+    } else if (args[0] === 'count') {
       message.guild.roles.forEach((v) => {
-        results[v.name] = v.members.keys.length;
-      })
+        results[v.name] = v.members.keyArray().length;
+      });
+      results = EmbedCreator.createRoleEmbed(results, 'COUNT');
     } else {
-      if (message.member.roles) {
-        let results = {};
-        message.member.roles.forEach((v, k) => {
-          results[k] = v.name;
-        });
-        results = JSON.stringify(results, null, 2);
-        await channel.send('```JSON' + `\n${results}\n` + '```');
-      } else {
-        await channel.send(`${message.author}, you have no roles`);
-      }
+      message.member.roles.forEach((v, k) => {
+        results[k] = v.name;
+      });
+      results = EmbedCreator.createRoleEmbed(results, message.author.username);
     }
+    // results = JSON.stringify(results, null, 2);
+    // await channel.send('```JSON' + `\n${results}\n` + '```');
+    await channel.send(results);
   }
 
   /**
    * THIS IS A TEST
    */
-  if (command === 'react') {
-    let m = await message.channel.send(`Pretend this is a roster for a run:\n ${roster.toString()}`);
-    m.react('🇹');
-    m.react('🇭');
-    m.react('🇲');
-    m.react('🇸');
-    m.react('❌');
+  if (command === 'test') {
+    let m = await message.channel.send('TESTING:');
+    m.delete();
   }
 
   /**
@@ -150,64 +145,64 @@ bot.on('message', async (message) => {
   }
 
   /**
-   * TODO: Raid commands that will be refactored to use emoji reactions
-   * TODO: Have different roles based on the trial
+   * Raid command that handles sign-up
    */
   if (command === 'raid') {
     // First argument
     let raidCommand = args[0];
     args.shift();
     if (raidCommand === 'create') {
-      let [title, time] = args;
-      let msg = 'Cannot create raid event. Required arguments: <title> <time>. Example: !raid create vMoL 730est';
+      let [day, time, title] = args;
+      let msg = '';
 
       // Don't create if one exists
       if (RaidEvent !== undefined) {
-        msg = `There is already an event: Raid ${RaidEvent.title} @ ${RaidEvent.time}.`
-        // Only create if give a title and time
-      } else if (title !== undefined || time !== undefined) {
-        let newRoster = RaidHelper.createRoster();
-        RaidEvent = RaidHelper.createRaid(title, time, newRoster);
-        msg = RaidHelper.printRaid(RaidEvent, newRoster);
-      }
-      message.channel.send(msg);
-    } else if (raidCommand === 'join') {
-      let msg = 'No raid available';
-      if (RaidEvent !== undefined) {
-        let role = args[0];
-        if (role === undefined) {
-          msg = 'Need a role';
-        } else {
-          RaidEvent.roster.add(user, role);
-          msg = RaidHelper.printRaid(RaidEvent, RaidEvent.roster);
+        message.channel.send('There is already an event going on. Please delete it before creating a new one: \`!raid delete\`');
+        return;
+      } else if (day !== undefined && title !== undefined && time !== undefined) {
+        RaidEvent = {
+          day: day,
+          time: time,
+          title: title
+        };
+        let raid = EmbedCreator.getRaidInfo(title);
+        if (raid instanceof Error) {
+          message.channel.send(raid.message);
+          RaidEvent = undefined;
+          return;
         }
+        roster = EmbedCreator.createRoster(raid);
+        msg = EmbedCreator.createEmbed(day, time, title, roster);
       }
-      message.channel.send(msg);
-    } else if (raidCommand === 'drop') {
-      let msg = 'No raid available';
-      if (RaidEvent !== undefined) {
-        RaidEvent.roster.remove(user);
-        msg = RaidHelper.printRaid(RaidEvent, RaidEvent.roster);
-      }
-      message.channel.send(msg);
-    } else if (raidCommand === 'roster') {
-      let msg = 'No raid available';
-      if (RaidEvent !== undefined) {
-        msg = RaidHelper.printRaid(RaidEvent, RaidEvent.roster);
-      }
-      message.channel.send(msg);
-    } else if (raidCommand === 'delete') {
-      let msg = 'No raid available';
-      if (RaidEvent !== undefined) {
-        msg = `Raid ${RaidEvent.title} @ ${RaidEvent.time} deleted`
+      if (msg instanceof Error) {
+        await message.channel.send(msg.message);
         RaidEvent = undefined;
+        return;
+      }
+      RaidMessage = await message.channel.send(msg);
+      let examples = emojis.examples;
+
+      try {
+        await RaidMessage.react(examples.mt);
+        await RaidMessage.react(examples.ot);
+        await RaidMessage.react(examples.heals);
+        await RaidMessage.react(examples.stam);
+        await RaidMessage.react(examples.mag);
+        await RaidMessage.react(examples.cancel);
+      } catch (err) {
+        console.error('One of the emojis failed to react.');
+      }
+    }
+
+    if (raidCommand === 'delete') {
+      let msg = 'No raid available';
+      if (RaidEvent !== undefined) {
+        msg = `Raid ${RaidEvent.title} deleted`
+        RaidEvent = undefined;
+        await RaidMessage.delete();
+        RaidMessage = undefined;
       }
       message.channel.send(msg);
-    } else if (raidCommand === 'help') {
-      bot.sendMessage({
-        to: channelID,
-        message: 'Available commands:\n- <create> [name] [time]\n- <join> [role]\n- <drop>\n- <roster>\n- <delete>'
-      })
     }
   }
 
@@ -243,11 +238,11 @@ bot.on('message', async (message) => {
     let defObject = await define.getDefinition(word);
     let definition;
     if (defObject.error) {
-      definition = `Error ${defObject.error}: ${defObject.errorMessage}`;
+      definition = `Error ${defObject.error}: **${defObject.errorMessage}**`;
     } else {
       definition = defObject.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0];
     }
-    message.channel.send(JSON.stringify(definition, null, 2));
+    message.channel.send(`*${definition}*`);
   }
 });
 
@@ -255,39 +250,62 @@ bot.on('message', async (message) => {
  * This is the event handler for when users add emoji reactions to a message.
  * The goal for this is to allow users to sign up for a roster by reacting
  */
+
 bot.on('messageReactionAdd', async (reaction, user) => {
   // Makes sure that this event only occurs on certain messages.
-  if (!reaction.message.content.includes('Pretend this is a roster for a run:')) return;
+  if (reaction.message.embeds.length <= 0 || !RaidEvent) return;
   let player = user.username;
   if (!user.bot) {
 
-    if (!roster.includes(player) && reaction.emoji.name !== '❌') {
-      roster.push(player);
+    // check for each emoji to add either tank, healer, or dps
+
+    // MT
+    if (reaction.emoji.name === '🇹' && roster.mt.count > roster.mt.players.length && !roster.mt.players.includes(player)) {
+      //RaidEvent.roster.add(user.username, 'main');
+      roster.mt.players.push(player);
     }
 
+    // OT
+    if (reaction.emoji.name === '🇴' && roster.ot.count > roster.ot.players.length && !roster.ot.players.includes(player)) {
+      // RaidEvent.roster.add(player, 'off');
+      roster.ot.players.push(player);
+    }
+
+    // healer
+    if (reaction.emoji.name === '🇭' && roster.healer.count > roster.healer.players.length && !roster.healer.players.includes(player)) {
+      // RaidEvent.roster.add(player, 'healer');
+      roster.healer.players.push(player);
+    }
+
+    // stam
+    if (reaction.emoji.name === '🇸' && roster.stam.count > roster.stam.players.length && !roster.stam.players.includes(player)) {
+      // RaidEvent.roster.add(player, 'stam');
+      roster.stam.players.push(player);
+    }
+
+    // mag
+    if (reaction.emoji.name === '🇲' && roster.mag.count > roster.mag.players.length && !roster.mag.players.includes(player)) {
+      // RaidEvent.roster.add(player, 'mag');
+      roster.mag.players.push(player);
+    }
+
+    // cancel
     if (reaction.emoji.name === '❌') {
-      roster = roster.filter((name) => name !== player);
+      // RaidEvent.roster.remove(player);
+      Object.keys(roster).forEach((role) => {
+        _.remove(roster[role].players, (p) => {
+          return p === player;
+        });
+      });
     }
 
-    // TODO: Use this in conjunction with the RaidHelper
-    await reaction.message.edit(`Pretend this is a roster for a run:\n ${roster.toString()}`);
-    // await bot.emit('messageReactionRemove', reaction, user);
+    try { 
+      reaction.message.edit(EmbedCreator.createEmbed(RaidEvent.day, RaidEvent.time, RaidEvent.title, roster));
+      reaction.remove(user);
+    } catch (err) {
+      console.log(`Error with message edit or remove: ${err}`);
+    }
   }
+
 });
 
-/**
- * This is the event handler for when users remove emoji reactions to a message.
- * The goal for this is to remove users from a roster by removing their emoji
- */
-bot.on('messageReactionRemove', async (reaction, user) => {
-  if (!reaction.message.content.includes('Pretend this is a roster for a run:')) return;
-  let player = user.username;
-  if (!user.bot) {
-    if (roster.includes(player)) {
-      roster = roster.filter((name) => name !== player);
-    }
-    // TODO: Use this in conjunction with the RaidHelper
-    await reaction.message.edit(`Pretend this is a roster for a run:\n ${roster.toString()}`);
-    // await bot.emit('messageReactionRemove', reaction, user);
-  }
-});

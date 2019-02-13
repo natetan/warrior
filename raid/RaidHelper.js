@@ -13,7 +13,7 @@ function createRaid(title, time, roster) {
 
 // Prints the raid in a good format for discord
 function printRaid(raid, roster) {
-  let result = `${raid.title} @ ${raid.time}\n${roster.showRoster()}`;
+  let result = `RaidEvent\n${raid.title} @ ${raid.time}\n${roster.showRoster()}`;
   return result;
 }
 
@@ -29,12 +29,14 @@ class Roster {
       MainTank: '',
       OffTank: '',
       Healers: [],
-      DPS: []
+      Stam: [],
+      Mag: []
     }
     this.mt = ['mt', 'main tank', 'maintank', 'main'];
     this.ot = ['ot', 'off tank', 'offtank', 'off'];
     this.h = ['heal', 'heals', 'healer'];
-    this.d = ['dd', 'dps', 'deeps'];
+    this.stam = ['stam', 'stam-dps'];
+    this.mag = ['mag', 'mag-dps'];
   }
 
   // Adds someone to the run with their given role
@@ -46,8 +48,10 @@ class Roster {
       this.roster.OffTank = name;
     } else if (this.h.includes(role) && this.roster.Healers.length < 2) {
       this.roster.Healers.push(name);
-    } else if (this.d.includes(role) && this.roster.Healers.length < 8) {
-      this.roster.DPS.push(name);
+    } else if (this.stam.includes(role) && this.roster.Stam.length < 4) {
+      this.roster.Stam.push(name);
+    } else if (this.mag.includes(role) && this.roster.Mag.length < 4) {
+      this.roster.Mag.push(name);
     }
   }
 
@@ -56,13 +60,20 @@ class Roster {
     if (name === this.roster.MainTank) {
       this.roster.MainTank = '';
     }
+
     if (name === this.roster.OffTank) {
       this.roster.OffTank = '';
     }
+
     _.remove(this.roster.Healers, (healer) => {
       return healer === name;
     });
-    _.remove(this.roster.DPS, (dps) => {
+
+    _.remove(this.roster.Stam, (dps) => {
+      return dps === name;
+    });
+
+    _.remove(this.roster.Mag, (dps) => {
       return dps === name;
     });
   }
@@ -79,14 +90,25 @@ class Roster {
       roster += `\n- Healer: `;
       healCount--;
     }
-    let dpsCount = 8;
-    this.roster.DPS.forEach((dps) => {
-      roster += `\n- DPS: ${dps}`;
-      dpsCount--;
+
+    let stamCount = 4;
+    this.roster.Stam.forEach((stam) => {
+      roster += `\n- Stam-dps: ${stam}`;
+      stamCount--;
     });
-    while (dpsCount > 0) {
-      roster += `\n- DPS: `;
-      dpsCount--;
+    while (stamCount > 0) {
+      roster += `\n- Stam-dps: `;
+      stamCount--;
+    }
+
+    let magCount = 4;
+    this.roster.Mag.forEach((mag) => {
+      roster += `\n- Mag-dps: ${mag}`;
+      magCount--;
+    });
+    while (magCount > 0) {
+      roster += `\n- Mag-dps: `;
+      magCount--;
     }
     return roster;
   }
