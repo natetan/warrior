@@ -141,7 +141,8 @@ bot.on('message', async (message) => {
     let quotes = warrior.quotes;
     let length = quotes.length;
     let randomQuote = quotes[Math.floor(Math.random() * length)];
-    message.channel.send(randomQuote);
+    let warriorEmoji = bot.emojis.get(emojis.customEmojis.warrior);
+    message.channel.send(`${warriorEmoji} ${randomQuote}`);
   }
 
   /**

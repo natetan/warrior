@@ -7,6 +7,11 @@ let examples = {
   'cancel': '❌'
 };
 
+let customEmojis = {
+  'warrior': '541863755815059466'
+}
+
 module.exports = {
-  examples: examples
+  examples: examples,
+  customEmojis: customEmojis
 };
