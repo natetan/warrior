@@ -3,7 +3,6 @@ let translate = require('google-translate-api');
 let logger = require('winston');
 let _ = require('lodash');
 
-let auth = require('./auth.json');
 let warrior = require('./resources/warrior-quotes.json');
 let languages = require('./translate/TranslateHelper');
 let define = require('./define/define');
@@ -29,7 +28,8 @@ var roster = [];
 const bot = new Discord.Client();
 
 // Logs in with the given token
-bot.login(auth.token);
+const token = process.env.token || require('./auth.json').token;
+bot.login(token);
 
 /**
  * The setup for when the bot launches 

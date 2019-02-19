@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-const auth = require('../auth.json');
 
 const oxfordBaseUrl = 'https://od-api.oxforddictionaries.com/api/v1/entries/en';
 
@@ -7,8 +6,8 @@ async function getDefinition(term) {
   let options = {
     method: 'GET',
     headers: {
-      'app_id': auth.oxford_app_id,
-      'app_key': auth.oxford_app_key
+      'app_id': process.env.oxford_app_id || require('../auth.json').oxford_app_id,
+      'app_key': process.env.oxford_app_key || require('../auth.json').oxford_app_key
     }
   }
   let res = await fetch(`${oxfordBaseUrl}/${term}`, options);
