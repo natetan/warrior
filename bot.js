@@ -150,9 +150,9 @@ bot.on('message', async (message) => {
    * Gets the daily pledges
    */
   if (command === 'pledges') {
-    pledges.getDailies().then((dailies) => {
-      message.channel.send(dailies);
-    })
+    let m = await message.channel.send('Grabbing pledges from esoleaderboards...');
+    let dailies = await pledges.getDailies();
+    m.edit(dailies);
   }
 
   /**
