@@ -3,6 +3,11 @@ let $ = require('cheerio');
 
 const ESO_LEADERBOARDS_URL = 'https://esoleaderboards.com/';
 
+/**
+ * Returns the HTML for a given web page
+ * 
+ * @param {String} url 
+ */
 async function getHtml(url) {
   let res = await fetch(url);
   if (res.status === 200) {
@@ -12,8 +17,15 @@ async function getHtml(url) {
   }
 }
 
+/**
+ * Returns a string representation of the daily pledges
+ */
 async function getDailies() {
   let html = await getHtml(ESO_LEADERBOARDS_URL);
+
+  if (!html) {
+    return `Unable to retrieve pledges from ${ESO_LEADERBOARDS_URL}`;
+  }
 
   let p1 = $('tbody tr:nth-child(4) td:nth-child(2) strong', html).first().text();
   let p2 = $('tbody tr:nth-child(4) td:nth-child(3) strong', html).first().text();
