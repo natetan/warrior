@@ -8,6 +8,7 @@ let languages = require('./translate/TranslateHelper');
 let define = require('./define/define');
 let emojis = require('./resources/emojis');
 let EmbedCreator = require('./raid/EmbedCreator');
+let pledges = require('./pledges/PledgeHelper');
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -143,6 +144,15 @@ bot.on('message', async (message) => {
     let randomQuote = quotes[Math.floor(Math.random() * length)];
     let warriorEmoji = bot.emojis.get(emojis.customEmojis.warrior);
     message.channel.send(`${warriorEmoji} ${randomQuote}`);
+  }
+
+  /**
+   * Gets the daily pledges
+   */
+  if (command === 'pledges') {
+    pledges.getDailies().then((dailies) => {
+      message.channel.send(dailies);
+    })
   }
 
   /**
