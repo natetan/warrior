@@ -3,7 +3,8 @@ let translate = require('google-translate-api');
 let logger = require('winston');
 let _ = require('lodash');
 
-let warrior = require('./resources/warrior-quotes.json');
+let quoteHelper = require('./quotes/QuoteHelper');
+let quotes = require('./resources/eso-quotes.json');
 let languages = require('./translate/TranslateHelper');
 let define = require('./define/define');
 let emojis = require('./resources/emojis');
@@ -138,12 +139,24 @@ bot.on('message', async (message) => {
   /**
    * Upon popular demand, this will randomly display a quote from the warrior
    */
+  
   if (command === 'warrior') {
-    let quotes = warrior.quotes;
-    let length = quotes.length;
-    let randomQuote = quotes[Math.floor(Math.random() * length)];
+    let warriorQuotes = quotes.warrior;
+    let randomQuote = quoteHelper.getQuote(warriorQuotes);
     let warriorEmoji = bot.emojis.get(emojis.customEmojis.warrior);
     message.channel.send(`${warriorEmoji} ${randomQuote}`);
+  }
+
+  if (command === 'zmaja') {
+    let zmajaQuotes = quotes.zmaja;
+    let randomQuote = quoteHelper.getQuote(zmajaQuotes);
+    message.channel.send(`${randomQuote}`);
+  }
+
+  if (command === 'rakkhat') {
+    let rakkhatQuotes = quotes.rakkhat;
+    let randomQuote = quoteHelper.getQuote(rakkhatQuotes);
+    message.channel.send(`${randomQuote}`);
   }
 
   /**
