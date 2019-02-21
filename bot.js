@@ -132,8 +132,7 @@ bot.on('message', async (message) => {
    * THIS IS A TEST
    */
   if (command === 'test') {
-    let m = await message.channel.send('TESTING:');
-    m.delete();
+    let m = await message.channel.send(`This channel's ID is: ${message.channel.id}`);
   }
 
   /**
