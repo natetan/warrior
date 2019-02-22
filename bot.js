@@ -209,12 +209,12 @@ bot.on('message', async (message) => {
       let examples = emojis.examples;
 
       try {
-        await RaidMessage.react(examples.mt);
-        await RaidMessage.react(examples.ot);
-        await RaidMessage.react(examples.heals);
-        await RaidMessage.react(examples.stam);
-        await RaidMessage.react(examples.mag);
-        await RaidMessage.react(examples.cancel);
+        await RaidMessage.react(bot.emojis.get(emojis.customEmojis.mt));
+        await RaidMessage.react(bot.emojis.get(emojis.customEmojis.ot));
+        await RaidMessage.react(bot.emojis.get(emojis.customEmojis.heals));
+        await RaidMessage.react(bot.emojis.get(emojis.customEmojis.mag));
+        await RaidMessage.react(bot.emojis.get(emojis.customEmojis.stam));
+        await RaidMessage.react(emojis.examples.cancel);
       } catch (err) {
         console.error('One of the emojis failed to react.');
       }
@@ -295,35 +295,36 @@ bot.on('messageReactionAdd', async (reaction, user) => {
   if (reaction.message.embeds.length <= 0 || !RaidEvent) return;
   let player = user.username;
   if (!user.bot) {
+    let cust = emojis.customEmojis;
 
     // check for each emoji to add either tank, healer, or dps
 
     // MT
-    if (reaction.emoji.name === '🇹' && roster.mt.count > roster.mt.players.length && !roster.mt.players.includes(player)) {
+    if (reaction.emoji.id === cust.mt && roster.mt.count > roster.mt.players.length && !roster.mt.players.includes(player)) {
       //RaidEvent.roster.add(user.username, 'main');
       roster.mt.players.push(player);
     }
 
     // OT
-    if (reaction.emoji.name === '🇴' && roster.ot.count > roster.ot.players.length && !roster.ot.players.includes(player)) {
+    if (reaction.emoji.id === cust.ot && roster.ot.count > roster.ot.players.length && !roster.ot.players.includes(player)) {
       // RaidEvent.roster.add(player, 'off');
       roster.ot.players.push(player);
     }
 
     // healer
-    if (reaction.emoji.name === '🇭' && roster.healer.count > roster.healer.players.length && !roster.healer.players.includes(player)) {
+    if (reaction.emoji.id === cust.heals && roster.healer.count > roster.healer.players.length && !roster.healer.players.includes(player)) {
       // RaidEvent.roster.add(player, 'healer');
       roster.healer.players.push(player);
     }
 
     // stam
-    if (reaction.emoji.name === '🇸' && roster.stam.count > roster.stam.players.length && !roster.stam.players.includes(player)) {
+    if (reaction.emoji.id === cust.stam && roster.stam.count > roster.stam.players.length && !roster.stam.players.includes(player)) {
       // RaidEvent.roster.add(player, 'stam');
       roster.stam.players.push(player);
     }
 
     // mag
-    if (reaction.emoji.name === '🇲' && roster.mag.count > roster.mag.players.length && !roster.mag.players.includes(player)) {
+    if (reaction.emoji.id === cust.mag && roster.mag.count > roster.mag.players.length && !roster.mag.players.includes(player)) {
       // RaidEvent.roster.add(player, 'mag');
       roster.mag.players.push(player);
     }
