@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 
 const oxfordBaseUrl = 'https://od-api.oxforddictionaries.com/api/v1/entries/en';
+const urbanDictionaryBaseUrl = `http://api.urbandictionary.com/v0/define?term=`;
 
 async function getDefinition(term) {
   let options = {
@@ -21,6 +22,29 @@ async function getDefinition(term) {
   }
 }
 
+async function getUrbanDefinition(term) {
+  let res = await fetch(`${urbanDictionaryBaseUrl}${term}`);
+  if (res.status === 200) {
+    let json = await res.json();
+    let result = 'Definitions:\n';
+    for (var i = 0; i < json.list.length && i < 1; i++) {
+      let currentLength = result.length;
+      let definition = json.list[i]['definition'];
+      if (currentLength + definition.length > 2000) {
+        return result;
+      }
+      result += `${i + 1}: ${definition}\n`;
+    }
+    return result;
+  } else {
+    return {
+      'error': res.status,
+      'errorMessage': res.statusText
+    }
+  }
+}
+
 module.exports = {
-  getDefinition: getDefinition
+  getDefinition: getDefinition,
+  getUrbanDefinition: getUrbanDefinition
 }

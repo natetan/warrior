@@ -133,6 +133,16 @@ bot.on('message', async (message) => {
    */
   if (command === 'test') {
     let m = await message.channel.send(`This channel's ID is: ${message.channel.id}`);
+    try {
+      await m.react(bot.emojis.get(emojis.customEmojis.mt));
+      await m.react(bot.emojis.get(emojis.customEmojis.ot));
+      await m.react(bot.emojis.get(emojis.customEmojis.heals));
+      await m.react(bot.emojis.get(emojis.customEmojis.mag));
+      await m.react(bot.emojis.get(emojis.customEmojis.stam));
+      await m.react(emojis.examples.cancel);
+    } catch (err) {
+      console.log('Test error: ' + err);
+    }
   }
 
   /**
@@ -146,16 +156,9 @@ bot.on('message', async (message) => {
     message.channel.send(`${warriorEmoji} ${randomQuote}`);
   }
 
-  if (command === 'zmaja') {
-    let zmajaQuotes = quotes.zmaja;
-    let randomQuote = quoteHelper.getQuote(zmajaQuotes);
-    message.channel.send(`${randomQuote}`);
-  }
-
-  if (command === 'rakkhat') {
-    let rakkhatQuotes = quotes.rakkhat;
-    let randomQuote = quoteHelper.getQuote(rakkhatQuotes);
-    message.channel.send(`${randomQuote}`);
+  if (quoteHelper.quoteOptions.includes(command)) {
+    let randomQuote = quoteHelper.getQuote(quotes[command]);
+    message.channel.send(randomQuote);
   }
 
   /**
@@ -267,6 +270,19 @@ bot.on('message', async (message) => {
     }
     message.channel.send(`*${definition}*`);
   }
+
+  if (command === 'urban') {
+    let word = args.join(' ');
+    let defObject = await define.getUrbanDefinition(word);
+    let definition;
+    if (defObject.error) {
+      definition = `Error ${defObject.error}: **${defObject.errorMessage}**`;
+    } else {
+      definition = defObject;
+    }
+    message.channel.send(`${definition}`);
+  }
+
 });
 
 /**

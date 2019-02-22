@@ -1,3 +1,5 @@
+let quoteOptions = ['zmaja', 'rakkhat'];
+
 function getQuote(quotes) {
   let length = quotes.length;
   let randomQuote = quotes[Math.floor(Math.random() * length)];
@@ -5,5 +7,6 @@ function getQuote(quotes) {
 }
 
 module.exports = {
-  getQuote: getQuote
+  getQuote: getQuote,
+  quoteOptions: quoteOptions
 }
