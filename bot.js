@@ -132,16 +132,26 @@ bot.on('message', async (message) => {
    * THIS IS A TEST
    */
   if (command === 'test') {
-    let m = await message.channel.send(`This channel's ID is: ${message.channel.id}`);
     try {
-      await m.react(bot.emojis.get(emojis.customEmojis.mt));
-      await m.react(bot.emojis.get(emojis.customEmojis.ot));
-      await m.react(bot.emojis.get(emojis.customEmojis.heals));
-      await m.react(bot.emojis.get(emojis.customEmojis.mag));
-      await m.react(bot.emojis.get(emojis.customEmojis.stam));
-      await m.react(emojis.examples.cancel);
+      await message.send('test');
     } catch (err) {
-      console.log('Test error: ' + err);
+      console.log('Test failed');
+    }
+  }
+
+  if (command === 'cid') {
+    message.channel.send(`This channel's ID is: ${message.channel.id}`);
+  }
+
+  // Send a message to SnF general chat
+  if (command === 'troll') {
+    let phrase = args.join(' ');
+    let openRunsChannel = bot.channels.get(process.env.troll_channel_id || require('./auth.json').bot_test_general_channel_id);
+    
+    if (!openRunsChannel) {
+      message.channel.send('Channel does not exist');
+    } else {
+      openRunsChannel.send(phrase);
     }
   }
 
