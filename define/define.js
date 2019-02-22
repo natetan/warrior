@@ -26,16 +26,14 @@ async function getUrbanDefinition(term) {
   let res = await fetch(`${urbanDictionaryBaseUrl}${term}`);
   if (res.status === 200) {
     let json = await res.json();
-    let result = 'Definitions:\n';
-    for (var i = 0; i < json.list.length && i < 1; i++) {
-      let currentLength = result.length;
-      let definition = json.list[i]['definition'];
-      if (currentLength + definition.length > 2000) {
-        return result;
-      }
-      result += `${i + 1}: ${definition}\n`;
+    let results = json.list;
+    let length = results.length;
+    let definition = results[Math.floor(Math.random() * length)]['definition'];
+    let tries = 5;
+    while (definition.length > 160 && tries > 0) {
+      definition = results[Math.floor(Math.random() * length)]['definition'];
     }
-    return result;
+    return definition;
   } else {
     return {
       'error': res.status,
