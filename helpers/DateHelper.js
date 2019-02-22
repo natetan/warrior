@@ -3,7 +3,7 @@ let days = {
   1: ["m", "mon", "monday"],
   2: ["t", "tue", "tues", "tuesday"],
   3: ["w", "wed", "wednesday"],
-  4: ["th", "thur", "thu", "thursday"],
+  4: ["th", "thu", "thur", "thurs", "thursday"],
   5: ["f", "fri", "friday"],
   6: ["sat", "saturday"]
 }
@@ -31,6 +31,10 @@ function getDayNum(day) {
  * @returns {Date}
  */
 function getNextDay(day) {
+  day = day.toLowerCase();
+  if (day === 'today') {
+    return new Date().toDateString().substring(0, 10);
+  }
   let x = getDayNum(day);
   if (!x) {
     return new Error(`\`${day}\` is not a day. Please correct yourself.`);
