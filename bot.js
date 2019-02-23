@@ -358,47 +358,52 @@ bot.on('messageReactionAdd', async (reaction, user) => {
   let player = user.username;
   if (!user.bot) {
     let cust = emojis.customEmojis;
-    
-    // MT
-    if (reaction.emoji.id === cust.mt && roster.mt.count > roster.mt.players.length && !roster.mt.players.includes(player)) {
-      roster.mt.players.push(player);
-    }
+    try {
+      // MT
+      if (reaction.emoji.id === cust.mt && roster.mt.count > roster.mt.players.length && !roster.mt.players.includes(player)) {
+        roster.mt.players.push(player);
+        update = true;
+      }
 
-    // OT
-    if (reaction.emoji.id === cust.ot && roster.ot.count > roster.ot.players.length && !roster.ot.players.includes(player)) {
-      roster.ot.players.push(player);
-    }
+      // OT
+      if (reaction.emoji.id === cust.ot && roster.ot.count > roster.ot.players.length && !roster.ot.players.includes(player)) {
+        roster.ot.players.push(player);
+      }
 
-    // healer
-    if (reaction.emoji.id === cust.heals && roster.healer.count > roster.healer.players.length && !roster.healer.players.includes(player)) {
-      roster.healer.players.push(player);
-    }
+      // healer
+      if (reaction.emoji.id === cust.heals && roster.healer.count > roster.healer.players.length && !roster.healer.players.includes(player)) {
+        roster.healer.players.push(player);
+      }
 
-    // stam
-    if (reaction.emoji.id === cust.stam && roster.stam.count > roster.stam.players.length && !roster.stam.players.includes(player)) {
-      roster.stam.players.push(player);
-    }
+      // stam
+      if (reaction.emoji.id === cust.stam && roster.stam.count > roster.stam.players.length && !roster.stam.players.includes(player)) {
+        roster.stam.players.push(player);
+      }
 
-    // mag
-    if (reaction.emoji.id === cust.mag && roster.mag.count > roster.mag.players.length && !roster.mag.players.includes(player)) {
-      roster.mag.players.push(player);
-    }
+      // mag
+      if (reaction.emoji.id === cust.mag && roster.mag.count > roster.mag.players.length && !roster.mag.players.includes(player)) {
+        roster.mag.players.push(player);
+      }
 
-    // cancel
-    if (reaction.emoji.name === '❌') {
-      Object.keys(roster).forEach((role) => {
-        _.remove(roster[role].players, (p) => {
-          return p === player;
+      // cancel
+      if (reaction.emoji.name === '❌') {
+        Object.keys(roster).forEach((role) => {
+          _.remove(roster[role].players, (p) => {
+            return p === player;
+          });
         });
-      });
+      }
+    } catch (err) {
+      console.log(`ERROR:\n\tEvent <messageReaction> failed.\n\tError: [${err}]`);
     }
-  }
 
-  try {
-    reaction.message.edit(EmbedCreator.createEmbed(RaidEvent.day, RaidEvent.time, RaidEvent.title, roster));
-    //reaction.remove(user);
-  } catch (err) {
-    console.log(`Error with message edit or remove: ${err}`);
+
+    try {
+      reaction.message.edit(EmbedCreator.createEmbed(RaidEvent.day, RaidEvent.time, RaidEvent.title, roster));
+      reaction.remove(user);
+    } catch (err) {
+      console.log(`Error with message edit or remove: ${err}`);
+    }
   }
 });
 
