@@ -212,7 +212,7 @@ bot.on('message', async (message) => {
     // First argument
     let raidCommand = args[0];
     args.shift();
-    if (raidCommand === 'test') {
+    if (raidCommand === 'create') {
       let [day, time, title] = args;
       let msg = '';
       try {
@@ -396,7 +396,6 @@ bot.on('messageReactionAdd', async (reaction, user) => {
     } catch (err) {
       console.log(`ERROR:\n\tEvent <messageReaction> failed.\n\tError: [${err}]`);
     }
-
 
     try {
       reaction.message.edit(EmbedCreator.createEmbed(RaidEvent.day, RaidEvent.time, RaidEvent.title, roster));

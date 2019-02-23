@@ -54,7 +54,13 @@ function createEmbed(day, time, title, roster) {
   }
   let cpDisplay = '';
   raid.cp.forEach((setup) => {
-    cpDisplay += `${setup.type}:\n ${JSON.stringify(setup.points)}\n`;
+    let results = '';
+    let perks = Object.keys(setup.points);
+    perks.forEach((perk) => {
+      results += `${perk} - ${setup.points[perk]}\n`
+    });
+    cpDisplay += `**${setup.type}**:\n${results}\n`;
+    //cpDisplay += `${setup.type}:\n ${JSON.stringify(setup.points)}\n`;
   });
 
   let embed = new Discord.RichEmbed()
