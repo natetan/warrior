@@ -16,12 +16,12 @@
       {
         "type": "Regular",
         "points": {
-          "Elemental Defender": 64,
-          "Hardy": 0,
-          "Thick Skinned": 61,
-          "Iron Clad": 81,
-          "Spell Shield": 53,
-          "Quick Recovery": 11
+          "Elemental Defender": "64",
+          "Hardy": "0",
+          "Thick Skinned": "61",
+          "Iron Clad": "81",
+          "Spell Shield": "53",
+          "Quick Recovery": "11"
         }
       }
     ]
@@ -43,24 +43,12 @@
       {
         "type": "Regular",
         "points": {
-          "Elemental Defender": 75,
-          "Hardy": 27,
-          "Thick Skinned": 0,
-          "Iron Clad": 81,
-          "Spell Shield": 76,
-          "Quick Recovery": 11
-        }
-      },
-      {
-        "type": "Lightning Kiter",
-        "points": {
-          "Elemental Defender": 75,
-          "Hardy": 0,
-          "Thick Skinned": 56,
-          "Iron Clad": 81,
-          "Spell Shield": 38,
-          "Quick Recovery": 11,
-          "Bastion": 20
+          "Elemental Defender": "75",
+          "Hardy": "27",
+          "Thick Skinned": "0",
+          "Iron Clad": "81",
+          "Spell Shield": "76",
+          "Quick Recovery": "11"
         }
       }
     ]
@@ -80,25 +68,14 @@
     },
     "cp": [
       {
-        "type": "Regular-red",
+        "type": "Regular",
         "points": {
-          "Elemental Defender": 56,
-          "Hardy": 0,
-          "Thick Skinned": 56,
-          "Iron Clad": 56,
-          "Spell Shield": 70,
-          "Quick Recovery": 32
-        }
-      },
-      {
-        "type": "Regular-green",
-        "points": {
-          "Sprinter": 56,
-          "Warlord": 20,
-          "Shadow Ward": 34,
-          "Tumbling": 52,
-          "Arcanist": 64,
-          "Tenacity": 24
+          "Elemental Defender": "56",
+          "Hardy": "0",
+          "Thick Skinned": "56",
+          "Iron Clad": "56",
+          "Spell Shield": "70",
+          "Quick Recovery": "32"
         }
       }
     ]
@@ -118,25 +95,14 @@
     },
     "cp": [
       {
-        "type": "Regular",
+        "type": "Regular/HM",
         "points": {
-          "Elemental Defender": 56,
-          "Hardy": 56,
-          "Thick Skinned": 56,
-          "Iron Clad": 61,
-          "Spell Shield": 30,
-          "Quick Recovery": 11
-        }
-      },
-      {
-        "type": "HM",
-        "points": {
-          "Elemental Defender": 64,
-          "Hardy": 49,
-          "Thick Skinned": 56,
-          "Iron Clad": 66,
-          "Spell Shield": 24,
-          "Quick Recovery": 11
+          "Elemental Defender": "56/64",
+          "Hardy": "56/49",
+          "Thick Skinned": "56",
+          "Iron Clad": "61/66",
+          "Spell Shield": "30/24",
+          "Quick Recovery": "11"
         }
       }
     ]
@@ -158,12 +124,12 @@
       {
         "type": "Regular",
         "points": {
-          "Elemental Defender": 56,
-          "Hardy": 56,
-          "Thick Skinned": 56,
-          "Iron Clad": 72,
-          "Spell Shield": 19,
-          "Quick Recovery": 11
+          "Elemental Defender": "56",
+          "Hardy": "56",
+          "Thick Skinned": "56",
+          "Iron Clad": "72",
+          "Spell Shield": "19",
+          "Quick Recovery": "11"
         }
       }
     ]
@@ -183,25 +149,14 @@
     },
     "cp": [
       {
-        "type": "Regular",
+        "type": "Regular/HM",
         "points": {
-          "Elemental Defender": 49,
-          "Hardy": 49,
-          "Thick Skinned": 48,
-          "Iron Clad": 81,
-          "Spell Shield": 32,
-          "Quick Recovery": 11
-        }
-      },
-      {
-        "type": "Hardmode",
-        "points": {
-          "Elemental Defender": 64,
-          "Hardy": 0,
-          "Thick Skinned": 61,
-          "Iron Clad": 81,
-          "Spell Shield": 53,
-          "Quick Recovery": 11
+          "Elemental Defender": "49/64",
+          "Hardy": "49/0",
+          "Thick Skinned": "48/61",
+          "Iron Clad": "81",
+          "Spell Shield": "32/53",
+          "Quick Recovery": "11"
         }
       }
     ]
@@ -223,12 +178,12 @@
       {
         "type": "Regular",
         "points": {
-          "Elemental Defender": 43,
-          "Hardy": 64,
-          "Thick Skinned": 61,
-          "Iron Clad": 61,
-          "Spell Shield": 30,
-          "Quick Recovery": 11
+          "Elemental Defender": "43",
+          "Hardy": "64",
+          "Thick Skinned": "61",
+          "Iron Clad": "61",
+          "Spell Shield": "30",
+          "Quick Recovery": "11"
         }
       }
     ]

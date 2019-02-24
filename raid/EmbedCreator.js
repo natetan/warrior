@@ -13,6 +13,9 @@ let DateHelper = require('../helpers/DateHelper');
  */
 function getRaidInfo(raidName) {
   raidName = raidName.toLowerCase();
+  if (raidName === 'vmaw') {
+    raidName = 'vmol';
+  }
   if (!RaidInfo[raidName]) {
     return new Error(`Raid \`${raidName}\` does not exist, you scrub.`);
   }
