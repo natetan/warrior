@@ -75,133 +75,45 @@ bot.on('message', async (message) => {
   let args = message.content.slice(prefix.length).trim().split(/ +/g);
   let command = args.shift().toLowerCase();
 
+  /**
+   * Logs the channel's name and ID, and then deletes the message.
+   */
+  if (command === 'cid') {
+    try {
+      console.log(`The ID of channel ${message.channel.name}: ${message.channel.id}`);
+      await message.delete();
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <cid> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  /**
+   * Uses the Oxford dictionary API to define words
+   * 
+   * @arg word - the word to define
+   */
+  if (command === 'define') {
+    try {
+      let word = args[0];
+      let defObject = await define.getDefinition(word);
+      let definition;
+      if (defObject.error) {
+        definition = `Error ${defObject.error}: **${defObject.errorMessage}**`;
+      } else {
+        definition = defObject.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0];
+      }
+      message.channel.send(`*${definition}*`);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <define> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
   // Snail's first command lmao
   if (command === 'help') {
     try {
       await message.channel.send('Git Gud');
     } catch (err) {
       console.log(`ERROR:\n\tCommand <help> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-    }
-  }
-
-  // Calculates the ping 
-  if (command === 'ping') {
-    try {
-      const channelMessage = await message.channel.send('Ping?');
-      channelMessage.edit(`Pong! Latency is ${channelMessage.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
-    } catch (err) {
-      console.log(`ERROR:\n\tCommand <ping> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-    }
-  }
-
-  /**
-   * Handles the roles of the members of the server
-   * 
-   * @arg all - gets all the roles and shows every user in those roles
-   * @arg count - gets all the roles and the counts of how many people are in those roles
-   * @arg default - gets the message sender's roles
-   */
-  if (command === 'roles') {
-    try {
-      let channel = message.channel;
-      let results = {};
-      if (args[0] === 'all') {
-        message.guild.roles.forEach((v) => {
-          let members = v.members.map((m) => {
-            return m.displayName;
-          });
-          // Ignore the @everyone tag since that can have a lot of users
-          if (v.name !== '@everyone') {
-            results[v.name] = members;
-          }
-        });
-        results = EmbedCreator.createRoleEmbed(results, 'ALL');
-      } else if (args[0] === 'count') {
-        message.guild.roles.forEach((v) => {
-          results[v.name] = v.members.keyArray().length;
-        });
-        results = EmbedCreator.createRoleEmbed(results, 'COUNT');
-      } else {
-        message.member.roles.forEach((v, k) => {
-          results[k] = v.name;
-        });
-        results = EmbedCreator.createRoleEmbed(results, message.author.username);
-      }
-      await channel.send(results);
-    } catch (err) {
-      console.log(`ERROR:\n\tCommand <roles> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-    }
-  }
-
-  /**
-   * THIS IS A TEST
-   */
-  if (command === 'test') {
-    try {
-      await message.send('test');
-    } catch (err) {
-      console.log('Test failed');
-    }
-  }
-
-  if (command === 'cid') {
-    try {
-      console.log(`The ID of channel ${message.channel.name}: ${message.channel.id}`);
-    } catch (err) {
-      console.log(`ERROR:\n\tCommand <cid> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-    }
-  }
-
-  // Send a message to SnF general chat
-  if (command === 'troll') {
-    try {
-      let phrase = args.join(' ');
-      let openRunsChannel = bot.channels.get(process.env.troll_channel_id || require('./auth.json').bot_test_general_channel_id);
-
-      if (!openRunsChannel) {
-        message.channel.send('Channel does not exist');
-      } else {
-        openRunsChannel.send(phrase);
-      }
-    } catch (err) {
-      console.log(`ERROR:\n\tCommand <troll> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-    }
-  }
-
-  /**
-   * Upon popular demand, this will randomly display a quote from the warrior
-   */
-
-  if (command === 'warrior') {
-    try {
-      let warriorQuotes = quotes.warrior;
-      let randomQuote = quoteHelper.getQuote(warriorQuotes);
-      let warriorEmoji = bot.emojis.get(emojis.customEmojis.warrior);
-      message.channel.send(`${warriorEmoji} ${randomQuote}`);
-    } catch (err) {
-      console.log(`ERROR:\n\tCommand <warrior> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-    }
-  }
-
-  if (quoteHelper.quoteOptions.includes(command)) {
-    try {
-      let randomQuote = quoteHelper.getQuote(quotes[command]);
-      message.channel.send(randomQuote);
-    } catch (err) {
-      console.log(`ERROR:\n\tCommand <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-    }
-  }
-
-  /**
-   * Gets the daily pledges
-   */
-  if (command === 'pledges') {
-    try {
-      let m = await message.channel.send('Grabbing pledges from esoleaderboards...');
-      let dailies = await pledges.getDailies();
-      m.edit(dailies);
-    } catch (err) {
-      console.log(`ERROR:\n\tCommand <pledges> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
@@ -279,6 +191,95 @@ bot.on('message', async (message) => {
   }
 
   /**
+   * Handles the roles of the members of the server
+   * 
+   * @arg all - gets all the roles and shows every user in those roles
+   * @arg count - gets all the roles and the counts of how many people are in those roles
+   * @arg default - gets the message sender's roles
+   */
+  if (command === 'roles') {
+    try {
+      let channel = message.channel;
+      let results = {};
+      if (args[0] === 'all') {
+        message.guild.roles.forEach((v) => {
+          let members = v.members.map((m) => {
+            return m.displayName;
+          });
+          // Ignore the @everyone tag since that can have a lot of users
+          if (v.name !== '@everyone') {
+            results[v.name] = members;
+          }
+        });
+        results = EmbedCreator.createRoleEmbed(results, 'ALL');
+      } else if (args[0] === 'count') {
+        message.guild.roles.forEach((v) => {
+          results[v.name] = v.members.keyArray().length;
+        });
+        results = EmbedCreator.createRoleEmbed(results, 'COUNT');
+      } else {
+        message.member.roles.forEach((v, k) => {
+          results[k] = v.name;
+        });
+        results = EmbedCreator.createRoleEmbed(results, message.author.username);
+      }
+      await channel.send(results);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <roles> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  // Calculates the ping 
+  if (command === 'ping') {
+    try {
+      const channelMessage = await message.channel.send('Ping?');
+      channelMessage.edit(`Pong! Latency is ${channelMessage.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <ping> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  /**
+   * Gets the daily pledges
+   */
+  if (command === 'pledges') {
+    try {
+      let m = await message.channel.send('Grabbing pledges from esoleaderboards...');
+      let dailies = await pledges.getDailies();
+      m.edit(dailies);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <pledges> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  /**
+   * THIS IS A TEST - do experimental stuff here
+   */
+  if (command === 'test') {
+    try {
+      await message.send('test');
+    } catch (err) {
+      console.log('Test failed');
+    }
+  }
+
+  // Send a message to SnF general chat
+  if (command === 'troll') {
+    try {
+      let phrase = args.join(' ');
+      let openRunsChannel = bot.channels.get(process.env.troll_channel_id || require('./auth.json').bot_test_general_channel_id);
+
+      if (!openRunsChannel) {
+        message.channel.send('Channel does not exist');
+      } else {
+        openRunsChannel.send(phrase);
+      }
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <troll> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  /**
    * Uses the google translate api to translate text
    * 
    * @arg targetLang - target language to translate to
@@ -305,27 +306,6 @@ bot.on('message', async (message) => {
   }
 
   /**
-   * Uses the Oxford dictionary API to define words
-   * 
-   * @arg word - the word to define
-   */
-  if (command === 'define') {
-    try {
-      let word = args[0];
-      let defObject = await define.getDefinition(word);
-      let definition;
-      if (defObject.error) {
-        definition = `Error ${defObject.error}: **${defObject.errorMessage}**`;
-      } else {
-        definition = defObject.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0];
-      }
-      message.channel.send(`*${definition}*`);
-    } catch (err) {
-      console.log(`ERROR:\n\tCommand <define> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-    }
-  }
-
-  /**
    * Uses the urban dictionary API to define words
    * 
    * @arg word - the word to define
@@ -343,6 +323,34 @@ bot.on('message', async (message) => {
       message.channel.send(`${definition}`);
     } catch (err) {
       console.log(`ERROR:\n\tCommand <urban> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  /**
+   * Upon popular demand, this will randomly display a quote from the warrior
+   */
+  if (command === 'warrior') {
+    try {
+      let warriorQuotes = quotes.warrior;
+      let randomQuote = quoteHelper.getQuote(warriorQuotes);
+      let warriorEmoji = bot.emojis.get(emojis.customEmojis.warrior);
+      message.channel.send(`${warriorEmoji} ${randomQuote}`);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <warrior> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  /**
+   * This uses quotes from other bosses if it exists.
+   * 
+   * options: !rakkhat, !zmaja
+   */
+  if (quoteHelper.quoteOptions.includes(command)) {
+    try {
+      let randomQuote = quoteHelper.getQuote(quotes[command]);
+      message.channel.send(randomQuote);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 });
