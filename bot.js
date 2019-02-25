@@ -282,22 +282,6 @@ bot.on('message', async (message) => {
     }
   }
 
-  // Send a message to SnF general chat
-  if (command === 'troll') {
-    try {
-      let phrase = args.join(' ');
-      let openRunsChannel = bot.channels.get(process.env.troll_channel_id || require('./auth.json').bot_test_general_channel_id);
-
-      if (!openRunsChannel) {
-        message.channel.send('Channel does not exist');
-      } else {
-        openRunsChannel.send(phrase);
-      }
-    } catch (err) {
-      console.log(`ERROR:\n\tCommand <troll> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-    }
-  }
-
   /**
    * Uses the google translate api to translate text
    * 
@@ -321,6 +305,22 @@ bot.on('message', async (message) => {
       });
     } catch (err) {
       console.log(`ERROR:\n\tCommand <translate> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  // Send a message to SnF general chat
+  if (command === 'troll') {
+    try {
+      let phrase = args.join(' ');
+      let openRunsChannel = bot.channels.get(process.env.troll_channel_id || require('./auth.json').bot_test_general_channel_id);
+
+      if (!openRunsChannel) {
+        message.channel.send('Channel does not exist');
+      } else {
+        openRunsChannel.send(phrase);
+      }
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <troll> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
