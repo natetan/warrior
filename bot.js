@@ -81,7 +81,7 @@ bot.on('message', async (message) => {
    */
   if (command === 'cid') {
     try {
-      console.log(`The ID of channel ${message.channel.name}: ${message.channel.id}`);
+      console.log(`The ID of channel #${message.channel.name} in guild <${message.guild.name}>: ${message.channel.id}`);
       await message.delete();
     } catch (err) {
       console.log(`ERROR:\n\tCommand <cid> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
@@ -274,13 +274,13 @@ bot.on('message', async (message) => {
   /**
    * THIS IS A TEST - do experimental stuff here
    */
-  if (command === 'test') {
-    try {
-      await message.send('test');
-    } catch (err) {
-      console.log('Test failed');
-    }
-  }
+  // if (command === 'test') {
+  //   try {
+  //     await message.send('test');
+  //   } catch (err) {
+  //     console.log('Test failed');
+  //   }
+  // }
 
   /**
    * Uses the google translate api to translate text
@@ -299,7 +299,11 @@ bot.on('message', async (message) => {
       let textToTranslate = args.join(' ');
 
       translate(textToTranslate, { to: languages.getCode(targetLang) }).then(res => {
-        message.channel.send(res.text);
+        if (!res || res.text.length === 0) {
+          message.channel.send('There was an error. I am sorry for your loss.');
+        } else {
+          message.channel.send(res.text);
+        }
       }).catch(err => {
         console.error(`Translate err: ${err}`);
       });
