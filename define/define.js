@@ -16,6 +16,7 @@ async function getDefinition(term) {
       'app_key': process.env.oxford_app_key || require('../auth.json').oxford_app_key
     }
   }
+  term = term.toLowerCase();
   let res = await fetch(`${oxfordBaseUrl}/${term}`, options);
   if (res.status === 200) {
     return res.json();
@@ -34,6 +35,7 @@ async function getDefinition(term) {
  * @param {String} term 
  */
 async function getUrbanDefinition(term) {
+  term = term.toLowerCase();
   let res = await fetch(`${urbanDictionaryBaseUrl}${term}`);
   if (res.status === 200) {
     let json = await res.json();

@@ -10,6 +10,7 @@ let define = require('./define/define');
 let emojis = require('./resources/emojis');
 let EmbedCreator = require('./raid/EmbedCreator');
 let pledges = require('./pledges/PledgeHelper');
+let strings = require('./resources/strings');
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -105,6 +106,24 @@ bot.on('message', async (message) => {
       message.channel.send(`*${definition}*`);
     } catch (err) {
       console.log(`ERROR:\n\tCommand <define> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  // The actual help command. Deletes after a minute.
+  if (command === 'halp') {
+    try {
+      let helpMessage = 'You\'ve reached the DJ Roomba help hotline! Here are your available commands:\n';
+      let helpStrings = Object.keys(strings.commands);
+      helpStrings.forEach((c) => {
+        helpMessage += `${c}: ${strings.commands[c]}\n\n`;
+      });
+      let m = await message.channel.send(helpMessage);
+      setTimeout(async () => {
+        await message.delete();
+        await m.delete();
+      }, 60000);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <halp> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
