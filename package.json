@@ -8,12 +8,15 @@
     "start": "node bot.js"
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
     "discord.io": "^2.5.3",
     "discord.js": "^11.4.2",
     "google-translate-api": "^2.3.0",
     "lodash": "^4.17.11",
     "node-fetch": "^2.3.0",
     "npm": "^6.6.0",
+    "puppeteer": "^1.12.2",
+    "request": "^2.88.0",
     "safe-eval": "^0.4.1",
     "winston": "^3.1.0"
   },

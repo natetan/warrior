@@ -3,11 +3,14 @@ let translate = require('google-translate-api');
 let logger = require('winston');
 let _ = require('lodash');
 
-let warrior = require('./resources/warrior-quotes.json');
+let quoteHelper = require('./quotes/QuoteHelper');
+let quotes = require('./resources/eso-quotes.json');
 let languages = require('./translate/TranslateHelper');
 let define = require('./define/define');
 let emojis = require('./resources/emojis');
 let EmbedCreator = require('./raid/EmbedCreator');
+let pledges = require('./pledges/PledgeHelper');
+let strings = require('./resources/strings');
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -73,75 +76,64 @@ bot.on('message', async (message) => {
   let args = message.content.slice(prefix.length).trim().split(/ +/g);
   let command = args.shift().toLowerCase();
 
+  /**
+   * Logs the channel's name and ID, and then deletes the message.
+   */
+  if (command === 'cid') {
+    try {
+      console.log(`The ID of channel #${message.channel.name} in guild <${message.guild.name}>: ${message.channel.id}`);
+      await message.delete();
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <cid> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  /**
+   * Uses the Oxford dictionary API to define words
+   * 
+   * @arg word - the word to define
+   */
+  if (command === 'define') {
+    try {
+      let word = args[0];
+      let defObject = await define.getDefinition(word);
+      let definition;
+      if (defObject.error) {
+        definition = `Error ${defObject.error}: **${defObject.errorMessage}**`;
+      } else {
+        definition = defObject.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0];
+      }
+      message.channel.send(`*${definition}*`);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <define> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  // The actual help command. Deletes after a minute.
+  if (command === 'halp') {
+    try {
+      let helpMessage = 'You\'ve reached the DJ Roomba help hotline! Here are your available commands:\n';
+      let helpStrings = Object.keys(strings.commands);
+      helpStrings.forEach((c) => {
+        helpMessage += `${c}: ${strings.commands[c]}\n\n`;
+      });
+      let m = await message.channel.send(helpMessage);
+      setTimeout(async () => {
+        await message.delete();
+        await m.delete();
+      }, 60000);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <halp> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
   // Snail's first command lmao
   if (command === 'help') {
-    await message.channel.send('Git Gud');
-  }
-
-  // Calculates the ping 
-  if (command === 'ping') {
-    const channelMessage = await message.channel.send('Ping?');
-    channelMessage.edit(`Pong! Latency is ${channelMessage.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
-  }
-
-  // Tells you who you are
-  if (command === 'whoami') {
-    await message.channel.send(`You are ${message.author} and your username is ${message.author.username}`);
-  }
-
-  /**
-   * Handles the roles of the members of the server
-   * 
-   * @arg all - gets all the roles and shows every user in those roles
-   * @arg count - gets all the roles and the counts of how many people are in those roles
-   * @arg default - gets the message sender's roles
-   */
-  if (command === 'roles') {
-    let channel = message.channel;
-    let results = {};
-    if (args[0] === 'all') {
-      message.guild.roles.forEach((v) => {
-        let members = v.members.map((m) => {
-          return m.displayName;
-        });
-        // Ignore the @everyone tag since that can have a lot of users
-        if (v.name !== '@everyone') {
-          results[v.name] = members;
-        }
-      });
-      results = EmbedCreator.createRoleEmbed(results, 'ALL');
-    } else if (args[0] === 'count') {
-      message.guild.roles.forEach((v) => {
-        results[v.name] = v.members.keyArray().length;
-      });
-      results = EmbedCreator.createRoleEmbed(results, 'COUNT');
-    } else {
-      message.member.roles.forEach((v, k) => {
-        results[k] = v.name;
-      });
-      results = EmbedCreator.createRoleEmbed(results, message.author.username);
+    try {
+      await message.channel.send('Git Gud');
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <help> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
-    // results = JSON.stringify(results, null, 2);
-    // await channel.send('```JSON' + `\n${results}\n` + '```');
-    await channel.send(results);
-  }
-
-  /**
-   * THIS IS A TEST
-   */
-  if (command === 'test') {
-    let m = await message.channel.send('TESTING:');
-    m.delete();
-  }
-
-  /**
-   * Upon popular demand, this will randomly display a quote from the warrior
-   */
-  if (command === 'warrior') {
-    let quotes = warrior.quotes;
-    let length = quotes.length;
-    let randomQuote = quotes[Math.floor(Math.random() * length)];
-    message.channel.send(randomQuote);
   }
 
   /**
@@ -154,57 +146,141 @@ bot.on('message', async (message) => {
     if (raidCommand === 'create') {
       let [day, time, title] = args;
       let msg = '';
+      try {
+        // Don't create if one exists
+        if (RaidEvent !== undefined) {
+          message.channel.send('There is already an event going on. Please delete it before creating a new one: \`!raid delete\`');
+          return;
+        }
 
-      // Don't create if one exists
-      if (RaidEvent !== undefined) {
-        message.channel.send('There is already an event going on. Please delete it before creating a new one: \`!raid delete\`');
-        return;
-      } else if (day !== undefined && title !== undefined && time !== undefined) {
-        RaidEvent = {
-          day: day,
-          time: time,
-          title: title
-        };
-        let raid = EmbedCreator.getRaidInfo(title);
-        if (raid instanceof Error) {
-          message.channel.send(raid.message);
+        if (day === undefined || title === undefined || time === undefined) {
+          message.channel.send(`I really don't think you know how to do this...TAKE A SEAT, YOUNG ${message.author}`);
+          return;
+        }
+        if (day !== undefined && title !== undefined && time !== undefined) {
+          RaidEvent = {
+            day: day,
+            time: time,
+            title: title
+          };
+          let raid = EmbedCreator.getRaidInfo(title);
+          if (raid instanceof Error) {
+            message.channel.send(raid.message);
+            RaidEvent = undefined;
+            return;
+          }
+          roster = EmbedCreator.createRoster(raid);
+          msg = EmbedCreator.createEmbed(day, time, title, roster);
+        }
+        if (msg instanceof Error) {
+          await message.channel.send(msg.message);
           RaidEvent = undefined;
           return;
         }
-        roster = EmbedCreator.createRoster(raid);
-        msg = EmbedCreator.createEmbed(day, time, title, roster);
+        RaidMessage = await message.channel.send(msg);
+      } catch (err) {
+        console.log(`ERROR:\n\tCommand <raid create> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
       }
-      if (msg instanceof Error) {
-        await message.channel.send(msg.message);
-        RaidEvent = undefined;
-        return;
-      }
-      RaidMessage = await message.channel.send(msg);
-      let examples = emojis.examples;
 
       try {
-        await RaidMessage.react(examples.mt);
-        await RaidMessage.react(examples.ot);
-        await RaidMessage.react(examples.heals);
-        await RaidMessage.react(examples.stam);
-        await RaidMessage.react(examples.mag);
-        await RaidMessage.react(examples.cancel);
+        await RaidMessage.react(bot.emojis.get(emojis.customEmojis.mt));
+        await RaidMessage.react(bot.emojis.get(emojis.customEmojis.ot));
+        await RaidMessage.react(bot.emojis.get(emojis.customEmojis.heals));
+        await RaidMessage.react(bot.emojis.get(emojis.customEmojis.mag));
+        await RaidMessage.react(bot.emojis.get(emojis.customEmojis.stam));
+        await RaidMessage.react(emojis.examples.cancel);
       } catch (err) {
-        console.error('One of the emojis failed to react.');
+        console.error('ERROR:\n<raid create> One of the emojis failed to react.');
       }
     }
-
     if (raidCommand === 'delete') {
-      let msg = 'No raid available';
-      if (RaidEvent !== undefined) {
-        msg = `Raid ${RaidEvent.title} deleted`
-        RaidEvent = undefined;
-        await RaidMessage.delete();
-        RaidMessage = undefined;
+      try {
+        let msg = 'No raid available';
+        if (RaidEvent !== undefined) {
+          msg = `Raid ${RaidEvent.title} deleted`
+          RaidEvent = undefined;
+          await RaidMessage.delete();
+          RaidMessage = undefined;
+        }
+        message.channel.send(msg);
+      } catch (err) {
+        console.log(`ERROR:\n\tCommand <raid delete> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
       }
-      message.channel.send(msg);
     }
   }
+
+  /**
+   * Handles the roles of the members of the server
+   * 
+   * @arg all - gets all the roles and shows every user in those roles
+   * @arg count - gets all the roles and the counts of how many people are in those roles
+   * @arg default - gets the message sender's roles
+   */
+  if (command === 'roles') {
+    try {
+      let channel = message.channel;
+      let results = {};
+      if (args[0] === 'all') {
+        message.guild.roles.forEach((v) => {
+          let members = v.members.map((m) => {
+            return m.displayName;
+          });
+          // Ignore the @everyone tag since that can have a lot of users
+          if (v.name !== '@everyone') {
+            results[v.name] = members;
+          }
+        });
+        results = EmbedCreator.createRoleEmbed(results, 'ALL');
+      } else if (args[0] === 'count') {
+        message.guild.roles.forEach((v) => {
+          results[v.name] = v.members.keyArray().length;
+        });
+        results = EmbedCreator.createRoleEmbed(results, 'COUNT');
+      } else {
+        message.member.roles.forEach((v, k) => {
+          results[k] = v.name;
+        });
+        results = EmbedCreator.createRoleEmbed(results, message.author.username);
+      }
+      await channel.send(results);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <roles> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  // Calculates the ping 
+  if (command === 'ping') {
+    try {
+      const channelMessage = await message.channel.send('Ping?');
+      channelMessage.edit(`Pong! Latency is ${channelMessage.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <ping> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  /**
+   * Gets the daily pledges
+   */
+  if (command === 'pledges') {
+    try {
+      let m = await message.channel.send('Grabbing pledges from esoleaderboards...');
+      let dailies = await pledges.getDailies();
+      m.edit(dailies);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <pledges> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  /**
+   * THIS IS A TEST - do experimental stuff here
+   */
+  // if (command === 'test') {
+  //   try {
+  //     await message.send('test');
+  //   } catch (err) {
+  //     console.log('Test failed');
+  //   }
+  // }
 
   /**
    * Uses the google translate api to translate text
@@ -214,35 +290,91 @@ bot.on('message', async (message) => {
    */
   if (command === 'translate') {
     // syntax: command targetLang text
-    let targetLang = args[0]
-    if (targetLang.toLowerCase() == 'chinese') {
-      targetLang = 'chinese-simplified';
-    }
-    args.shift();
-    let textToTranslate = args.join(' ');
+    try {
+      let targetLang = args[0]
+      if (targetLang.toLowerCase() == 'chinese') {
+        targetLang = 'chinese-simplified';
+      }
+      args.shift();
+      let textToTranslate = args.join(' ');
 
-    translate(textToTranslate, { to: languages.getCode(targetLang) }).then(res => {
-      message.channel.send(res.text);
-    }).catch(err => {
-      console.error(err);
-    });
+      translate(textToTranslate, { to: languages.getCode(targetLang) }).then(res => {
+        if (!res || res.text.length === 0) {
+          message.channel.send('There was an error. I am sorry for your loss.');
+        } else {
+          message.channel.send(res.text);
+        }
+      }).catch(err => {
+        console.error(`Translate err: ${err}`);
+      });
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <translate> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  // Send a message to SnF general chat
+  if (command === 'troll') {
+    try {
+      let phrase = args.join(' ');
+      let openRunsChannel = bot.channels.get(process.env.troll_channel_id || require('./auth.json').bot_test_general_channel_id);
+
+      if (!openRunsChannel) {
+        message.channel.send('Channel does not exist');
+      } else {
+        openRunsChannel.send(phrase);
+      }
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <troll> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
   }
 
   /**
-   * Uses the Oxford dictionary API to define words
+   * Uses the urban dictionary API to define words
    * 
    * @arg word - the word to define
    */
-  if (command === 'define') {
-    let word = args[0];
-    let defObject = await define.getDefinition(word);
-    let definition;
-    if (defObject.error) {
-      definition = `Error ${defObject.error}: **${defObject.errorMessage}**`;
-    } else {
-      definition = defObject.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0];
+  if (command === 'urban') {
+    try {
+      let word = args.join(' ');
+      let defObject = await define.getUrbanDefinition(word);
+      let definition;
+      if (!defObject || defObject.error) {
+        definition = `Either UrbanDictionary didn't have the term \`${word}\` or you're just looking up some strange things, my friend.`;
+      } else {
+        definition = defObject;
+      }
+      message.channel.send(`${definition}`);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <urban> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
-    message.channel.send(`*${definition}*`);
+  }
+
+  /**
+   * Upon popular demand, this will randomly display a quote from the warrior
+   */
+  if (command === 'warrior') {
+    try {
+      let warriorQuotes = quotes.warrior;
+      let randomQuote = quoteHelper.getQuote(warriorQuotes);
+      let warriorEmoji = bot.emojis.get(emojis.customEmojis.warrior);
+      message.channel.send(`${warriorEmoji} ${randomQuote}`);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <warrior> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  /**
+   * This uses quotes from other bosses if it exists.
+   * 
+   * options: !rakkhat, !zmaja
+   */
+  if (quoteHelper.quoteOptions.includes(command)) {
+    try {
+      let randomQuote = quoteHelper.getQuote(quotes[command]);
+      message.channel.send(randomQuote);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
   }
 });
 
@@ -256,56 +388,52 @@ bot.on('messageReactionAdd', async (reaction, user) => {
   if (reaction.message.embeds.length <= 0 || !RaidEvent) return;
   let player = user.username;
   if (!user.bot) {
+    let cust = emojis.customEmojis;
+    try {
+      // MT
+      if (reaction.emoji.id === cust.mt && roster.mt.count > roster.mt.players.length && !roster.mt.players.includes(player)) {
+        roster.mt.players.push(player);
+        update = true;
+      }
 
-    // check for each emoji to add either tank, healer, or dps
+      // OT
+      if (reaction.emoji.id === cust.ot && roster.ot.count > roster.ot.players.length && !roster.ot.players.includes(player)) {
+        roster.ot.players.push(player);
+      }
 
-    // MT
-    if (reaction.emoji.name === '🇹' && roster.mt.count > roster.mt.players.length && !roster.mt.players.includes(player)) {
-      //RaidEvent.roster.add(user.username, 'main');
-      roster.mt.players.push(player);
-    }
+      // healer
+      if (reaction.emoji.id === cust.heals && roster.healer.count > roster.healer.players.length && !roster.healer.players.includes(player)) {
+        roster.healer.players.push(player);
+      }
 
-    // OT
-    if (reaction.emoji.name === '🇴' && roster.ot.count > roster.ot.players.length && !roster.ot.players.includes(player)) {
-      // RaidEvent.roster.add(player, 'off');
-      roster.ot.players.push(player);
-    }
+      // stam
+      if (reaction.emoji.id === cust.stam && roster.stam.count > roster.stam.players.length && !roster.stam.players.includes(player)) {
+        roster.stam.players.push(player);
+      }
 
-    // healer
-    if (reaction.emoji.name === '🇭' && roster.healer.count > roster.healer.players.length && !roster.healer.players.includes(player)) {
-      // RaidEvent.roster.add(player, 'healer');
-      roster.healer.players.push(player);
-    }
+      // mag
+      if (reaction.emoji.id === cust.mag && roster.mag.count > roster.mag.players.length && !roster.mag.players.includes(player)) {
+        roster.mag.players.push(player);
+      }
 
-    // stam
-    if (reaction.emoji.name === '🇸' && roster.stam.count > roster.stam.players.length && !roster.stam.players.includes(player)) {
-      // RaidEvent.roster.add(player, 'stam');
-      roster.stam.players.push(player);
-    }
-
-    // mag
-    if (reaction.emoji.name === '🇲' && roster.mag.count > roster.mag.players.length && !roster.mag.players.includes(player)) {
-      // RaidEvent.roster.add(player, 'mag');
-      roster.mag.players.push(player);
-    }
-
-    // cancel
-    if (reaction.emoji.name === '❌') {
-      // RaidEvent.roster.remove(player);
-      Object.keys(roster).forEach((role) => {
-        _.remove(roster[role].players, (p) => {
-          return p === player;
+      // cancel
+      if (reaction.emoji.name === '❌') {
+        Object.keys(roster).forEach((role) => {
+          _.remove(roster[role].players, (p) => {
+            return p === player;
+          });
         });
-      });
+      }
+    } catch (err) {
+      console.log(`ERROR:\n\tEvent <messageReaction> failed.\n\tError: [${err}]`);
     }
 
-    try { 
+    try {
       reaction.message.edit(EmbedCreator.createEmbed(RaidEvent.day, RaidEvent.time, RaidEvent.title, roster));
       reaction.remove(user);
     } catch (err) {
       console.log(`Error with message edit or remove: ${err}`);
     }
   }
-
 });
 

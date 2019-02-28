@@ -13,6 +13,9 @@ let DateHelper = require('../helpers/DateHelper');
  */
 function getRaidInfo(raidName) {
   raidName = raidName.toLowerCase();
+  if (raidName === 'vmaw') {
+    raidName = 'vmol';
+  }
   if (!RaidInfo[raidName]) {
     return new Error(`Raid \`${raidName}\` does not exist, you scrub.`);
   }
@@ -54,7 +57,13 @@ function createEmbed(day, time, title, roster) {
   }
   let cpDisplay = '';
   raid.cp.forEach((setup) => {
-    cpDisplay += `${setup.type}:\n ${JSON.stringify(setup.points)}\n`;
+    let results = '';
+    let perks = Object.keys(setup.points);
+    perks.forEach((perk) => {
+      results += `${perk} - ${setup.points[perk]}\n`
+    });
+    cpDisplay += `**${setup.type}**:\n${results}\n`;
+    //cpDisplay += `${setup.type}:\n ${JSON.stringify(setup.points)}\n`;
   });
 
   let embed = new Discord.RichEmbed()
