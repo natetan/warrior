@@ -46,8 +46,13 @@ async function getUrbanDefinition(term) {
     }
     let definition = results[Math.floor(Math.random() * length)]['definition'];
     let tries = 5;
-    while (definition.length > 160 && tries > 0) {
+    let characterLimit = 200;
+    while (definition.length > characterLimit && tries > 0) {
       definition = results[Math.floor(Math.random() * length)]['definition'];
+      tries--;
+    }
+    if (tries < 1) {
+      definition = `After 5 tries, I could not find a definition that is less than ${characterLimit} characters.`;
     }
     // Use Regex to replace all square brackets
     definition = (definition + '').replace(/[\[\]']+/g, '');

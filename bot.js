@@ -72,6 +72,10 @@ bot.on('message', async (message) => {
     return;
   }
 
+  if (message.isMemberMentioned(bot.user)) {
+    message.channel.send('no u');
+  }
+
   if (!message.content.startsWith(prefix)) return;
   let args = message.content.slice(prefix.length).trim().split(/ +/g);
   let command = args.shift().toLowerCase();
