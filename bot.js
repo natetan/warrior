@@ -4,7 +4,7 @@ let logger = require('winston');
 let _ = require('lodash');
 
 let quoteHelper = require('./quotes/QuoteHelper');
-let quotes = require('./resources/eso-quotes.json');
+let quotes = require('./resources/quotes.json');
 let languages = require('./translate/TranslateHelper');
 let define = require('./define/define');
 let emojis = require('./resources/emojis');

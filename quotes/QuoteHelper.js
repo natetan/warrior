@@ -1,4 +1,4 @@
-let quoteOptions = ['zmaja', 'rakkhat'];
+let quoteOptions = ['zmaja', 'rakkhat', 'ramsay'];
 
 function getQuote(quotes) {
   let length = quotes.length;
