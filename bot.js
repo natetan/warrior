@@ -72,8 +72,14 @@ bot.on('message', async (message) => {
     return;
   }
 
-  if (message.isMemberMentioned(bot.user)) {
-    message.channel.send('no u');
+  if (message.isMemberMentioned(bot.user) && !message.mentions.everyone) {
+    let retorts = quotes.retort;
+    let randomQuote = quoteHelper.getQuote(retorts);
+    try {
+      await message.channel.send(randomQuote);
+    } catch (err) {
+      console.log(`ERROR:\n\ton bot mention.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
   }
 
   if (!message.content.startsWith(prefix)) return;
