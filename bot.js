@@ -146,6 +146,28 @@ bot.on('message', async (message) => {
     }
   }
 
+  // Purge
+  if (command === 'purge') {
+    // Will need to add an admin level check here
+    let isAdmin = false;
+    if (!isAdmin) {
+      return message.channel.send(`${message.author}, you do not have permission to use this command`);
+    }
+
+    const deleteCount = Number(args[0]);
+    let min = 1;
+    let max = 10;
+    if (!deleteCount || deleteCount < min || deleteCount > max) {
+      return message.reply(`Please provide a number between ${min} and ${max} for the number of messages to delete.`);
+    }
+    try {
+      const recentMessages = await message.channel.fetchMessages({ limit: deleteCount });
+      message.channel.bulkDelete(recentMessages).catch(error => message.reply(`Couldn't delete messages because of: ${error}`));
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <purge> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
   /**
    * Raid command that handles sign-up
    */
@@ -159,13 +181,11 @@ bot.on('message', async (message) => {
       try {
         // Don't create if one exists
         if (RaidEvent !== undefined) {
-          message.channel.send('There is already an event going on. Please delete it before creating a new one: \`!raid delete\`');
-          return;
+          return message.channel.send('There is already an event going on. Please delete it before creating a new one: \`!raid delete\`');
         }
 
         if (day === undefined || title === undefined || time === undefined) {
-          message.channel.send(`I really don't think you know how to do this...TAKE A SEAT, YOUNG ${message.author}`);
-          return;
+          return message.channel.send(`I really don't think you know how to do this...TAKE A SEAT, YOUNG ${message.author}`);
         }
         if (day !== undefined && title !== undefined && time !== undefined) {
           RaidEvent = {
@@ -175,17 +195,15 @@ bot.on('message', async (message) => {
           };
           let raid = EmbedCreator.getRaidInfo(title);
           if (raid instanceof Error) {
-            message.channel.send(raid.message);
             RaidEvent = undefined;
-            return;
+            return message.channel.send(raid.message);
           }
           roster = EmbedCreator.createRoster(raid);
           msg = EmbedCreator.createEmbed(day, time, title, roster);
         }
         if (msg instanceof Error) {
-          await message.channel.send(msg.message);
           RaidEvent = undefined;
-          return;
+          return await message.channel.send(msg.message);
         }
         RaidMessage = await message.channel.send(msg);
       } catch (err) {
