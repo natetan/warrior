@@ -120,6 +120,44 @@ bot.on('message', async (message) => {
     }
   }
 
+  /**GAMBLING GAME */
+  if (command === 'game') {
+    let gameCommand = args[0];
+    if (!gameCommand) {
+      return await message.channel.send(`Command !game requires parameters: !game <command>`);
+    }
+    let serverName = message.guild.name;
+    if (gameCommand === 'setup') {
+      try {
+        args.shift();
+        let amount = args[0];
+        let members = message.guild.members;
+        let players = [];
+        let startingAmount = amount || 200000;
+        members.forEach((m) => {
+          let member = {
+            name: m.user.username.toLowerCase(),
+            funds: startingAmount
+          };
+          players.push(member)
+        });
+        await firebase.setUpPlayers(serverName, players);
+        message.channel.send(`All players in this server have been setup with $${startingAmount}`);
+      } catch (err) {
+        console.log(`ERROR:\n\tCommand <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      }
+    } else if (gameCommand === 'funds') {
+      let funds = await firebase.getPlayerFunds(serverName, message.author.username.toLowerCase());
+      let msg = `${message.author}, you have $${funds}`;
+      if (!funds) {
+        msg = `Sorry, ${message.author} I could not retrieve your funds. Either there was an error on my end, or you're just a bum.`;
+      }
+      message.channel.send(msg);
+    } else {
+      return await message.channel.send(`!game ${gameCommand} is not valid.`);
+    }
+  }
+
   // The actual help command. Deletes after a minute.
   if (command === 'halp') {
     try {
@@ -147,10 +185,33 @@ bot.on('message', async (message) => {
     }
   }
 
+  // Calculates the ping 
+  if (command === 'ping') {
+    try {
+      const channelMessage = await message.channel.send('Ping?');
+      channelMessage.edit(`Pong! Latency is ${channelMessage.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <ping> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  /**
+   * Gets the daily pledges
+   */
+  if (command === 'pledges') {
+    try {
+      let m = await message.channel.send('Grabbing pledges from esoleaderboards...');
+      let dailies = await pledges.getDailies();
+      m.edit(dailies);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <pledges> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
   // Purge
   if (command === 'purge') {
     // Will need to add an admin level check here
-    let isAdmin = false;
+    let isAdmin = true;
     if (!isAdmin) {
       return message.channel.send(`${message.author}, you do not have permission to use this command`);
     }
@@ -277,29 +338,6 @@ bot.on('message', async (message) => {
     }
   }
 
-  // Calculates the ping 
-  if (command === 'ping') {
-    try {
-      const channelMessage = await message.channel.send('Ping?');
-      channelMessage.edit(`Pong! Latency is ${channelMessage.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
-    } catch (err) {
-      console.log(`ERROR:\n\tCommand <ping> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-    }
-  }
-
-  /**
-   * Gets the daily pledges
-   */
-  if (command === 'pledges') {
-    try {
-      let m = await message.channel.send('Grabbing pledges from esoleaderboards...');
-      let dailies = await pledges.getDailies();
-      m.edit(dailies);
-    } catch (err) {
-      console.log(`ERROR:\n\tCommand <pledges> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-    }
-  }
-
   /**
    * THIS IS A TEST - do experimental stuff here
    */
@@ -403,44 +441,6 @@ bot.on('message', async (message) => {
       message.channel.send(randomQuote);
     } catch (err) {
       console.log(`ERROR:\n\tCommand <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-    }
-  }
-
-  /**GAMBLING GAME */
-  if (command === 'game') {
-    let gameCommand = args[0];
-    if (!gameCommand) {
-      return await message.channel.send(`Command !game requires parameters: !game <command>`);
-    }
-    let serverName = message.guild.name;
-    if (gameCommand === 'setup') {
-      try {
-        args.shift();
-        let amount = args[0];
-        let members = message.guild.members;
-        let players = [];
-        let startingAmount = amount || 200000;
-        members.forEach((m) => {
-          let member = {
-            name: m.user.username.toLowerCase(),
-            funds: startingAmount
-          };
-          players.push(member)
-        });
-        await firebase.setUpPlayers(serverName, players);
-        message.channel.send(`All players in this server have been setup with $${startingAmount}`);
-      } catch (err) {
-        console.log(`ERROR:\n\tCommand <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-      }
-    } else if (gameCommand === 'funds') {
-      let funds = await firebase.getPlayerFunds(serverName, message.author.username.toLowerCase());
-      let msg = `${message.author.username}, you have $${funds}`;
-      if (!funds) {
-        msg = 'Sorry. I could not retrieve your funds.';
-      }
-      message.channel.send(msg);
-    } else {
-      return await message.channel.send(`!game ${gameCommand} is not valid.`);
     }
   }
 });
