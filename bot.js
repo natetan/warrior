@@ -11,6 +11,7 @@ let emojis = require('./resources/emojis');
 let EmbedCreator = require('./raid/EmbedCreator');
 let pledges = require('./pledges/PledgeHelper');
 let strings = require('./resources/strings');
+let firebase = require('./db/FirebaseHelper');
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -64,7 +65,7 @@ bot.on("guildDelete", guild => {
 bot.on('message', async (message) => {
   // Our bot needs to know if it will execute a command
   // It will listen for messages that will start with `!`
-  const prefix = '!';
+  const prefix = '?';
 
   // It's good practice to ignore other bots. This also makes your bot ignore itself
   // and not get into a spam loop called 'botception'
@@ -402,6 +403,44 @@ bot.on('message', async (message) => {
       message.channel.send(randomQuote);
     } catch (err) {
       console.log(`ERROR:\n\tCommand <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  /**GAMBLING GAME */
+  if (command === 'game') {
+    let gameCommand = args[0];
+    if (!gameCommand) {
+      return await message.channel.send(`Command !game requires parameters: !game <command>`);
+    }
+    let serverName = message.guild.name;
+    if (gameCommand === 'setup') {
+      try {
+        args.shift();
+        let amount = args[0];
+        let members = message.guild.members;
+        let players = [];
+        let startingAmount = amount || 200000;
+        members.forEach((m) => {
+          let member = {
+            name: m.user.username.toLowerCase(),
+            funds: startingAmount
+          };
+          players.push(member)
+        });
+        await firebase.setUpPlayers(serverName, players);
+        message.channel.send(`All players in this server have been setup with $${startingAmount}`);
+      } catch (err) {
+        console.log(`ERROR:\n\tCommand <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      }
+    } else if (gameCommand === 'funds') {
+      let funds = await firebase.getPlayerFunds(serverName, message.author.username.toLowerCase());
+      let msg = `${message.author.username}, you have $${funds}`;
+      if (!funds) {
+        msg = 'Sorry. I could not retrieve your funds.';
+      }
+      message.channel.send(msg);
+    } else {
+      return await message.channel.send(`!game ${gameCommand} is not valid.`);
     }
   }
 });
