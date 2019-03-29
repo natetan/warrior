@@ -1,3 +1,4 @@
+// Firebase setup
 let admin = require('firebase-admin');
 
 admin.initializeApp({
@@ -16,6 +17,13 @@ admin.initializeApp({
 
 let db = admin.database();
 
+/**
+ * Adds every member of the guild into the Firebase database with starting funds.
+ * Every member will have their played flag set to false
+ * 
+ * @param {String} serverName - Name of the server
+ * @param {Object} players - Array of player objects
+ */
 async function setUpPlayers(serverName, players) {
   players.forEach((player) => {
     let ref = db.ref(`${serverName}/${String(player.name).toLowerCase()}`);
@@ -26,6 +34,14 @@ async function setUpPlayers(serverName, players) {
   })
 }
 
+/**
+ * Gets the player's funds from the respective guild and returns it
+ * 
+ * @param {Object} serverName - Name of the server
+ * @param {String} player - Name of the player
+ * 
+ * @returns {Int}
+ */
 async function getPlayerFunds(serverName, player) {
   player = String(player).toLowerCase();
   let ref = db.ref(`${serverName}/${player}`);
@@ -39,6 +55,15 @@ async function getPlayerFunds(serverName, player) {
   return funds;
 }
 
+/**
+ * Updates a player's funds with the given amount and returns it
+ * 
+ * @param {Object} serverName - Name of the server
+ * @param {String} player - Name of the player
+ * @param {Int} amount - Amount of funds to add
+ * 
+ * @returns {Int}
+ */
 async function updatePlayerFunds(serverName, player, amount) {
   player = String(player).toLowerCase();
   let ref = db.ref(`${serverName}/${player}`);
@@ -55,6 +80,14 @@ async function updatePlayerFunds(serverName, player, amount) {
   return funds;
 }
 
+/**
+ * Returns true if the given user exists and false otherwise
+ * 
+ * @param {Object} serverName - Name of the server
+ * @param {String} player - Name of the player
+ * 
+ * @returns {boolean}
+ */
 async function userExists(serverName, player) {
   player = String(player).toLowerCase();
   let ref = db.ref(`${serverName}/${player}`);

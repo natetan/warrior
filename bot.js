@@ -194,7 +194,7 @@ bot.on('message', async (message) => {
       if (amount > senderFunds) {
         return message.channel.send(`${message.author}, you can't send more than you have. Balance: $${senderFunds}`);
       }
-      
+
       receiverFunds = await firebase.updatePlayerFunds(serverName, receiverName, amount);
       senderFunds = await firebase.updatePlayerFunds(serverName, message.author.username, amount * -1);
       return message.channel.send(`Transfer complete!\n\t${message.author.username}: $${senderFunds}\n\t${receiverName}: $${receiverFunds}`);
@@ -255,17 +255,17 @@ bot.on('message', async (message) => {
 
   // Purge
   if (command === 'purge') {
-    // Will need to add an admin level check here
-    let isAdmin = true;
-    if (!isAdmin) {
+    // Checks if the user is in a role that has permission
+    // So far, roles include: Admin
+    let hasPermission = message.member.roles.some(r => ['Admin'].includes(r.name));
+    if (!hasPermission) {
       return message.channel.send(`${message.author}, you do not have permission to use this command`);
     }
-
     const deleteCount = Number(args[0]);
     let min = 1;
     let max = 10;
-    if (!deleteCount || deleteCount < min || deleteCount > max) {
-      return message.reply(`Please provide a number between ${min} and ${max} for the number of messages to delete.`);
+    if (!deleteCount || deleteCount <= min || deleteCount > max) {
+      return message.reply(`Please provide a number between ${min} (exclusive) and ${max} (inclusive) for the number of messages to delete.`);
     }
     try {
       const recentMessages = await message.channel.fetchMessages({ limit: deleteCount });
