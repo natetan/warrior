@@ -128,6 +128,10 @@ bot.on('message', async (message) => {
     }
     let serverName = message.guild.name;
     if (gameCommand === 'setup') {
+      let hasPermission = message.member.roles.some(r => ['Admin', 'bot'].includes(r.name));
+      if (!hasPermission) {
+        return message.channel.send(`${message.author}, you do not have permission to use this command`);
+      }
       try {
         args.shift();
         let amount = args[0];
