@@ -65,7 +65,7 @@ bot.on("guildDelete", guild => {
 bot.on('message', async (message) => {
   // Our bot needs to know if it will execute a command
   // It will listen for messages that will start with `!`
-  const prefix = '?';
+  const prefix = '!';
 
   // It's good practice to ignore other bots. This also makes your bot ignore itself
   // and not get into a spam loop called 'botception'
@@ -133,10 +133,10 @@ bot.on('message', async (message) => {
         let amount = args[0];
         let members = message.guild.members;
         let players = [];
-        let startingAmount = amount || 200000;
+        let startingAmount = Number(amount) || 200000;
         members.forEach((m) => {
           let member = {
-            name: m.user.username.toLowerCase(),
+            name: m.user.username,
             funds: startingAmount
           };
           players.push(member)
@@ -147,12 +147,57 @@ bot.on('message', async (message) => {
         console.log(`ERROR:\n\tCommand <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
       }
     } else if (gameCommand === 'funds') {
-      let funds = await firebase.getPlayerFunds(serverName, message.author.username.toLowerCase());
+      let funds = await firebase.getPlayerFunds(serverName, message.author.username);
       let msg = `${message.author}, you have $${funds}`;
       if (!funds) {
         msg = `Sorry, ${message.author} I could not retrieve your funds. Either there was an error on my end, or you're just a bum.`;
       }
       message.channel.send(msg);
+    } else if (gameCommand === 'give') {
+      args.shift();
+      let receiver = args[0];
+      // Receiver looks like this: <@123456789>
+      receiver = receiver.replace(/\</g, '').replace(/\>/g, '').replace(/@/g, '');
+      let user;
+
+      // We'll try to parse a user from an @, and if that fails, use what they typed
+      // i.e. @Aerovertics vs aerovertics
+      try {
+        user = await bot.fetchUser(receiver);
+      } catch (err) {
+        console.log(`SUPPRESSING ERROR: ${err}. Attempting to use actual string.`);
+        user = receiver;
+      }
+
+      let receiverName = user.username || user;
+      let userExists = await firebase.userExists(serverName, receiverName);
+      if (!userExists) {
+        return message.channel.send(`${receiverName} does not exist in the database. Maybe they joined after the game has already been set up?`);
+      }
+
+      args.shift();
+      let amount = args[0];
+
+      if (!amount) {
+        return message.channel.send(`${message.author}, you must input an amount to give.`);
+      }
+
+      if (!Number(amount)) {
+        return message.channel.send(`${message.author}, that's not an integer I can parse, you vitamin-d deficient clown.`);
+      }
+
+      if (amount < 1) {
+        return message.channel.send(`${message.author}, you must give an amount greater than 0 you frugally poor dweeb.`);
+      }
+
+      let senderFunds = await firebase.getPlayerFunds(serverName, message.author.username);
+      if (amount > senderFunds) {
+        return message.channel.send(`${message.author}, you can't send more than you have. Balance: $${senderFunds}`);
+      }
+      
+      receiverFunds = await firebase.updatePlayerFunds(serverName, receiverName, amount);
+      senderFunds = await firebase.updatePlayerFunds(serverName, message.author.username, amount * -1);
+      return message.channel.send(`Transfer complete!\n\t${message.author.username}: $${senderFunds}\n\t${receiverName}: $${receiverFunds}`);
     } else {
       return await message.channel.send(`!game ${gameCommand} is not valid.`);
     }
