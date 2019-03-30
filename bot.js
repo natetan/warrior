@@ -153,7 +153,7 @@ bot.on('message', async (message) => {
     } else if (gameCommand === 'funds') {
       let funds = await firebase.getPlayerFunds(serverName, message.author.username);
       let msg = `${message.author}, you have $${funds}`;
-      if (!funds) {
+      if (!funds && funds > 0) {
         msg = `Sorry, ${message.author} I could not retrieve your funds. Either there was an error on my end, or you're just a bum.`;
       }
       message.channel.send(msg);
@@ -176,7 +176,7 @@ bot.on('message', async (message) => {
       let receiverName = user.username || user;
       let userExists = await firebase.userExists(serverName, receiverName);
       if (!userExists) {
-        return message.channel.send(`${receiverName} does not exist in the database. Maybe they joined after the game has already been set up?`);
+        return message.channel.send(`${receiverName} does not exist in the database. Maybe they joined after the game had already been set up?`);
       }
 
       args.shift();
