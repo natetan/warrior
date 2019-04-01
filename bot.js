@@ -128,7 +128,7 @@ bot.on('message', async (message) => {
     }
     let serverName = message.guild.name;
     if (gameCommand === 'setup') {
-      let hasPermission = message.member.roles.some(r => ['Admin', 'bot'].includes(r.name));
+      let hasPermission = message.member.roles.some(r => ['Admin', 'bot', 'Core'].includes(r.name));
       if (!hasPermission) {
         return message.channel.send(`${message.author}, you do not have permission to use this command`);
       }
@@ -145,12 +145,20 @@ bot.on('message', async (message) => {
           };
           players.push(member)
         });
-        await firebase.setUpPlayers(serverName, players);
-        message.channel.send(`All players in this server have been setup with $${startingAmount}`);
+        let errorNames = await firebase.setUpPlayers(serverName, players);
+        if (errorNames.length === 0) {
+          message.channel.send(`Setup complete! All players in this server have been setup with $${startingAmount}`);
+        } else {
+          message.channel.send(`Setup complete! However, here are the players that could not be added: \`${errorNames.toString()}\` because their names contained: \`.\`, \`#\`, \`$\`, \`[\`, or \`]\``);
+        }
       } catch (err) {
         console.log(`ERROR:\n\tCommand <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
       }
     } else if (gameCommand === 'funds') {
+      let userExists = await firebase.userExists(serverName, message.author.username);
+      if (!userExists) {
+        return message.channel.send('You do not exist in the database. I cannot retrieve your funds. I\'d add you in, but that\'s against protocol. Try `!help`.');
+      }
       let funds = await firebase.getPlayerFunds(serverName, message.author.username);
       let msg = `${message.author}, you have $${funds}`;
       if (!funds && funds > 0) {
@@ -158,6 +166,10 @@ bot.on('message', async (message) => {
       }
       message.channel.send(msg);
     } else if (gameCommand === 'give') {
+      let userExists = await firebase.userExists(serverName, message.author.username);
+      if (!userExists) {
+        return message.channel.send('You do not exist in the database. I cannot retrieve your funds. I\'d add you in, but that\'s against protocol. Try `!help`.');
+      }
       args.shift();
       let receiver = args[0];
       // Receiver looks like this: <@123456789>
@@ -174,9 +186,9 @@ bot.on('message', async (message) => {
       }
 
       let receiverName = user.username || user;
-      let userExists = await firebase.userExists(serverName, receiverName);
-      if (!userExists) {
-        return message.channel.send(`${receiverName} does not exist in the database. Maybe they joined after the game had already been set up?`);
+      let receiverExists = await firebase.userExists(serverName, receiverName);
+      if (!receiverExists) {
+        return message.channel.send(`${receiverName} does not exist in the database.`);
       }
 
       args.shift();
@@ -189,6 +201,8 @@ bot.on('message', async (message) => {
       if (!Number(amount)) {
         return message.channel.send(`${message.author}, that's not an integer I can parse, you vitamin-d deficient clown.`);
       }
+
+      amount = Math.floor(amount);
 
       if (amount < 1) {
         return message.channel.send(`${message.author}, you must give an amount greater than 0 you frugally poor dweeb.`);
@@ -261,7 +275,7 @@ bot.on('message', async (message) => {
   if (command === 'purge') {
     // Checks if the user is in a role that has permission
     // So far, roles include: Admin
-    let hasPermission = message.member.roles.some(r => ['Admin'].includes(r.name));
+    let hasPermission = message.member.roles.some(r => ['Admin', 'Core'].includes(r.name));
     if (!hasPermission) {
       return message.channel.send(`${message.author}, you do not have permission to use this command`);
     }

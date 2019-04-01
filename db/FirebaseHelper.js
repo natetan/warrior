@@ -25,13 +25,21 @@ let db = admin.database();
  * @param {Object} players - Array of player objects
  */
 async function setUpPlayers(serverName, players) {
+  let errorNames = [];
   players.forEach((player) => {
-    let ref = db.ref(`${serverName}/${String(player.name).toLowerCase()}`);
-    ref.set({
-      funds: player.funds,
-      played: false
-    })
-  })
+    let formattedName = String(player.name).toLowerCase();
+    try {
+      let ref = db.ref(`${serverName}/${formattedName}`);
+      ref.set({
+        funds: player.funds,
+        played: false
+      })
+    } catch (err) {
+      console.log(`Firebase error trying to set up ref: ${err}`);
+      errorNames.push(formattedName);
+    }
+  });
+  return errorNames;
 }
 
 /**
@@ -43,16 +51,21 @@ async function setUpPlayers(serverName, players) {
  * @returns {Int}
  */
 async function getPlayerFunds(serverName, player) {
-  player = String(player).toLowerCase();
-  let ref = db.ref(`${serverName}/${player}`);
-  let funds = null;
-  await ref.once('value', (snapshot) => {
-    let obj = snapshot.val();
-    funds = obj.funds;
-  }, (err) => {
-    console.log(`Failed to getPlayerFunds: ${err}`);
-  });
-  return funds;
+  try {
+    player = String(player).toLowerCase();
+    let ref = db.ref(`${serverName}/${player}`);
+    let funds = null;
+    await ref.once('value', (snapshot) => {
+      let obj = snapshot.val();
+      funds = obj.funds;
+    }, (err) => {
+      console.log(`Failed to getPlayerFunds: ${err}`);
+    });
+    return funds;
+  } catch (err) {
+    console.log(`Firebase error on getPlayerFunds(${serverName}, ${player}): ${err}`);
+    return null;
+  }
 }
 
 /**
@@ -65,19 +78,24 @@ async function getPlayerFunds(serverName, player) {
  * @returns {Int}
  */
 async function updatePlayerFunds(serverName, player, amount) {
-  player = String(player).toLowerCase();
-  let ref = db.ref(`${serverName}/${player}`);
-  amount = Number(amount);
-  let funds = null;
-  await ref.once('value', (snapshot) => {
-    let obj = snapshot.val();
-    funds = obj.funds + amount;
-    ref.update({
-      funds: funds,
-      played: true
+  try {
+    player = String(player).toLowerCase();
+    let ref = db.ref(`${serverName}/${player}`);
+    amount = Math.floor(Number(amount));
+    let funds = null;
+    await ref.once('value', (snapshot) => {
+      let obj = snapshot.val();
+      funds = obj.funds + amount;
+      ref.update({
+        funds: funds,
+        played: true
+      });
     });
-  });
-  return funds;
+    return funds;
+  } catch (err) {
+    console.log(`Firebase error on updatePlayerFunds(${serverName}, ${player}, ${amount}): ${err}`);
+    return null;
+  }
 }
 
 /**
@@ -89,11 +107,16 @@ async function updatePlayerFunds(serverName, player, amount) {
  * @returns {boolean}
  */
 async function userExists(serverName, player) {
-  player = String(player).toLowerCase();
-  let ref = db.ref(`${serverName}/${player}`);
-  return await ref.once('value').then((snapshot) => {
-    return snapshot.exists();
-  });
+  try {
+    player = String(player).toLowerCase();
+    let ref = db.ref(`${serverName}/${player}`);
+    return await ref.once('value').then((snapshot) => {
+      return snapshot.exists();
+    });
+  } catch (err) {
+    console.log(`Firebase error on userExists(${serverName}, ${player}): ${err}`);
+    return false;
+  }
 }
 
 module.exports = {
