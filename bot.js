@@ -28,6 +28,9 @@ var RaidMessage = undefined;
 // REMOVE LATER: testing some stuff here that will be refactored later
 var roster = [];
 
+// Important roles that have permission
+const permissionRoles = ['Admin', 'bot'];
+
 // Initialize Discord Bot
 const bot = new Discord.Client();
 
@@ -128,7 +131,7 @@ bot.on('message', async (message) => {
     }
     let serverName = message.guild.name;
     if (gameCommand === 'setup') {
-      let hasPermission = message.member.roles.some(r => ['Admin', 'bot', 'Core'].includes(r.name));
+      let hasPermission = message.member.roles.some(r => permissionRoles.includes(r.name));
       if (!hasPermission) {
         return message.channel.send(`${message.author}, you do not have permission to use this command`);
       }
@@ -275,7 +278,7 @@ bot.on('message', async (message) => {
   if (command === 'purge') {
     // Checks if the user is in a role that has permission
     // So far, roles include: Admin
-    let hasPermission = message.member.roles.some(r => ['Admin', 'Core'].includes(r.name));
+    let hasPermission = message.member.roles.some(r => permissionRoles.includes(r.name));
     if (!hasPermission) {
       return message.channel.send(`${message.author}, you do not have permission to use this command`);
     }
