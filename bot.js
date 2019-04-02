@@ -11,6 +11,7 @@ let emojis = require('./resources/emojis');
 let EmbedCreator = require('./raid/EmbedCreator');
 let pledges = require('./pledges/PledgeHelper');
 let strings = require('./resources/strings');
+let firebase = require('./db/FirebaseHelper');
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -26,6 +27,9 @@ var RaidMessage = undefined;
 
 // REMOVE LATER: testing some stuff here that will be refactored later
 var roster = [];
+
+// Important roles that have permission
+const permissionRoles = ['Admin', 'bot'];
 
 // Initialize Discord Bot
 const bot = new Discord.Client();
@@ -119,6 +123,107 @@ bot.on('message', async (message) => {
     }
   }
 
+  /**GAMBLING GAME */
+  if (command === 'game') {
+    let gameCommand = args[0];
+    if (!gameCommand) {
+      return await message.channel.send(`Command !game requires parameters: !game <command>`);
+    }
+    let serverName = message.guild.name;
+    if (gameCommand === 'setup') {
+      let hasPermission = message.member.roles.some(r => permissionRoles.includes(r.name));
+      if (!hasPermission) {
+        return message.channel.send(`${message.author}, you do not have permission to use this command`);
+      }
+      try {
+        args.shift();
+        let amount = args[0];
+        let members = message.guild.members;
+        let players = [];
+        let startingAmount = Number(amount) || 200000;
+        members.forEach((m) => {
+          let member = {
+            name: m.user.username,
+            funds: startingAmount
+          };
+          players.push(member)
+        });
+        let errorNames = await firebase.setUpPlayers(serverName, players);
+        if (errorNames.length === 0) {
+          message.channel.send(`Setup complete! All players in this server have been setup with $${startingAmount}`);
+        } else {
+          message.channel.send(`Setup complete! However, here are the players that could not be added: \`${errorNames.toString()}\` because their names contained: \`.\`, \`#\`, \`$\`, \`[\`, or \`]\``);
+        }
+      } catch (err) {
+        console.log(`ERROR:\n\tCommand <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      }
+    } else if (gameCommand === 'funds') {
+      let userExists = await firebase.userExists(serverName, message.author.username);
+      if (!userExists) {
+        return message.channel.send('You do not exist in the database. I cannot retrieve your funds. I\'d add you in, but that\'s against protocol. Try `!help`.');
+      }
+      let funds = await firebase.getPlayerFunds(serverName, message.author.username);
+      let msg = `${message.author}, you have $${funds}`;
+      if (!funds && funds > 0) {
+        msg = `Sorry, ${message.author} I could not retrieve your funds. Either there was an error on my end, or you're just a bum.`;
+      }
+      message.channel.send(msg);
+    } else if (gameCommand === 'give') {
+      let userExists = await firebase.userExists(serverName, message.author.username);
+      if (!userExists) {
+        return message.channel.send('You do not exist in the database. I cannot retrieve your funds. I\'d add you in, but that\'s against protocol. Try `!help`.');
+      }
+      args.shift();
+      let receiver = args[0];
+      // Receiver looks like this: <@123456789>
+      receiver = receiver.replace(/\</g, '').replace(/\>/g, '').replace(/@/g, '');
+      let user;
+
+      // We'll try to parse a user from an @, and if that fails, use what they typed
+      // i.e. @Aerovertics vs aerovertics
+      try {
+        user = await bot.fetchUser(receiver);
+      } catch (err) {
+        console.log(`SUPPRESSING ERROR: ${err}. Attempting to use actual string.`);
+        user = receiver;
+      }
+
+      let receiverName = user.username || user;
+      let receiverExists = await firebase.userExists(serverName, receiverName);
+      if (!receiverExists) {
+        return message.channel.send(`${receiverName} does not exist in the database.`);
+      }
+
+      args.shift();
+      let amount = args[0];
+
+      if (!amount) {
+        return message.channel.send(`${message.author}, you must input an amount to give.`);
+      }
+
+      if (!Number(amount)) {
+        return message.channel.send(`${message.author}, that's not an integer I can parse, you vitamin-d deficient clown.`);
+      }
+
+      amount = Math.floor(amount);
+
+      if (amount < 1) {
+        return message.channel.send(`${message.author}, you must give an amount greater than 0 you frugally poor dweeb.`);
+      }
+
+      let senderFunds = await firebase.getPlayerFunds(serverName, message.author.username);
+      if (amount > senderFunds) {
+        return message.channel.send(`${message.author}, you can't send more than you have. Balance: $${senderFunds}`);
+      }
+
+      receiverFunds = await firebase.updatePlayerFunds(serverName, receiverName, amount);
+      senderFunds = await firebase.updatePlayerFunds(serverName, message.author.username, amount * -1);
+      return message.channel.send(`Transfer complete!\n\t${message.author.username}: $${senderFunds}\n\t${receiverName}: $${receiverFunds}`);
+    } else {
+      return await message.channel.send(`!game ${gameCommand} is not valid.`);
+    }
+  }
+
   // The actual help command. Deletes after a minute.
   if (command === 'halp') {
     try {
@@ -146,6 +251,51 @@ bot.on('message', async (message) => {
     }
   }
 
+  // Calculates the ping 
+  if (command === 'ping') {
+    try {
+      const channelMessage = await message.channel.send('Ping?');
+      channelMessage.edit(`Pong! Latency is ${channelMessage.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <ping> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  /**
+   * Gets the daily pledges
+   */
+  if (command === 'pledges') {
+    try {
+      let m = await message.channel.send('Grabbing pledges from esoleaderboards...');
+      let dailies = await pledges.getDailies();
+      m.edit(dailies);
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <pledges> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  // Purge
+  if (command === 'purge') {
+    // Checks if the user is in a role that has permission
+    // So far, roles include: Admin
+    let hasPermission = message.member.roles.some(r => permissionRoles.includes(r.name));
+    if (!hasPermission) {
+      return message.channel.send(`${message.author}, you do not have permission to use this command`);
+    }
+    const deleteCount = Number(args[0]);
+    let min = 1;
+    let max = 10;
+    if (!deleteCount || deleteCount <= min || deleteCount > max) {
+      return message.reply(`Please provide a number between ${min} (exclusive) and ${max} (inclusive) for the number of messages to delete.`);
+    }
+    try {
+      const recentMessages = await message.channel.fetchMessages({ limit: deleteCount });
+      message.channel.bulkDelete(recentMessages).catch(error => message.reply(`Couldn't delete messages because of: ${error}`));
+    } catch (err) {
+      console.log(`ERROR:\n\tCommand <purge> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
   /**
    * Raid command that handles sign-up
    */
@@ -159,13 +309,11 @@ bot.on('message', async (message) => {
       try {
         // Don't create if one exists
         if (RaidEvent !== undefined) {
-          message.channel.send('There is already an event going on. Please delete it before creating a new one: \`!raid delete\`');
-          return;
+          return message.channel.send('There is already an event going on. Please delete it before creating a new one: \`!raid delete\`');
         }
 
         if (day === undefined || title === undefined || time === undefined) {
-          message.channel.send(`I really don't think you know how to do this...TAKE A SEAT, YOUNG ${message.author}`);
-          return;
+          return message.channel.send(`I really don't think you know how to do this...TAKE A SEAT, YOUNG ${message.author}`);
         }
         if (day !== undefined && title !== undefined && time !== undefined) {
           RaidEvent = {
@@ -175,17 +323,15 @@ bot.on('message', async (message) => {
           };
           let raid = EmbedCreator.getRaidInfo(title);
           if (raid instanceof Error) {
-            message.channel.send(raid.message);
             RaidEvent = undefined;
-            return;
+            return message.channel.send(raid.message);
           }
           roster = EmbedCreator.createRoster(raid);
           msg = EmbedCreator.createEmbed(day, time, title, roster);
         }
         if (msg instanceof Error) {
-          await message.channel.send(msg.message);
           RaidEvent = undefined;
-          return;
+          return await message.channel.send(msg.message);
         }
         RaidMessage = await message.channel.send(msg);
       } catch (err) {
@@ -255,29 +401,6 @@ bot.on('message', async (message) => {
       await channel.send(results);
     } catch (err) {
       console.log(`ERROR:\n\tCommand <roles> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-    }
-  }
-
-  // Calculates the ping 
-  if (command === 'ping') {
-    try {
-      const channelMessage = await message.channel.send('Ping?');
-      channelMessage.edit(`Pong! Latency is ${channelMessage.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
-    } catch (err) {
-      console.log(`ERROR:\n\tCommand <ping> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-    }
-  }
-
-  /**
-   * Gets the daily pledges
-   */
-  if (command === 'pledges') {
-    try {
-      let m = await message.channel.send('Grabbing pledges from esoleaderboards...');
-      let dailies = await pledges.getDailies();
-      m.edit(dailies);
-    } catch (err) {
-      console.log(`ERROR:\n\tCommand <pledges> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
