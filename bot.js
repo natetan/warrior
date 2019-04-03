@@ -1,5 +1,4 @@
 let Discord = require('discord.js');
-let translate = require('google-translate-api');
 let logger = require('winston');
 let _ = require('lodash');
 
@@ -12,6 +11,7 @@ let EmbedCreator = require('./raid/EmbedCreator');
 let pledges = require('./pledges/PledgeHelper');
 let strings = require('./resources/strings');
 let firebase = require('./db/FirebaseHelper');
+let sets = require('./sets/EsoSets');
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -29,7 +29,7 @@ var RaidMessage = undefined;
 var roster = [];
 
 // Important roles that have permission
-const permissionRoles = ['Admin', 'bot'];
+const permissionRoles = ['Admin', 'bot', 'Core'];
 
 // Initialize Discord Bot
 const bot = new Discord.Client();
@@ -82,7 +82,7 @@ bot.on('message', async (message) => {
     try {
       await message.channel.send(randomQuote);
     } catch (err) {
-      console.log(`ERROR:\n\ton bot mention.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`ERROR: on bot mention.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
@@ -98,7 +98,7 @@ bot.on('message', async (message) => {
       console.log(`The ID of channel #${message.channel.name} in guild <${message.guild.name}>: ${message.channel.id}`);
       await message.delete();
     } catch (err) {
-      console.log(`ERROR:\n\tCommand <cid> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`ERROR: Command <cid> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
@@ -119,7 +119,7 @@ bot.on('message', async (message) => {
       }
       message.channel.send(`*${definition}*`);
     } catch (err) {
-      console.log(`ERROR:\n\tCommand <define> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`ERROR: Command <define> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
@@ -155,7 +155,7 @@ bot.on('message', async (message) => {
           message.channel.send(`Setup complete! However, here are the players that could not be added: \`${errorNames.toString()}\` because their names contained: \`.\`, \`#\`, \`$\`, \`[\`, or \`]\``);
         }
       } catch (err) {
-        console.log(`ERROR:\n\tCommand <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+        console.log(`ERROR: Command <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
       }
     } else if (gameCommand === 'funds') {
       let userExists = await firebase.userExists(serverName, message.author.username);
@@ -238,7 +238,7 @@ bot.on('message', async (message) => {
         await m.delete();
       }, 60000);
     } catch (err) {
-      console.log(`ERROR:\n\tCommand <halp> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`ERROR: Command <halp> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
@@ -247,7 +247,7 @@ bot.on('message', async (message) => {
     try {
       await message.channel.send('Git Gud');
     } catch (err) {
-      console.log(`ERROR:\n\tCommand <help> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`ERROR: Command <help> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
@@ -257,7 +257,7 @@ bot.on('message', async (message) => {
       const channelMessage = await message.channel.send('Ping?');
       channelMessage.edit(`Pong! Latency is ${channelMessage.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
     } catch (err) {
-      console.log(`ERROR:\n\tCommand <ping> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`ERROR: Command <ping> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
@@ -270,7 +270,7 @@ bot.on('message', async (message) => {
       let dailies = await pledges.getDailies();
       m.edit(dailies);
     } catch (err) {
-      console.log(`ERROR:\n\tCommand <pledges> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`ERROR: Command <pledges> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
@@ -292,7 +292,7 @@ bot.on('message', async (message) => {
       const recentMessages = await message.channel.fetchMessages({ limit: deleteCount });
       message.channel.bulkDelete(recentMessages).catch(error => message.reply(`Couldn't delete messages because of: ${error}`));
     } catch (err) {
-      console.log(`ERROR:\n\tCommand <purge> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`ERROR: Command <purge> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
@@ -335,7 +335,7 @@ bot.on('message', async (message) => {
         }
         RaidMessage = await message.channel.send(msg);
       } catch (err) {
-        console.log(`ERROR:\n\tCommand <raid create> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+        console.log(`ERROR: Command <raid create> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
       }
 
       try {
@@ -360,7 +360,7 @@ bot.on('message', async (message) => {
         }
         message.channel.send(msg);
       } catch (err) {
-        console.log(`ERROR:\n\tCommand <raid delete> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+        console.log(`ERROR: Command <raid delete> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
       }
     }
   }
@@ -400,7 +400,33 @@ bot.on('message', async (message) => {
       }
       await channel.send(results);
     } catch (err) {
-      console.log(`ERROR:\n\tCommand <roles> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`ERROR: Command <roles> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  if (command === 'set') {
+    let query = args.join(' ');
+    if (!query) {
+      return message.channel.send('Command `!set` requires arguments: `!set <name>` or `!set <id>`.');
+    }
+    let m = await message.channel.send('Grabbing set from `eso-sets`...');
+    let set;
+    if (Number(query)) {
+      set = await sets.GetSetById(query);
+    } else {
+      set = await sets.GetSetByName(query);
+    }
+    if (!set || set.length < 1) {
+      return m.edit('There was an error with your query.');
+    }
+    if (set.length > 1) {
+      message.channel.send(`Found more than one set for your query: ${set.length} results.`);
+    }
+    try {
+      return m.edit(EmbedCreator.createSetEmbed(set))
+    } catch (err) {
+      console.log(`ERROR: Command <set> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      return m.edit('There was an error. I am sorry for your loss.');
     }
   }
 
@@ -441,7 +467,7 @@ bot.on('message', async (message) => {
         console.error(`Translate err: ${err}`);
       });
     } catch (err) {
-      console.log(`ERROR:\n\tCommand <translate> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`ERROR: Command <translate> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
@@ -457,7 +483,7 @@ bot.on('message', async (message) => {
         openRunsChannel.send(phrase);
       }
     } catch (err) {
-      console.log(`ERROR:\n\tCommand <troll> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`ERROR: Command <troll> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
@@ -478,7 +504,7 @@ bot.on('message', async (message) => {
       }
       message.channel.send(`${definition}`);
     } catch (err) {
-      console.log(`ERROR:\n\tCommand <urban> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`ERROR: Command <urban> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
@@ -492,7 +518,7 @@ bot.on('message', async (message) => {
       let warriorEmoji = bot.emojis.get(emojis.customEmojis.warrior);
       message.channel.send(`${warriorEmoji} ${randomQuote}`);
     } catch (err) {
-      console.log(`ERROR:\n\tCommand <warrior> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`ERROR: Command <warrior> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
@@ -506,7 +532,7 @@ bot.on('message', async (message) => {
       let randomQuote = quoteHelper.getQuote(quotes[command]);
       message.channel.send(randomQuote);
     } catch (err) {
-      console.log(`ERROR:\n\tCommand <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`ERROR: Command <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 });
@@ -558,7 +584,7 @@ bot.on('messageReactionAdd', async (reaction, user) => {
         });
       }
     } catch (err) {
-      console.log(`ERROR:\n\tEvent <messageReaction> failed.\n\tError: [${err}]`);
+      console.log(`ERROR: Event <messageReaction> failed.\n\tError: [${err}]`);
     }
 
     try {

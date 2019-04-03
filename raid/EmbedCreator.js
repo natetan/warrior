@@ -126,9 +126,49 @@ function createRoleEmbed(data, type) {
   return embed;
 }
 
+function createSetEmbed(set) {
+  let display = '';
+  if (set.length > 1) {
+    let embed = new Discord.RichEmbed()
+      .setColor('#ff6600')
+      .setTitle('Multiple sets')
+      .setDescription('Try grabbing the ID instead. `!set <id>`')
+      .setThumbnail(logos['2']);
+    set.forEach((s) => {
+      display += `[${s.id}] - [${s.name}](${s.url})\n`;
+    });
+    embed.addField('Sets', display);
+    return embed;
+  }
+  if (Array.isArray(set)) {
+    set = set[0];
+  }
+  let url = set.url;
+  let traits = set.traits_needed ? ` (${set.traits_needed} traits)` : '';
+  let embed = new Discord.RichEmbed()
+    .setColor('#ff6600')
+    .setTitle(set.name)
+    .setDescription(`ID: ${set.id}\nType: ${set.type}${traits}\nLocation: ${set.location}`)
+    .setURL(url)
+    .setThumbnail(logos['2']);
+
+  for (let i = 1; i <= 5; i++) {
+    let bonus = set[`bonus_item_${i}`];
+    if (bonus) {
+      let items = 'items';
+      if (i === 1) {
+        items = 'item';
+      }
+      embed.addField(`(${i} ${items}):`, set[`bonus_item_${i}`]);
+    }
+  }
+  return embed;
+}
+
 module.exports = {
   getRaidInfo,
   createRoster,
   createEmbed: createEmbed,
-  createRoleEmbed: createRoleEmbed
+  createRoleEmbed: createRoleEmbed,
+  createSetEmbed: createSetEmbed
 }
