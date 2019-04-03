@@ -126,6 +126,14 @@ function createRoleEmbed(data, type) {
   return embed;
 }
 
+/**
+ * Creates an embed for a set. If multiple sets are found, they 
+ * will be shown in a list format.
+ * 
+ * @param {Object} set - json representing an eso set
+ * 
+ * Returns a Discord RichEmbed
+ */
 function createSetEmbed(set) {
   let display = '';
   if (set.length > 1) {

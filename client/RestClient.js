@@ -1,6 +1,14 @@
 let fetch = require('node-fetch');
 let fs = require('fs');
 
+/**
+ * Gets a json response from the endpoint
+ * 
+ * @param {string} url - url
+ * @param {Object} options - request options (optional)
+ * 
+ * Returns json
+ */
 async function GetAsync(url, options = {}) {
   try {
     let res = await fetch(url, options);
@@ -11,10 +19,19 @@ async function GetAsync(url, options = {}) {
   }
 }
 
-async function SaveJsonAsync(url, options = {}) {
+/**
+ * Saves json into a file
+ * 
+ * @param {string} url - url
+ * @param {string} fileName - name of the file to save
+ * @param {Object} options - request options (optional)
+ * 
+ * Returns true if successful and false otherwise
+ */
+async function SaveJsonAsync(url, fileName, options = {}) {
   try {
     let json = await GetAsync(url, options);
-    await fs.writeFileSync('eso_sets.json', JSON.stringify(json, null, 2), (err) => {
+    await fs.writeFileSync(fileName, JSON.stringify(json, null, 2), (err) => {
       console.log(`File save error: ${err}`);
     });
     return true;

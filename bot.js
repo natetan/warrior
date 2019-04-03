@@ -404,6 +404,13 @@ bot.on('message', async (message) => {
     }
   }
 
+  /**
+   * Gets sets from https://eso-sets.com
+   * 
+   * Users can either look for an item string or its ID.
+   * 
+   * @arg query - name of item or id of item
+   */
   if (command === 'set') {
     let query = args.join(' ');
     if (!query) {

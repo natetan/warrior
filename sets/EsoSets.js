@@ -5,6 +5,9 @@ const eso_sets_api_base_url = 'https://beast.pathfindermediagroup.com/api/eso/se
 const eso_sets_base_url = 'https://eso-sets.com/set';
 const eso_sets_auth = process.env.eso_sets_token || require('../auth.json').eso_sets_token;
 
+/**
+ * Downloads all the eso sets as a json file called eso_sets.json
+ */
 async function DownloadSets() {
   try {
     let options = {
@@ -13,7 +16,7 @@ async function DownloadSets() {
         'Authorization': `Basic ${base64.encode(eso_sets_auth)}`
       }
     };
-    let success = await client.SaveJsonAsync(eso_sets_api_base_url, options);
+    let success = await client.SaveJsonAsync(eso_sets_api_base_url, 'eso_sets.json', options);
     if (success) {
       console.log('Completed!');
     } else {
@@ -24,6 +27,13 @@ async function DownloadSets() {
   }
 }
 
+/**
+ * Gets a set from eso-sets
+ * 
+ * @param {String} setName - name of set
+ * 
+ * Returns a json representation of a set
+ */
 async function GetSetByName(setName) {
   try {
     let options = {
@@ -46,6 +56,13 @@ async function GetSetByName(setName) {
   }
 }
 
+/**
+ * Gets a set from eso-sets
+ * 
+ * @param {Int} id - id of set
+ * 
+ * Returns a json representation of a set
+ */
 async function GetSetById(id) {
   try {
     if (!Number(id)) {
