@@ -14,10 +14,10 @@ async function GetAsync(url, options = {}) {
 async function SaveJsonAsync(url, options = {}) {
   try {
     let json = await GetAsync(url, options);
-    fs.writeFileSync('results.json', JSON.stringify(json, null, 2), (err) => {
+    await fs.writeFileSync('eso_sets.json', JSON.stringify(json, null, 2), (err) => {
       console.log(`File save error: ${err}`);
-      return true;
     });
+    return true;
   } catch (e) {
     console.log(`Error in <RestClient.SaveJsonAsync()>: ${err}`);
     return false;
