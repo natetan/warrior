@@ -8,11 +8,11 @@
     "start": "node bot.js"
   },
   "dependencies": {
+    "base-64": "^0.1.0",
     "cheerio": "^1.0.0-rc.2",
     "discord.io": "^2.5.3",
     "discord.js": "^11.4.2",
     "firebase-admin": "^7.1.1",
-    "google-translate-api": "^2.3.0",
     "lodash": "^4.17.11",
     "node-fetch": "^2.3.0",
     "npm": "^6.6.0",
