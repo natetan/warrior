@@ -43,7 +43,7 @@ bot.login(token);
  */
 bot.on('ready', () => {
   logger.info('Connected');
-  logger.info('Logged in as: ');
+  logger.info(`Client ID: ${bot.user.id}`);
   logger.info(bot.user.tag);
   console.log(`Bot has started, with ${bot.users.size} users, in ${bot.channels.size} channels of ${bot.guilds.size} guilds.`);
   bot.user.setActivity(`Serving ${bot.guilds.size} servers`);
@@ -99,6 +99,32 @@ bot.on('message', async (message) => {
       await message.delete();
     } catch (err) {
       console.log(`ERROR: Command <cid> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  /**
+   * Get the user's ID, and then deletes the message
+   */
+  if (command === 'uid') {
+    try {
+      console.log(`The ID of user ${message.author.username} is ${message.author.id}`);
+      await message.delete();
+    } catch (err) {
+      console.log(`ERROR: Command <uid> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  // Logs out all the members and their ids in the channel and deletes the message
+  if (command === 'ids') {
+    try {
+      let res = {};
+      message.channel.members.forEach((member) => {
+        res[member.user.username] = member.user.id
+      });
+      console.log(res);
+      await message.delete();
+    } catch (err) {
+      console.log(`ERROR: Command <ids> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
