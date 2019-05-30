@@ -12,6 +12,7 @@ let pledges = require('./pledges/PledgeHelper');
 let strings = require('./resources/strings');
 let firebase = require('./db/FirebaseHelper');
 let sets = require('./sets/EsoSets');
+let doggo = require('./doggo/Doggo');
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -99,6 +100,16 @@ bot.on('message', async (message) => {
       await message.delete();
     } catch (err) {
       console.log(`ERROR: Command <cid> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+
+  if (command === 'doggo') {
+    try {
+      let doggoUrl = await doggo.getRandomDoggo();
+      message.channel.send(doggoUrl.url);
+    } catch (err) {
+      console.log(`ERROR: Command <doggo> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      message.channel.send('There was an error. No doggos for you.');
     }
   }
 
