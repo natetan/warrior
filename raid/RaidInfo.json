@@ -187,5 +187,31 @@
         }
       }
     ]
+  },
+  "vss": {
+    "name": "Sunspire",
+    "short_name": "vSS",
+    "location": "Elsweyr",
+    "options": ["HM"],
+    "isMini": false,
+    "comp": {
+      "mt": 1,
+      "ot": 1,
+      "healer": 2,
+      "stam": 4,
+      "mag": 4
+    },
+    "cp": [
+      {
+        "type": "Regular",
+        "points": {
+          "Elemental Defender": "49",
+          "Hardy": "43",
+          "Thick Skinned": "81",
+          "Iron Clad": "81",
+          "Spell Shield": "16"
+        }
+      }
+    ]
   }
 }

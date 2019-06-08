@@ -20,15 +20,6 @@ logger.add(new logger.transports.Console, {
   colorize: true
 });
 
-// Keeps track of the RaidEvent
-var RaidEvent = undefined;
-
-// Keeps track of the Raid message
-var RaidMessage = undefined;
-
-// REMOVE LATER: testing some stuff here that will be refactored later
-var roster = [];
-
 // Important roles that have permission
 const permissionRoles = ['Admin', 'bot', 'Core'];
 
@@ -56,6 +47,7 @@ bot.on('ready', () => {
 bot.on("guildCreate", guild => {
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
   bot.user.setActivity(`Serving ${bot.guilds.size} servers`);
+  firebase.initializeGuild(guild.id, guild.name, guild.owner.displayName);
 });
 
 /**
@@ -160,13 +152,28 @@ bot.on('message', async (message) => {
     }
   }
 
+  // Firebase stuff
+  if (command === 'fb') {
+    let fbCommand = args[0];
+    if (!fbCommand) {
+      return await message.channel.send(`Command !fb requires parameters: !fb <command>`);
+    }
+    if (fbCommand === 'init') {
+      let guildId = message.guild.id;
+      let guildName = message.guild.name;
+      let guildOwner = message.guild.owner.displayName;
+      await firebase.initializeGuild(guildId, guildName, guildOwner);
+      return message.delete();
+    }
+  }
+
   /**GAMBLING GAME */
   if (command === 'game') {
     let gameCommand = args[0];
     if (!gameCommand) {
       return await message.channel.send(`Command !game requires parameters: !game <command>`);
     }
-    let serverName = message.guild.name;
+    let guildId = message.guild.id;
     if (gameCommand === 'setup') {
       let hasPermission = message.member.roles.some(r => permissionRoles.includes(r.name));
       if (!hasPermission) {
@@ -185,7 +192,7 @@ bot.on('message', async (message) => {
           };
           players.push(member)
         });
-        let errorNames = await firebase.setUpPlayers(serverName, players);
+        let errorNames = await firebase.setUpPlayers(guildId, players);
         if (errorNames.length === 0) {
           message.channel.send(`Setup complete! All players in this server have been setup with $${startingAmount}`);
         } else {
@@ -195,18 +202,18 @@ bot.on('message', async (message) => {
         console.log(`ERROR: Command <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
       }
     } else if (gameCommand === 'funds') {
-      let userExists = await firebase.userExists(serverName, message.author.username);
+      let userExists = await firebase.userExists(guildId, message.author.username);
       if (!userExists) {
         return message.channel.send('You do not exist in the database. I cannot retrieve your funds. I\'d add you in, but that\'s against protocol. Try `!help`.');
       }
-      let funds = await firebase.getPlayerFunds(serverName, message.author.username);
+      let funds = await firebase.getPlayerFunds(guildId, message.author.username);
       let msg = `${message.author}, you have $${funds}`;
       if (!funds && funds > 0) {
         msg = `Sorry, ${message.author} I could not retrieve your funds. Either there was an error on my end, or you're just a bum.`;
       }
       message.channel.send(msg);
     } else if (gameCommand === 'give') {
-      let userExists = await firebase.userExists(serverName, message.author.username);
+      let userExists = await firebase.userExists(guildId, message.author.username);
       if (!userExists) {
         return message.channel.send('You do not exist in the database. I cannot retrieve your funds. I\'d add you in, but that\'s against protocol. Try `!help`.');
       }
@@ -226,7 +233,7 @@ bot.on('message', async (message) => {
       }
 
       let receiverName = user.username || user;
-      let receiverExists = await firebase.userExists(serverName, receiverName);
+      let receiverExists = await firebase.userExists(guildId, receiverName);
       if (!receiverExists) {
         return message.channel.send(`${receiverName} does not exist in the database.`);
       }
@@ -248,13 +255,13 @@ bot.on('message', async (message) => {
         return message.channel.send(`${message.author}, you must give an amount greater than 0 you frugally poor dweeb.`);
       }
 
-      let senderFunds = await firebase.getPlayerFunds(serverName, message.author.username);
+      let senderFunds = await firebase.getPlayerFunds(guildId, message.author.username);
       if (amount > senderFunds) {
         return message.channel.send(`${message.author}, you can't send more than you have. Balance: $${senderFunds}`);
       }
 
-      receiverFunds = await firebase.updatePlayerFunds(serverName, receiverName, amount);
-      senderFunds = await firebase.updatePlayerFunds(serverName, message.author.username, amount * -1);
+      receiverFunds = await firebase.updatePlayerFunds(guildId, receiverName, amount);
+      senderFunds = await firebase.updatePlayerFunds(guildId, message.author.username, amount * -1);
       return message.channel.send(`Transfer complete!\n\t${message.author.username}: $${senderFunds}\n\t${receiverName}: $${receiverFunds}`);
     } else {
       return await message.channel.send(`!game ${gameCommand} is not valid.`);
@@ -334,9 +341,9 @@ bot.on('message', async (message) => {
   }
 
   /**
-   * Raid command that handles sign-up
+   * Raid command that handles sign-up (CURRENTLY ON HOLD)
    */
-  if (command === 'raid') {
+  if (command === 'raidllllllllll') {
     // First argument
     let raidCommand = args[0];
     args.shift();
@@ -475,6 +482,97 @@ bot.on('message', async (message) => {
   }
 
   /**
+   * Join trials!
+   * 
+   * Usage: 
+   *  - trial create <day> <time> <trial> <eventName>
+   *  - trial join <eventName> <role> <?note>
+   *  - trial leave <eventName>
+   */
+  if (command === 'trial') {
+    let guildId = message.guild.id;
+    let trialCommand = args[0];
+    args.shift();
+    if (trialCommand === 'create') {
+      let [day, time, trial, eventName] = args;
+      if (day !== undefined && time !== undefined && trial !== undefined && eventName !== undefined) {
+        await firebase.createRaid(guildId, day, time, trial, eventName);
+        let raid = await firebase.getRaid(guildId, eventName);
+        return message.channel.send(EmbedCreator.createEmbed(raid.day, raid.time, raid.trial, raid.name, raid.roster));
+      } else {
+        return message.channel.send('Could not create trial - please check command params: `trial create <day> <time> <trial> <eventName>`')
+      }
+    } else if (trialCommand === 'join') {
+      let [eventName, role, note] = args;
+      if (eventName !== undefined && role !== undefined) {
+        role = role.toLowerCase();
+        let eventExists = await firebase.raidExists(guildId, eventName);
+        if (!eventExists) {
+          return message.channel.send(`Event \`${eventName}\` does not exist.`);
+        }
+        let raid = await firebase.getRaid(guildId, eventName);
+        let roster = raid.roster;
+        let mt = ['mt', 'main-tank', 'maintank', 'main'];
+        let ot = ['ot', 'off-tank', 'offtank', 'off'];
+        let h = ['heal', 'heals', 'healer'];
+        let stam = ['stam', 'stam-dps'];
+        let mag = ['mag', 'mag-dps'];
+
+        if (mt.includes(role)) {
+          role = 'mt';
+        } else if (ot.includes(role)) {
+          role = 'ot';
+        } else if (h.includes(role)) {
+          role = 'healer';
+        } else if (stam.includes(role)) {
+          role = 'stam';
+        } else if (mag.includes(role)) {
+          role = 'mag';
+        } else {
+          return message.channel.send(`Invalid role: ${role}`);
+        }
+        let players = roster[role].players;
+        if (!players) {
+          players = {};
+        }
+
+        if (Object.keys(players).length < roster[role].count) {
+          players[message.author.username] = {
+            note: note ? `${message.author.username} - ${note}` : message.author.username
+          }
+        }
+        roster[role].players = players;
+        await firebase.updateRaid(guildId, eventName, roster);
+        raid = await firebase.getRaid(guildId, eventName);
+        return message.channel.send(EmbedCreator.createEmbed(raid.day, raid.time, raid.trial, raid.name, raid.roster));
+      } else {
+        return message.channel.search('Could not join trial -- please check params: `trial join <eventName> <role> (note -- optional one word note)`');
+      }
+    } else if (trialCommand === 'leave') {
+      let [eventName] = args;
+      if (eventName !== undefined) {
+        let eventExists = await firebase.raidExists(guildId, eventName);
+        if (!eventExists) {
+          return message.channel.send(`Event \`${eventName}\` does not exist.`);
+        }
+        let raid = await firebase.getRaid(guildId, eventName);
+        let roster = raid.roster;
+        Object.keys(roster).forEach((role) => {
+          let players = roster[role].players;
+          if (players) {
+            delete players[message.author.username];
+          }
+        })
+        await firebase.updateRaid(guildId, eventName, roster);
+        raid = await firebase.getRaid(guildId, eventName);
+        return message.channel.send(EmbedCreator.createEmbed(raid.day, raid.time, raid.trial, raid.name, raid.roster));
+      }
+    } else {
+
+    }
+  }
+
+  /**
    * THIS IS A TEST - do experimental stuff here
    */
   // if (command === 'test') {
@@ -586,57 +684,57 @@ bot.on('message', async (message) => {
  * The goal for this is to allow users to sign up for a roster by reacting
  */
 
-bot.on('messageReactionAdd', async (reaction, user) => {
-  // Makes sure that this event only occurs on certain messages.
-  if (reaction.message.embeds.length <= 0 || !RaidEvent) return;
-  let player = user.username;
-  if (!user.bot) {
-    let cust = emojis.customEmojis;
-    try {
-      // MT
-      if (reaction.emoji.id === cust.mt && roster.mt.count > roster.mt.players.length && !roster.mt.players.includes(player)) {
-        roster.mt.players.push(player);
-        update = true;
-      }
+// bot.on('messageReactionAdd', async (reaction, user) => {
+//   // Makes sure that this event only occurs on certain messages.
+//   if (reaction.message.embeds.length <= 0 || !RaidEvent) return;
+//   let player = user.username;
+//   if (!user.bot) {
+//     let cust = emojis.customEmojis;
+//     try {
+//       // MT
+//       if (reaction.emoji.id === cust.mt && roster.mt.count > roster.mt.players.length && !roster.mt.players.includes(player)) {
+//         roster.mt.players.push(player);
+//         update = true;
+//       }
 
-      // OT
-      if (reaction.emoji.id === cust.ot && roster.ot.count > roster.ot.players.length && !roster.ot.players.includes(player)) {
-        roster.ot.players.push(player);
-      }
+//       // OT
+//       if (reaction.emoji.id === cust.ot && roster.ot.count > roster.ot.players.length && !roster.ot.players.includes(player)) {
+//         roster.ot.players.push(player);
+//       }
 
-      // healer
-      if (reaction.emoji.id === cust.heals && roster.healer.count > roster.healer.players.length && !roster.healer.players.includes(player)) {
-        roster.healer.players.push(player);
-      }
+//       // healer
+//       if (reaction.emoji.id === cust.heals && roster.healer.count > roster.healer.players.length && !roster.healer.players.includes(player)) {
+//         roster.healer.players.push(player);
+//       }
 
-      // stam
-      if (reaction.emoji.id === cust.stam && roster.stam.count > roster.stam.players.length && !roster.stam.players.includes(player)) {
-        roster.stam.players.push(player);
-      }
+//       // stam
+//       if (reaction.emoji.id === cust.stam && roster.stam.count > roster.stam.players.length && !roster.stam.players.includes(player)) {
+//         roster.stam.players.push(player);
+//       }
 
-      // mag
-      if (reaction.emoji.id === cust.mag && roster.mag.count > roster.mag.players.length && !roster.mag.players.includes(player)) {
-        roster.mag.players.push(player);
-      }
+//       // mag
+//       if (reaction.emoji.id === cust.mag && roster.mag.count > roster.mag.players.length && !roster.mag.players.includes(player)) {
+//         roster.mag.players.push(player);
+//       }
 
-      // cancel
-      if (reaction.emoji.name === '❌') {
-        Object.keys(roster).forEach((role) => {
-          _.remove(roster[role].players, (p) => {
-            return p === player;
-          });
-        });
-      }
-    } catch (err) {
-      console.log(`ERROR: Event <messageReaction> failed.\n\tError: [${err}]`);
-    }
+//       // cancel
+//       if (reaction.emoji.name === '❌') {
+//         Object.keys(roster).forEach((role) => {
+//           _.remove(roster[role].players, (p) => {
+//             return p === player;
+//           });
+//         });
+//       }
+//     } catch (err) {
+//       console.log(`ERROR: Event <messageReaction> failed.\n\tError: [${err}]`);
+//     }
 
-    try {
-      reaction.message.edit(EmbedCreator.createEmbed(RaidEvent.day, RaidEvent.time, RaidEvent.title, roster));
-      reaction.remove(user);
-    } catch (err) {
-      console.log(`Error with message edit or remove: ${err}`);
-    }
-  }
-});
+//     try {
+//       reaction.message.edit(EmbedCreator.createEmbed(RaidEvent.day, RaidEvent.time, RaidEvent.title, roster));
+//       reaction.remove(user);
+//     } catch (err) {
+//       console.log(`Error with message edit or remove: ${err}`);
+//     }
+//   }
+// });
 

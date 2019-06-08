@@ -25,7 +25,7 @@ function getRaidInfo(raidName) {
 /**
  * Creates a roster based on the raid
  * 
- * @param {String} raid - Raid name
+ * @param {Object} raid - Raid object
  * @returns {Object}
  */
 function createRoster(raid) {
@@ -49,12 +49,12 @@ function createRoster(raid) {
  * @param {String} title - raidName
  * @param {Object} roster - Roster object
  */
-function createEmbed(day, time, title, roster) {
+function createEmbed(day, time, title, eventName, roster) {
   let raid = getRaidInfo(title);
-  let date = DateHelper.getNextDay(day);
-  if (date instanceof Error) {
-    return date;
-  }
+  // let date = DateHelper.getNextDay(day);
+  // if (date instanceof Error) {
+  //   return date;
+  // }
   let cpDisplay = '';
   raid.cp.forEach((setup) => {
     let results = '';
@@ -68,24 +68,31 @@ function createEmbed(day, time, title, roster) {
 
   let embed = new Discord.RichEmbed()
     .setColor('#ff6600')
-    .setTitle(`${DateHelper.getNextDay(day)} @ ${time} ${raid['short_name']}`)
+    .setTitle(`Event Name: ${eventName}`)
+    .setDescription(`Date: ${day} @ ${time}est\n Trial: ${raid['short_name']}`)
     .setThumbnail(logos['2']);
 
   let roles = Object.keys(roster);
   roles.forEach((role) => {
     let results = '';
     let roleCount = roster[role].count;
-    if (roleCount > 0) {
+    let players = roster[role].players;
+    if (!players) {
       for (let i = 0; i < roleCount; i++) {
         let player = '--';
-        if (roster[role].players[i]) {
-          player = roster[role].players[i];
-        }
         results += `${player}\n`;
-        // embed.addField(`${role.toUpperCase()}`, player, true);
       }
-      embed.addField(role.toUpperCase(), results, true);
+    } else {
+      Object.keys(players).forEach((p) => {
+        p = players[p];
+        results += `${p.note}\n`;
+      });
+      let remainder = roleCount - Object.keys(players).length;
+      for (let i = 0; i < remainder; i++) {
+        results += '--\n';
+      }
     }
+    embed.addField(role.toUpperCase(), results, true);
   });
   embed.addField('CP', cpDisplay, true);
   return embed;
