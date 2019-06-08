@@ -61,7 +61,7 @@ bot.on("guildDelete", guild => {
 bot.on('message', async (message) => {
   // Our bot needs to know if it will execute a command
   // It will listen for messages that will start with `!`
-  const prefix = '?';
+  const prefix = '!';
 
   // It's good practice to ignore other bots. This also makes your bot ignore itself
   // and not get into a spam loop called 'botception'
