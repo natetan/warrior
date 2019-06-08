@@ -37,6 +37,22 @@ function createRoster(raid) {
       'count': comp[role],
       'players': []
     }
+    switch (role) {
+      case 'mt':
+        roster[role].priority = 1;
+        break;
+      case 'ot':
+        roster[role].priority = 2;
+        break;
+      case 'healer':
+        roster[role].priority = 3;
+        break;
+      case 'stam':
+        roster[role].priority = 4;
+        break;
+      default:
+        roster[role].priority = 5;
+    }
   });
   return roster;
 }
@@ -72,7 +88,11 @@ function createEmbed(day, time, title, eventName, roster) {
     .setDescription(`Date: ${day} @ ${time}est\n Trial: ${raid['short_name']}`)
     .setThumbnail(logos['2']);
 
-  let roles = Object.keys(roster);
+  // Sort by their priority (the usual postings)
+  let roles = Object.keys(roster).sort((a, b) => {
+    return (roster[a].priority - roster[b].priority); 
+  });
+
   roles.forEach((role) => {
     let results = '';
     let roleCount = roster[role].count;
