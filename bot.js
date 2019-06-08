@@ -61,7 +61,7 @@ bot.on("guildDelete", guild => {
 bot.on('message', async (message) => {
   // Our bot needs to know if it will execute a command
   // It will listen for messages that will start with `!`
-  const prefix = '!';
+  const prefix = '?';
 
   // It's good practice to ignore other bots. This also makes your bot ignore itself
   // and not get into a spam loop called 'botception'
@@ -572,8 +572,8 @@ bot.on('message', async (message) => {
         raid = await firebase.getRaid(guildId, eventName);
         return message.channel.send(EmbedCreator.createEmbed(raid.day, raid.time, raid.trial, raid.name, raid.roster));
       }
-    } else {
-
+    } else if (trialCommand === 'help') {
+      return message.channel.send('`!trial create <day> <time> <trial-name> <event-name>` -- Creates a trial in the database. Trial options are currently all in vet. **Warning**: Creating one with the same name will replace the current one.\n`!trial join <event-name> <role> <optional-note>` -- Joins the given trial with the given role -- mt, ot, heals, stam, mag. The optional note should not contain any spaces.\n`!trial leave <event-name>` -- leaves the sign-up');
     }
   }
 

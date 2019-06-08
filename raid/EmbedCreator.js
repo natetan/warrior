@@ -84,8 +84,8 @@ function createEmbed(day, time, title, eventName, roster) {
 
   let embed = new Discord.RichEmbed()
     .setColor('#ff6600')
-    .setTitle(`Event Name: ${eventName}`)
-    .setDescription(`Date: ${day} @ ${time}est\n Trial: ${raid['short_name']}`)
+    .setTitle(`${eventName.toUpperCase()}\n${day} @ ${time}est\nTrial: ${raid['short_name']}`)
+    .setDescription(`!trial join ${eventName} <role> <optional-note>`)
     .setThumbnail(logos['2']);
 
   // Sort by their priority (the usual postings)
