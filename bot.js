@@ -295,6 +295,11 @@ bot.on('message', async (message) => {
     }
   }
 
+  if (command === 'inviteurl') {
+    console.log(`Invite link: https://discordapp.com/oauth2/authorize?client_id=${bot.user.id}&permissions=0&scope=bot`);
+    return message.delete();
+  }
+
   // Calculates the ping 
   if (command === 'ping') {
     try {
