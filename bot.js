@@ -13,6 +13,7 @@ let strings = require('./resources/strings');
 let firebase = require('./db/FirebaseHelper');
 let sets = require('./sets/EsoSets');
 let doggo = require('./doggo/Doggo');
+let memes = require('./memes/Memes');
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -300,6 +301,12 @@ bot.on('message', async (message) => {
     return message.delete();
   }
 
+  if (command === 'meme') {
+    let m = await message.channel.send('Fetching random meme from reddit...');
+    let meme = await memes.getRandomMeme();
+    return m.edit(`From \`r/${meme.subreddit}\`: ${meme.url}`);
+  }
+
   // Calculates the ping 
   if (command === 'ping') {
     try {
@@ -501,6 +508,9 @@ bot.on('message', async (message) => {
     if (trialCommand === 'create') {
       let [day, time, trial, eventName] = args;
       if (day !== undefined && time !== undefined && trial !== undefined && eventName !== undefined) {
+        if (!EmbedCreator.getRaidInfo(trial)) {
+          return message.channel.send(`There is no trial called ${trial}.`);
+        }
         await firebase.createRaid(guildId, day, time, trial, eventName);
         let raid = await firebase.getRaid(guildId, eventName);
         return message.channel.send(EmbedCreator.createEmbed(raid.day, raid.time, raid.trial, raid.name, raid.roster));

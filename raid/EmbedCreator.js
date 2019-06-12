@@ -16,10 +16,8 @@ function getRaidInfo(raidName) {
   if (raidName === 'vmaw') {
     raidName = 'vmol';
   }
-  if (!RaidInfo[raidName]) {
-    return new Error(`Raid \`${raidName}\` does not exist, you scrub.`);
-  }
-  return RaidInfo[raidName];
+  
+  return RaidInfo[raidName] ? RaidInfo[raidName] : null;
 }
 
 /**
@@ -90,29 +88,31 @@ function createEmbed(day, time, title, eventName, roster) {
 
   // Sort by their priority (the usual postings)
   let roles = Object.keys(roster).sort((a, b) => {
-    return (roster[a].priority - roster[b].priority); 
+    return (roster[a].priority - roster[b].priority);
   });
 
   roles.forEach((role) => {
     let results = '';
     let roleCount = roster[role].count;
-    let players = roster[role].players;
-    if (!players) {
-      for (let i = 0; i < roleCount; i++) {
-        let player = '--';
-        results += `${player}\n`;
+    if (roleCount > 0) {
+      let players = roster[role].players;
+      if (!players) {
+        for (let i = 0; i < roleCount; i++) {
+          let player = '--';
+          results += `${player}\n`;
+        }
+      } else {
+        Object.keys(players).forEach((p) => {
+          p = players[p];
+          results += `${p.note}\n`;
+        });
+        let remainder = roleCount - Object.keys(players).length;
+        for (let i = 0; i < remainder; i++) {
+          results += '--\n';
+        }
       }
-    } else {
-      Object.keys(players).forEach((p) => {
-        p = players[p];
-        results += `${p.note}\n`;
-      });
-      let remainder = roleCount - Object.keys(players).length;
-      for (let i = 0; i < remainder; i++) {
-        results += '--\n';
-      }
+      embed.addField(role.toUpperCase(), results, true);
     }
-    embed.addField(role.toUpperCase(), results, true);
   });
   embed.addField('CP', cpDisplay, true);
   return embed;
