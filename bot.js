@@ -8,11 +8,11 @@ let languages = require('./translate/TranslateHelper');
 let define = require('./define/define');
 let emojis = require('./resources/emojis');
 let EmbedCreator = require('./raid/EmbedCreator');
-let pledges = require('./pledges/PledgeHelper');
 let strings = require('./resources/strings');
 let firebase = require('./db/FirebaseHelper');
 let sets = require('./sets/EsoSets');
 let skills = require('./skills/EsoSkills');
+let pledges = require('./pledges/EsoPledges');
 let doggo = require('./doggo/Doggo');
 let memes = require('./memes/Memes');
 
@@ -323,9 +323,10 @@ bot.on('message', async (message) => {
    */
   if (command === 'pledges') {
     try {
-      let m = await message.channel.send('Grabbing pledges from esoleaderboards...');
-      let dailies = await pledges.getDailies();
-      m.edit(dailies);
+      let m = await message.channel.send('Grabbing pledges from Dwemer Automaton...');
+      let dailies = await pledges.getPledges();
+      let embed = EmbedCreator.createPledgesEmbed(dailies);
+      m.edit(embed);
     } catch (err) {
       console.log(`ERROR: Command <pledges> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
@@ -480,12 +481,19 @@ bot.on('message', async (message) => {
     } else {
       set = await sets.GetSetByName(query);
     }
-    if (!set || set.length < 1) {
+
+    if (!set) {
       return m.edit('There was an error with your query.');
     }
+
+    if (set.length < 1) {
+      return m.edit(`Nothing found for set ${query}`);
+    }
+
     if (set.length > 1) {
       message.channel.send(`Found more than one set for your query: ${set.length} results.`);
     }
+
     try {
       return m.edit(EmbedCreator.createSetEmbed(set))
     } catch (err) {
@@ -513,12 +521,19 @@ bot.on('message', async (message) => {
     } else {
       skill = await skills.GetSkillByName(query);
     }
-    if (!skill || skill.length < 1) {
+
+    if (!skill) {
       return m.edit('There was an error with your query.');
     }
+
+    if (skill.length < 1) {
+      return m.edit(`Nothing found for skill ${query}`);
+    }
+
     if (skill.length > 1) {
       message.channel.send(`Found more than one skill for your query: ${skill.length} results.`);
     }
+
     try {
       return m.edit(EmbedCreator.createSkillEmbed(skill))
     } catch (err) {

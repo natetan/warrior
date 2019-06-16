@@ -62,6 +62,8 @@ function createRoster(raid) {
  * @param {String} time - time
  * @param {String} title - raidName
  * @param {Object} roster - Roster object
+ * 
+ * @returns {Discord.RichEmbed} - Discord Embed
  */
 function createEmbed(day, time, title, eventName, roster) {
   let raid = getRaidInfo(title);
@@ -123,7 +125,7 @@ function createEmbed(day, time, title, eventName, roster) {
  * 
  * @param {Object} - Discord's role object 
  * @param {String} - The type of role categorization 
- * @returns {RichEmbed}
+ * @returns {Discord.RichEmbed} - Discord Embed
  */
 function createRoleEmbed(data, type) {
   let embed = new Discord.RichEmbed()
@@ -159,7 +161,7 @@ function createRoleEmbed(data, type) {
  * 
  * @param {Object} set - json representing an eso set
  * 
- * Returns a Discord RichEmbed
+ * @returns {Discord.RichEmbed} - Discord Embed
  */
 function createSetEmbed(set) {
   let display = '';
@@ -206,7 +208,7 @@ function createSetEmbed(set) {
  * 
  * @param {Object} set - json representing an eso set
  * 
- * Returns a Discord RichEmbed
+ * @returns {Discord.RichEmbed} - Discord Embed
  */
 function createSkillEmbed(skill) {
   let display = '';
@@ -237,11 +239,31 @@ function createSkillEmbed(skill) {
   return embed;
 }
 
+/**
+ * Creates an embed for pledges
+ * 
+ * @returns {Discord.RichEmbed} - Discord Embed
+ */
+function createPledgesEmbed(pledges) {
+  if (!pledges) {
+    return '';
+  }
+  let embed = new Discord.RichEmbed()
+      .setColor('#ff6600')
+      .setTitle(`Pledges - ${new Date().toDateString().substring(0, 10)}`)
+      .setThumbnail(logos['2'])
+      .addField('Maj', pledges['1'])
+      .addField('Glirion', pledges['2'])
+      .addField('Urgalarg', pledges['3']);
+  return embed;
+}
+
 module.exports = {
   getRaidInfo,
   createRoster,
   createEmbed: createEmbed,
   createRoleEmbed: createRoleEmbed,
   createSetEmbed: createSetEmbed,
-  createSkillEmbed: createSkillEmbed
+  createSkillEmbed: createSkillEmbed,
+  createPledgesEmbed: createPledgesEmbed
 }
