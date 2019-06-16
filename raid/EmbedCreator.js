@@ -216,7 +216,7 @@ function createSkillEmbed(skill) {
     let embed = new Discord.RichEmbed()
       .setColor('#ff6600')
       .setTitle('Multiple skills')
-      .setDescription('Try grabbing the ID instead. `!set <id>`')
+      .setDescription('Try grabbing the ID instead. `!skill <id>`')
       .setThumbnail(logos['2']);
     skill.forEach((s) => {
       display += `[${s.id}] - [${s.name}](${s.url})\n`;
