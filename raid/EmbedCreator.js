@@ -183,7 +183,7 @@ function createSetEmbed(set) {
   let embed = new Discord.RichEmbed()
     .setColor('#ff6600')
     .setTitle(set.name)
-    .setDescription(`ID: ${set.id}\nType: ${set.type}${traits}\nLocation: ${set.location}`)
+    .setDescription(`**ID**: ${set.id}\n**Type**: ${set.type}${traits}\n**Location**: ${set.location}`)
     .setURL(url)
     .setThumbnail(logos['2']);
 
@@ -200,10 +200,48 @@ function createSetEmbed(set) {
   return embed;
 }
 
+/**
+ * Creates an embed for a set. If multiple sets are found, they 
+ * will be shown in a list format.
+ * 
+ * @param {Object} set - json representing an eso set
+ * 
+ * Returns a Discord RichEmbed
+ */
+function createSkillEmbed(skill) {
+  let display = '';
+  if (skill.length > 1) {
+    let embed = new Discord.RichEmbed()
+      .setColor('#ff6600')
+      .setTitle('Multiple skills')
+      .setDescription('Try grabbing the ID instead. `!set <id>`')
+      .setThumbnail(logos['2']);
+    skill.forEach((s) => {
+      display += `[${s.id}] - [${s.name}](${s.url})\n`;
+    });
+    embed.addField('Skills', display);
+    return embed;
+  }
+  if (Array.isArray(skill)) {
+    skill = skill[0];
+  }
+  let url = skill.url;
+  let cost = skill.cost !== 'Nothing' ? `**Cost**: ${skill.cost}\n` : '';
+  let embed = new Discord.RichEmbed()
+    .setColor('#ff6600')
+    .setTitle(skill.name)
+    .setURL(url)
+    .setThumbnail(skill.iconUrl)
+    .setDescription(`**ID**: ${skill.id}\n**Type**: ${skill.typeString} Ability\n${cost}`);
+  embed.addField('Effect', skill.effect_1);
+  return embed;
+}
+
 module.exports = {
   getRaidInfo,
   createRoster,
   createEmbed: createEmbed,
   createRoleEmbed: createRoleEmbed,
-  createSetEmbed: createSetEmbed
+  createSetEmbed: createSetEmbed,
+  createSkillEmbed: createSkillEmbed
 }

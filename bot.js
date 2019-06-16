@@ -12,6 +12,7 @@ let pledges = require('./pledges/PledgeHelper');
 let strings = require('./resources/strings');
 let firebase = require('./db/FirebaseHelper');
 let sets = require('./sets/EsoSets');
+let skills = require('./skills/EsoSkills');
 let doggo = require('./doggo/Doggo');
 let memes = require('./memes/Memes');
 
@@ -62,7 +63,7 @@ bot.on("guildDelete", guild => {
 bot.on('message', async (message) => {
   // Our bot needs to know if it will execute a command
   // It will listen for messages that will start with `!`
-  const prefix = '!';
+  const prefix = process.env.prefix ? '!' : '?';
 
   // It's good practice to ignore other bots. This also makes your bot ignore itself
   // and not get into a spam loop called 'botception'
@@ -489,6 +490,39 @@ bot.on('message', async (message) => {
       return m.edit(EmbedCreator.createSetEmbed(set))
     } catch (err) {
       console.log(`ERROR: Command <set> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      return m.edit('There was an error. I am sorry for your loss.');
+    }
+  }
+
+  /**
+   * Gets skills from https://eso-skillbook.com
+   * 
+   * Users can either look for an item string or its ID.
+   * 
+   * @arg query - name of item or id of item
+   */
+  if (command === 'skill') {
+    let query = args.join(' ');
+    if (!query) {
+      return message.channel.send('Command `!skill` requires arguments: `!skill <name>` or `!skill <id>`.');
+    }
+    let m = await message.channel.send('Grabbing set from `eso-skillbook`...');
+    let skill;
+    if (Number(query)) {
+      skill = await skills.GetSkillById(query);
+    } else {
+      skill = await skills.GetSkillByName(query);
+    }
+    if (!skill || skill.length < 1) {
+      return m.edit('There was an error with your query.');
+    }
+    if (skill.length > 1) {
+      message.channel.send(`Found more than one skill for your query: ${skill.length} results.`);
+    }
+    try {
+      return m.edit(EmbedCreator.createSkillEmbed(skill))
+    } catch (err) {
+      console.log(`ERROR: Command <skill> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
       return m.edit('There was an error. I am sorry for your loss.');
     }
   }
