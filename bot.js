@@ -304,8 +304,12 @@ bot.on('message', async (message) => {
 
   if (command === 'meme') {
     let m = await message.channel.send('Fetching random meme from reddit...');
-    let meme = await memes.getRandomMeme();
-    return m.edit(`From \`r/${meme.subreddit}\`: ${meme.url}`);
+    try {
+      let meme = await memes.getRandomMeme();
+      return m.edit(`From \`r/${meme.subreddit}\`: ${meme.url}`);
+    } catch (err) {
+      return m.edit(`There was an error: ${err}`);
+    }
   }
 
   // Calculates the ping 
