@@ -110,6 +110,50 @@
     "Shall I teach you another lesson in futility?",
     "Enough! This ends now. *(Execute phase)*"
   ],
+  "dragon": 
+    {
+      "yolna": [
+        "Leave and I may spare you.",
+        "Dispose of yourself, before I do.",
+        "You'll suffer for disturbing me.",
+        "You dare enter my domain? Fools.",
+        "Begone Vermin!",
+        "Obey me, living flames. *(Summoning Flame Atronachs)*",
+        "Rise from the ash, servants of flame! *(Summoning Flame Atronachs)*",
+        "Burn them to cinders! *(Summoning Flame Atronachs)*",
+        "Never trifle with gods *(Wipe)*",
+        "Insolent trash *(Wipe)*"
+      ],
+      "lokke": [
+        "Bugs in my bed. How irritating.",
+        "Are you ignorant to your own mortality? Tragic.",
+        "Has futility set in? Do you finally accept your place in the world?",
+        "Simple creatures. Blind to your own insignificance. I admire your audacity.",
+        "Gnats who think themselves wolves. Ah, what folly.",
+        "Does the sound of thunder frighten you, animals?",
+        "I'll shout you into dust!",
+        "On your knees!",
+        "Think you can weather the storm?",
+        "You'll leave nothing but a crater and a stain!",
+        "You want to stand shoulder to shoulder with a god? Here I am."
+      ],
+      "nahv": [
+        "You think yourselves Dragon slayers. You'll soon learn that not all Dragons are created equal.",
+        "If you will not give your lives to me, I will take them.",
+        "Prideful whelps. You will be an example to others.",
+        "You would make worthy slaves. Accept me as your god and I will overlook your rebelliousness.",
+        "I would prefer your adoration, but I will accept your fear and awe.",
+        "Destroy the heretics and become my true faithful.",
+        "Slaves! Your god grants you a chance to redeem your past failings. *(Summoning his Faithful)*",
+        "Return, faithful. Earn your right to live. *(Summoning his Faithful)*",
+        "Fear no death, for you already serve me eternally. *(Summoning his Faithful)*",
+        "Serve me now, as you served me then. *(Summoning his Faithful)*",
+        "These slaves are as limitless as time itself *(Summoning his Faithful)*.",
+        "You look as insignificant from down here as you did up there.",
+        "Suffer my wrath first hand."
+
+      ]
+    },
   "ramsay": [
     "Don't just stand there like a big fucking muffin!",
     "Don't take it personally. Just take it seriously.",

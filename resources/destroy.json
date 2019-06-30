@@ -1,0 +1,24 @@
+{
+  "warrior": [
+    "*@ destroyed the whole group by pressing Y+B.*",
+    "*@ is swiped by a tousand cuts, like whispers in the wind.*",
+    "*Shehai storm is cast and @ does not block or shield and dies.*",
+    "*@ dies from the shield throw.*",
+    "*@ is caught in a destructive outbreak and dies.*",
+    "*@ completes Hel Ra Citadel with a score of 20.*"
+  ],
+  "zmaja": [
+    "*@ gets wrecked by corpulence.*",
+    "*z'Maja destroys @ with Nocturnal's Favor.*",
+    "*Tank misses a bash and @ is dropped from the sky and breaks both legs.*",
+    "*@ runs face first into a malevolent orb and dies.*",
+    "*@ is rooted by a creeper and has no stamina to roll dodge and dies.**",
+    "*@ is overloaded and swaps bars on Relequen and wipes the group.*",
+    "*@ has Siroria's fire bomb and dies alone*."
+  ],
+  "rakkhat": [
+    "*@ doesn't move core out of group and dies.*",
+    "*@ lets the meteors fall into group.*",
+    "*@ converts incorrectly and wipes the entire group.*"
+  ]
+}

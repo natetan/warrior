@@ -4,6 +4,7 @@ let _ = require('lodash');
 
 let quoteHelper = require('./quotes/QuoteHelper');
 let quotes = require('./resources/quotes.json');
+let destroy = require('./resources/destroy.json');
 let languages = require('./translate/TranslateHelper');
 let define = require('./define/define');
 let emojis = require('./resources/emojis');
@@ -645,9 +646,13 @@ bot.on('message', async (message) => {
    */
   // if (command === 'test') {
   //   try {
-  //     await message.send('test');
+  //     let results = message.mentions.users.map((u) => {
+  //       return `<@${u.id}>`;
+  //     });
+  //     console.log(results);
+  //     return message.delete();
   //   } catch (err) {
-  //     console.log('Test failed');
+  //     console.log(`Test failed: ${err}`);
   //   }
   // }
 
@@ -723,10 +728,23 @@ bot.on('message', async (message) => {
    */
   if (command === 'warrior') {
     try {
-      let warriorQuotes = quotes.warrior;
-      let randomQuote = quoteHelper.getQuote(warriorQuotes);
-      let warriorEmoji = bot.emojis.get(emojis.customEmojis.warrior);
-      message.channel.send(`${warriorEmoji} ${randomQuote}`);
+      let results = message.mentions.users.map((u) => {
+        return `<@${u.id}>`;
+      });
+      if (results.length > 0) {
+        let warriorQuotes = destroy.warrior;
+        results.forEach((p) => {
+          let randomQuote = quoteHelper.getQuote(warriorQuotes);
+          randomQuote = randomQuote.replace('@', p);
+          return message.channel.send(randomQuote);
+        });
+      } else {
+        let warriorQuotes = quotes.warrior;
+        let randomQuote = quoteHelper.getQuote(warriorQuotes);
+        let warriorEmoji = bot.emojis.get(emojis.customEmojis.warrior);
+        return message.channel.send(`${warriorEmoji} ${randomQuote}`);
+      }
+
     } catch (err) {
       console.log(`ERROR: Command <warrior> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
@@ -739,8 +757,19 @@ bot.on('message', async (message) => {
    */
   if (quoteHelper.quoteOptions.includes(command)) {
     try {
-      let randomQuote = quoteHelper.getQuote(quotes[command]);
-      message.channel.send(randomQuote);
+      let results = message.mentions.users.map((u) => {
+        return `<@${u.id}>`;
+      });
+      if (results.length > 0 && destroy[command]) {
+        results.forEach((p) => {
+          let randomQuote = quoteHelper.getQuote(destroy[command]);
+          randomQuote = randomQuote.replace('@', p);
+          return message.channel.send(randomQuote);
+        });
+      } else {
+        let randomQuote = quoteHelper.getQuote(quotes[command]);
+        return message.channel.send(randomQuote);
+      }
     } catch (err) {
       console.log(`ERROR: Command <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }

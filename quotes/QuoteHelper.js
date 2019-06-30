@@ -1,6 +1,9 @@
-let quoteOptions = ['zmaja', 'rakkhat', 'ramsay'];
+let quoteOptions = ['zmaja', 'rakkhat', 'ramsay', 'dragon'];
 
 function getQuote(quotes) {
+  if (!quotes) {
+    return null;
+  }
   let length = quotes.length;
   let randomQuote = quotes[Math.floor(Math.random() * length)];
   return randomQuote;
