@@ -764,7 +764,7 @@ bot.on('message', async (message) => {
         results.forEach((p) => {
           let randomQuote = quoteHelper.getQuote(destroy[command]);
           randomQuote = randomQuote.replace('@', p);
-          return message.channel.send(randomQuote);
+          return message.channel.send(`*${randomQuote}*`);
         });
       } else {
         let randomQuote = quoteHelper.getQuote(quotes[command]);

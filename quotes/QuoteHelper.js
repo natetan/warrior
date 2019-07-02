@@ -1,4 +1,4 @@
-let quoteOptions = ['zmaja', 'rakkhat', 'ramsay', 'dragon'];
+let quoteOptions = ['zmaja', 'rakkhat', 'ramsay', 'dragon', 'mage', 'serpent'];
 
 function getQuote(quotes) {
   if (!quotes) {
