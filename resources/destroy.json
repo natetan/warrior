@@ -14,7 +14,7 @@
     "@ gets popcorn and doesn't roll dodge and dies."
   ],
   "mage": [
-    "A reflection lands on @ and they are yeeted into oblivion.",
+    "@ is yeeted into oblivion upon the arrival of a Reflection.",
     "@ dies within the Arcane Vortex"
   ],
   "zmaja": [
@@ -44,7 +44,9 @@
     "@ is shouted to dust by Lokkestiiz.",
     "@ leaves Nahviintaas' meteors in group.",
     "@ completes Sunspire with a score of 76.",
-    "@ stays in the center when Yolnahkriin takes flight and dies.",
-    "@ is struck down by Call Lightning."
+    "@ stays in the center when Yolnahkriin takes flight and dies to cataclysm.",
+    "@ is struck down by Call Lightning.",
+    "@ gets smacked by an Ice Atro's Glacial Fist.",
+    "@ picked a fight with an Iron Servant and lost. No one is surprised."
   ]
 }

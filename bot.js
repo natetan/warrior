@@ -61,6 +61,13 @@ bot.on("guildDelete", guild => {
   bot.user.setActivity(`Serving ${bot.guilds.size} servers`);
 });
 
+bot.on('guildMemberAdd', (member) => {
+  let retorts = quotes.retort;
+  let randomQuote = quoteHelper.getQuote(retorts);
+  let welcome = `Welcome <@${member.user.id}>! ${randomQuote}}`;
+  member.guild.channels.find(c => c.name === "general").send(welcome);
+});
+
 bot.on('message', async (message) => {
   // Our bot needs to know if it will execute a command
   // It will listen for messages that will start with `!`
