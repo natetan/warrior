@@ -64,7 +64,7 @@ bot.on("guildDelete", guild => {
 bot.on('guildMemberAdd', (member) => {
   let retorts = quotes.retort;
   let randomQuote = quoteHelper.getQuote(retorts);
-  let welcome = `Welcome <@${member.user.id}>! ${randomQuote}}`;
+  let welcome = `Welcome <@${member.user.id}>! ${randomQuote}`;
   member.guild.channels.find(c => c.name === "general").send(welcome);
 });
 
