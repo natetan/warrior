@@ -68,6 +68,13 @@ bot.on('guildMemberAdd', (member) => {
   member.guild.channels.find(c => c.name === "general").send(welcome);
 });
 
+bot.on('guildMemberRemove', (member) => {
+  let warriorQuotes = quotes.warrior;
+  let randomQuote = quoteHelper.getQuote(warriorQuotes);
+  let farewell = `${member.user.username} has left the guild. ${randomQuote}`;
+  member.guild.channels.find(c => c.name === "general").send(farewell);
+})
+
 bot.on('message', async (message) => {
   // Our bot needs to know if it will execute a command
   // It will listen for messages that will start with `!`
