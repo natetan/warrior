@@ -30,7 +30,7 @@ const permissionRoles = ['Admin', 'bot', 'Core'];
 const bot = new Discord.Client();
 
 // Logs in with the given token
-const token = process.env.token || require('./auth.json').token;
+const token = process.env.token || require('./auth.json')['token_warrior'];
 bot.login(token);
 
 /**
