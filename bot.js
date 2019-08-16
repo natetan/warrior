@@ -1,6 +1,7 @@
 let Discord = require('discord.js');
 let logger = require('winston');
 let _ = require('lodash');
+let fs = require('fs');
 
 let quoteHelper = require('./quotes/QuoteHelper');
 let quotes = require('./resources/quotes.json');
@@ -16,6 +17,7 @@ let skills = require('./skills/EsoSkills');
 let pledges = require('./pledges/EsoPledges');
 let doggo = require('./doggo/Doggo');
 let memes = require('./memes/Memes');
+let imgen = require('./imgen/ImageManipulator');
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -25,6 +27,9 @@ logger.add(new logger.transports.Console, {
 
 // Important roles that have permission
 const permissionRoles = ['Admin', 'bot', 'Core'];
+
+// Image manipulation commands
+const imgenCommands = ['slap']
 
 // Initialize Discord Bot
 const bot = new Discord.Client();
@@ -559,6 +564,29 @@ bot.on('message', async (message) => {
       console.log(`ERROR: Command <skill> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
       return m.edit('There was an error. I am sorry for your loss.');
     }
+  }
+
+  if (imgenCommands.includes(command)) {
+    let users = message.mentions.users.map((u) => {
+      return u;
+    });
+    let avatars = [];
+    let avatar1;
+    let avatar2;
+    if (users.length) {
+      avatar1 = message.author.avatarURL;
+      avatar2 = users[0].avatarURL;
+    } else {
+      avatar1 = bot.user.avatarURL;
+      avatar2 = message.author.avatarURL;
+    }
+    avatars.push(avatar1, avatar2);
+    let imageName = await imgen.determineMeme(command, avatars);
+    await message.channel.send('', {
+      file: imageName
+    });
+
+    return fs.unlinkSync(imageName);
   }
 
   /**
