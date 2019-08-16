@@ -581,7 +581,7 @@ bot.on('message', async (message) => {
       avatar2 = message.author.avatarURL;
     }
     avatars.push(avatar1, avatar2);
-    let imageName = await imgen.determineMeme(command, avatars);
+    let imageName = await imgen.determineMeme(command, avatars, message.author.username, users ? users[0].username : null);
     await message.channel.send('', {
       file: imageName
     });
