@@ -29,7 +29,7 @@ logger.add(new logger.transports.Console, {
 const permissionRoles = ['Admin', 'bot', 'Core'];
 
 // Image manipulation commands
-const imgenCommands = ['slap']
+const imgenCommands = ['slap', 'egg', 'shit']
 
 // Initialize Discord Bot
 const bot = new Discord.Client();
@@ -581,7 +581,7 @@ bot.on('message', async (message) => {
       avatar2 = message.author.avatarURL;
     }
     avatars.push(avatar1, avatar2);
-    let imageName = await imgen.determineMeme(command, avatars, message.author.username, users ? users[0].username : null);
+    let imageName = await imgen.determineMeme(command, avatars, message.author.username, users.length ? users[0].username : null);
     await message.channel.send('', {
       file: imageName
     });

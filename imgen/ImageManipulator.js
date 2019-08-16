@@ -2,7 +2,8 @@ let Jimp = require('jimp');
 
 const memes = {
   'egg': egg,
-  'slap': slap
+  'slap': slap,
+  'shit': shit
 }
 
 /**
@@ -18,16 +19,26 @@ async function determineMeme(command, avatars, originUser, targetUser) {
 }
 
 async function egg(avatars) {
-  
+  let egg = await Jimp.read(avatars[1]);
+  let base = await Jimp.read('https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/egg.bmp');
+  let outputName = 'egg.png';
+
+  egg.resize(50, 50);
+  base
+    .resize(350, 350)
+    .composite(egg, 143, 188)
+    .write(outputName);
+  return outputName;
+
 }
 
 // Batman slapping Robin
 async function slap(avatars) {
   let slapper = await Jimp.read(avatars[0]);
   let slapee = await Jimp.read(avatars[1]);
-  let base = await Jimp.read('https://raw.githubusercontent.com/DankMemer/meme-server/master/assets/batslap/batslap.bmp');
+  let base = await Jimp.read('https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/slap.bmp');
+  let outputName = 'slap.png';
 
-  let outputName = 'temp.png';
   slapper.resize(200, 200);
   slapee.resize(220, 220);
   base
@@ -36,6 +47,27 @@ async function slap(avatars) {
     .composite(slapee, 580, 260)
     .write(outputName);
   return outputName;
+}
+
+// Stepping in shit
+async function shit(avatars) {
+  let shit1 = await Jimp.read(avatars[1]);
+  let shit2 = await Jimp.read(avatars[1]);
+  let shit3 = await Jimp.read(avatars[1]);
+  let base = await Jimp.read('https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/shit.bmp');
+  let outputName = 'shit.png';
+
+  shit1.resize(80, 80);
+  shit2.resize(80, 80);
+  shit3.resize(80, 80);
+
+  base 
+    .composite(shit1, 225, 820)
+    .composite(shit2, 305, 720)
+    .composite(shit3, 385, 620)
+    .write(outputName);
+  return outputName;
+
 }
 
 module.exports = {
