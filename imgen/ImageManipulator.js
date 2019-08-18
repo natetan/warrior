@@ -18,6 +18,10 @@ async function determineMeme(command, avatars, originUser, targetUser) {
   return await fn(avatars, originUser, targetUser);
 }
 
+async function airpods(avatars) {
+  
+}
+
 async function egg(avatars) {
   let egg = await Jimp.read(avatars[1]);
   let base = await Jimp.read('https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/egg.bmp');
