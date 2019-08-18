@@ -3,6 +3,7 @@ const commands = {
   doggo: 'Grabs a random dog media.',
   game: 'Game commands. Usage: \n`!game setup` - sets up everyone with money.\n`!game funds` - Checks your funds\n`!game give <player> <amount>` - Gives the specified player the specified amount',
   meme: 'Random meme from reddit',
+  memes: 'airpods, egg, rip, shit, slap',
   ping: 'Calculates your ping and the bot\'s ping. Usage: \`!ping\`',
   pledges: 'Grabs the daily pledge from esoleaderboards.com. Usage: \`!pledges\`',
   purge: 'Purges messages. Admin only. Usage: \n`!purge <x>` - purges x messages where x is a number between 1 (exclusive) and 10 (inclusive)',

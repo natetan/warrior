@@ -293,7 +293,7 @@ bot.on('message', async (message) => {
   // The actual help command. Deletes after a minute.
   if (command === 'halp') {
     try {
-      let helpMessage = 'You\'ve reached the DJ Roomba help hotline! Here are your available commands:\n';
+      let helpMessage = 'You\'ve reached ZOS Customer Support! Here are your available game-breaking commands:\n';
       let helpStrings = Object.keys(strings.commands);
       helpStrings.forEach((c) => {
         helpMessage += `${c}: ${strings.commands[c]}\n\n`;
@@ -366,7 +366,7 @@ bot.on('message', async (message) => {
     }
     const deleteCount = Number(args[0]);
     let min = 1;
-    let max = 10;
+    let max = 20;
     if (!deleteCount || deleteCount <= min || deleteCount > max) {
       return message.reply(`Please provide a number between ${min} (exclusive) and ${max} (inclusive) for the number of messages to delete.`);
     }

@@ -8,12 +8,15 @@ Author: [Aerovertics](https://github.com/yulongtan)
 Prefix: `!`
 - `define` 
   - [s]: defines a given word using the Oxford dictionary
+- `doggo`: Gets a random dog photo
 - `game`: game commands
   - `setup` [x=200000]: sets up fake funds for everyone in the server with the default of 2000000
   - `funds`: gets the player's funds
   - `give` [player] [amount]: gives the given player the given amount of fake funds
 - `halp`: Gives a list of commands that are available. Self deletes after a minute
 - `help`: Very trolly help command. Tells the user to *git gud*
+- `meme`: Grabs a random meme from reddit - `r/dankmemes`, `r/memes`, `r/meirl`
+- `memes`: Imgen meme pictures: `airpods`, `egg`, `rip`, `shit`, `slap`
 - `ping`: Calculates the ping
 - `pledges`: Gets the daily pledges for ESO
 - `purge` 
