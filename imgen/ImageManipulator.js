@@ -1,6 +1,7 @@
 let Jimp = require('jimp');
 
 const memes = {
+  'airpods': airpods,
   'egg': egg,
   'slap': slap,
   'shit': shit
@@ -19,7 +20,15 @@ async function determineMeme(command, avatars, originUser, targetUser) {
 }
 
 async function airpods(avatars) {
-  
+  let person = await Jimp.read(avatars[1]);
+  let base = await Jimp.read('https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/airpods.png');
+  let outputName = 'airpods.png';
+
+  person.resize(325, 500).rotate(21.6);
+  base
+    .composite(person, 480, 365)
+    .write(outputName);
+  return outputName;
 }
 
 async function egg(avatars) {
