@@ -586,7 +586,7 @@ bot.on('message', async (message) => {
       file: imageName
     });
 
-    return fs.unlinkSync(imageName);
+    //return fs.unlinkSync(imageName);
   }
 
   /**
