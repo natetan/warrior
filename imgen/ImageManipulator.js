@@ -3,6 +3,7 @@ let Jimp = require('jimp');
 const memes = {
   'airpods': airpods,
   'egg': egg,
+  'rip': rip,
   'slap': slap,
   'shit': shit
 }
@@ -19,6 +20,7 @@ async function determineMeme(command, avatars, originUser, targetUser) {
   return await fn(avatars, originUser, targetUser);
 }
 
+// Old man with iPad & Airpods
 async function airpods(avatars) {
   let person = await Jimp.read(avatars[1]);
   let base = await Jimp.read('https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/airpods.png');
@@ -31,6 +33,7 @@ async function airpods(avatars) {
   return outputName;
 }
 
+// Duck pooping out an egg
 async function egg(avatars) {
   let egg = await Jimp.read(avatars[1]);
   let base = await Jimp.read('https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/egg.bmp');
@@ -43,6 +46,21 @@ async function egg(avatars) {
     .write(outputName);
   return outputName;
 
+}
+
+// Gravestone
+async function rip(avatars) {
+  let person = await Jimp.read(avatars[1]);
+  let base = await Jimp.read('https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/rip.bmp');
+  let outputName = 'rip.png';
+
+  person.resize(300, 300);
+  base
+    .resize(642, 806)
+    .composite(person, 175, 385)
+    .write(outputName);
+  
+  return outputName;
 }
 
 // Batman slapping Robin

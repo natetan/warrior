@@ -582,11 +582,11 @@ bot.on('message', async (message) => {
     }
     avatars.push(avatar1, avatar2);
     let imageName = await imgen.determineMeme(command, avatars, message.author.username, users.length ? users[0].username : null);
-    // await message.channel.send('', {
-    //   file: imageName
-    // });
+    await message.channel.send('', {
+      file: imageName
+    });
 
-    // return fs.unlinkSync(imageName);
+    return fs.unlinkSync(imageName);
   }
 
   /**
