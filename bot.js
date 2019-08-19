@@ -567,26 +567,32 @@ bot.on('message', async (message) => {
   }
 
   if (imgenCommands.includes(command)) {
-    let users = message.mentions.users.map((u) => {
-      return u;
-    });
-    let avatars = [];
-    let avatar1;
-    let avatar2;
-    if (users.length) {
-      avatar1 = message.author.avatarURL;
-      avatar2 = users[0].avatarURL;
-    } else {
-      avatar1 = bot.user.avatarURL;
-      avatar2 = message.author.avatarURL;
+    try {
+      let users = message.mentions.users.map((u) => {
+        return u;
+      });
+      let avatars = [];
+      let avatar1;
+      let avatar2;
+      if (users.length) {
+        avatar1 = message.author.avatarURL;
+        avatar2 = users[0].avatarURL;
+      } else {
+        avatar1 = bot.user.avatarURL;
+        avatar2 = message.author.avatarURL;
+      }
+      avatars.push(avatar1, avatar2);
+      imgen.determineMeme(command, avatars, message.author.username, users.length ? users[0].username : null)
+        .then(async (imageName) => {
+          await message.channel.send('', {
+            file: imageName
+          });
+          return fs.unlinkSync(imageName);
+        })
+    } catch (err) {
+      console.log(err);
+      return message.delete();
     }
-    avatars.push(avatar1, avatar2);
-    let imageName = await imgen.determineMeme(command, avatars, message.author.username, users.length ? users[0].username : null);
-    await message.channel.send('', {
-      file: imageName
-    });
-
-    return fs.unlinkSync(imageName);
   }
 
   /**
