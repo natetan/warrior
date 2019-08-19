@@ -29,7 +29,7 @@ logger.add(new logger.transports.Console, {
 const permissionRoles = ['Admin', 'bot', 'Core'];
 
 // Image manipulation commands
-const imgenCommands = ['airpods', 'egg', 'rip', 'shit', 'slap'];
+const imgenCommands = ['airpods', 'egg', 'rip', 'shit', 'slap', 'vma'];
 
 // Initialize Discord Bot
 const bot = new Discord.Client();
@@ -586,7 +586,7 @@ bot.on('message', async (message) => {
       file: imageName
     });
 
-    //return fs.unlinkSync(imageName);
+    return fs.unlinkSync(imageName);
   }
 
   /**

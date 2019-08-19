@@ -5,7 +5,8 @@ const memes = {
   'egg': egg,
   'rip': rip,
   'slap': slap,
-  'shit': shit
+  'shit': shit,
+  'vma': vma
 }
 
 /**
@@ -103,4 +104,17 @@ async function shit(avatars) {
 
 module.exports = {
   determineMeme: determineMeme
+}
+
+async function vma(avatars, originUser, targetUser) {
+  let name = targetUser ? targetUser : originUser;
+  let base = await Jimp.read('https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/low-vma.png');
+  let font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE);
+  let outputName = 'vma.png';
+
+  base
+    .print(font, 576, 475, name)
+    .write(outputName);
+  return outputName;
+
 }
