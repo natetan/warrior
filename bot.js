@@ -16,6 +16,7 @@ let sets = require('./sets/EsoSets');
 let skills = require('./skills/EsoSkills');
 let pledges = require('./pledges/EsoPledges');
 let doggo = require('./doggo/Doggo');
+let meow = require('./meow/Meow');
 let memes = require('./memes/Memes');
 let imgen = require('./imgen/ImageManipulator');
 
@@ -329,6 +330,16 @@ bot.on('message', async (message) => {
       return m.edit(`From \`r/${meme.subreddit}\`: ${meme.url}`);
     } catch (err) {
       return m.edit(`There was an error: ${err}`);
+    }
+  }
+
+  if (command === 'meow') {
+    try {
+      let catResponse = await meow.getRandomCat();
+      message.channel.send(catResponse.file);
+    } catch (err) {
+      console.log(`ERROR: Command <meow> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      message.channel.send('There was an error. No cats for you.');
     }
   }
 
