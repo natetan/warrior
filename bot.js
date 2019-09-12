@@ -1,24 +1,25 @@
-let Discord = require('discord.js');
-let logger = require('winston');
-let _ = require('lodash');
-let fs = require('fs');
+const Discord = require('discord.js');
+const logger = require('winston');
+const _ = require('lodash');
+const fs = require('fs');
 
-let quoteHelper = require('./quotes/QuoteHelper');
-let quotes = require('./resources/quotes.json');
-let destroy = require('./resources/destroy.json');
-let languages = require('./translate/TranslateHelper');
-let define = require('./define/define');
-let emojis = require('./resources/emojis');
-let EmbedCreator = require('./raid/EmbedCreator');
-let strings = require('./resources/strings');
-let firebase = require('./db/FirebaseHelper');
-let sets = require('./sets/EsoSets');
-let skills = require('./skills/EsoSkills');
-let pledges = require('./pledges/EsoPledges');
-let doggo = require('./doggo/Doggo');
-let meow = require('./meow/Meow');
-let memes = require('./memes/Memes');
-let imgen = require('./imgen/ImageManipulator');
+const quoteHelper = require('./quotes/QuoteHelper');
+const quotes = require('./resources/quotes.json');
+const destroy = require('./resources/destroy.json');
+const commands = require('./resources/commands.json');
+const languages = require('./translate/TranslateHelper');
+const define = require('./define/define');
+const emojis = require('./resources/emojis');
+const EmbedCreator = require('./raid/EmbedCreator');
+const strings = require('./resources/strings');
+const firebase = require('./db/FirebaseHelper');
+const sets = require('./sets/EsoSets');
+const skills = require('./skills/EsoSkills');
+const pledges = require('./pledges/EsoPledges');
+const doggo = require('./doggo/Doggo');
+const meow = require('./meow/Meow');
+const memes = require('./memes/Memes');
+const imgen = require('./imgen/ImageManipulator');
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -112,6 +113,17 @@ bot.on('message', async (message) => {
   if (command === 'cid') {
     try {
       console.log(`The ID of channel #${message.channel.name} in guild <${message.guild.name}>: ${message.channel.id}`);
+      let allChannels = message.guild.channels.sort((a, b) => {
+        return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+      }).filter((c) => { 
+        return c.type === 'text'; 
+      }).map((c) => {
+        return {
+          name: c.name,
+          id: c.id
+        };
+      });
+      console.log(allChannels);
       await message.delete();
     } catch (err) {
       console.log(`ERROR: Command <cid> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
@@ -389,72 +401,13 @@ bot.on('message', async (message) => {
     }
   }
 
-  /**
-   * Raid command that handles sign-up (CURRENTLY ON HOLD)
-   */
-  if (command === 'raidllllllllll') {
-    // First argument
-    let raidCommand = args[0];
-    args.shift();
-    if (raidCommand === 'create') {
-      let [day, time, title] = args;
-      let msg = '';
-      try {
-        // Don't create if one exists
-        if (RaidEvent !== undefined) {
-          return message.channel.send('There is already an event going on. Please delete it before creating a new one: \`!raid delete\`');
-        }
-
-        if (day === undefined || title === undefined || time === undefined) {
-          return message.channel.send(`I really don't think you know how to do this...TAKE A SEAT, YOUNG ${message.author}`);
-        }
-        if (day !== undefined && title !== undefined && time !== undefined) {
-          RaidEvent = {
-            day: day,
-            time: time,
-            title: title
-          };
-          let raid = EmbedCreator.getRaidInfo(title);
-          if (raid instanceof Error) {
-            RaidEvent = undefined;
-            return message.channel.send(raid.message);
-          }
-          roster = EmbedCreator.createRoster(raid);
-          msg = EmbedCreator.createEmbed(day, time, title, roster);
-        }
-        if (msg instanceof Error) {
-          RaidEvent = undefined;
-          return await message.channel.send(msg.message);
-        }
-        RaidMessage = await message.channel.send(msg);
-      } catch (err) {
-        console.log(`ERROR: Command <raid create> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-      }
-
-      try {
-        await RaidMessage.react(bot.emojis.get(emojis.customEmojis.mt));
-        await RaidMessage.react(bot.emojis.get(emojis.customEmojis.ot));
-        await RaidMessage.react(bot.emojis.get(emojis.customEmojis.heals));
-        await RaidMessage.react(bot.emojis.get(emojis.customEmojis.mag));
-        await RaidMessage.react(bot.emojis.get(emojis.customEmojis.stam));
-        await RaidMessage.react(emojis.examples.cancel);
-      } catch (err) {
-        console.error('ERROR:\n<raid create> One of the emojis failed to react.');
-      }
-    }
-    if (raidCommand === 'delete') {
-      try {
-        let msg = 'No raid available';
-        if (RaidEvent !== undefined) {
-          msg = `Raid ${RaidEvent.title} deleted`
-          RaidEvent = undefined;
-          await RaidMessage.delete();
-          RaidMessage = undefined;
-        }
-        message.channel.send(msg);
-      } catch (err) {
-        console.log(`ERROR: Command <raid delete> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-      }
+  if (command === 'roast') {
+    let retorts = quotes.retort;
+    let randomQuote = quoteHelper.getQuote(retorts);
+    try {
+      await message.channel.send(randomQuote);
+    } catch (err) {
+      console.log(`ERROR: on roast.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
 
@@ -705,11 +658,11 @@ bot.on('message', async (message) => {
    */
   // if (command === 'test') {
   //   try {
-  //     let results = message.mentions.users.map((u) => {
-  //       return `<@${u.id}>`;
-  //     });
-  //     console.log(results);
-  //     return message.delete();
+  //     let general = EmbedCreator.createGeneralHelpEmbed(commands);
+  //     let special = EmbedCreator.createSpecializedHelpEmbed(commands);
+  //     let channel = require('./auth.json').snf_bot_commands_channel_id;
+  //     bot.channels.get(channel).send(general);
+  //     return bot.channels.get(channel).send(special);
   //   } catch (err) {
   //     console.log(`Test failed: ${err}`);
   //   }
