@@ -1,9 +1,8 @@
-let Discord = require('discord.js');
-let _ = require('lodash');
+const Discord = require('discord.js');
+const _ = require('lodash');
 
-let RaidInfo = require('./RaidInfo.json');
-let logos = require('../resources/logos.json');
-let DateHelper = require('../helpers/DateHelper');
+const RaidInfo = require('./RaidInfo.json');
+const logos = require('../resources/logos.json');
 
 /**
  * Returns the json object related to the raid
@@ -117,6 +116,33 @@ function createEmbed(day, time, title, eventName, roster) {
     }
   });
   embed.addField('CP', cpDisplay, true);
+  return embed;
+}
+
+function createGeneralHelpEmbed(commands) {
+  let embed = new Discord.RichEmbed()
+    .setColor('#ff6600')
+    .setTitle('General Commands')
+    .setThumbnail(logos['2']);
+  let desc = '';
+  let generalCommands = Object.keys(commands.general);
+  generalCommands.forEach((c) => {
+    // desc += `**${c}** - *${commands.general[c].desc}* | \`!${commands.general[c].usage}\`\n`;
+    embed.addField(`**${c}** - *${commands.general[c].desc}*`, `\`!${commands.general[c].usage}\`\n`);
+  });
+  //embed.setDescription(desc);
+  return embed;
+}
+
+function createSpecializedHelpEmbed(commands) {
+  let embed = new Discord.RichEmbed()
+    .setColor('#ff6600')
+    .setTitle('Specialized Commands')
+    .setThumbnail(logos['2']);
+  let specializedCommands = Object.keys(commands.specialized);
+  specializedCommands.forEach((c) => {
+    embed.addField(`${c} - ${commands.specialized[c].desc}`, commands.specialized[c].options);
+  });
   return embed;
 }
 
@@ -265,5 +291,7 @@ module.exports = {
   createRoleEmbed: createRoleEmbed,
   createSetEmbed: createSetEmbed,
   createSkillEmbed: createSkillEmbed,
-  createPledgesEmbed: createPledgesEmbed
+  createPledgesEmbed: createPledgesEmbed,
+  createGeneralHelpEmbed: createGeneralHelpEmbed,
+  createSpecializedHelpEmbed: createSpecializedHelpEmbed
 }
