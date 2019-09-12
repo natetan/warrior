@@ -1,0 +1,74 @@
+{
+  "general": {
+    "define": {
+      "desc": "Defines a given word.",
+      "usage": "define [word]"
+    },
+    "doggo": {
+      "desc": "Gets a random dog media (png, jpg, gif, wmv).",
+      "usage": "doggo"
+    },
+    "halp": {
+      "desc": "List of commands - self deletes after a minute.",
+      "usage": "halp"
+    },
+    "help": {
+      "desc": "Not a fun way to seek help.",
+      "usage": "help"
+    },
+    "meme": {
+      "desc": "Random meme from Reddit. Hit or miss :eyes:",
+      "usage": "meme"
+    },
+    "meow": {
+      "desc": "Companion command of doggo -- random cats!",
+      "usage": "meow"
+    },
+    "ping": {
+      "desc": "Calculates the ping.",
+      "usage": "ping"
+    },
+    "pledges": {
+      "desc": "Gets the daily pledges.",
+      "usage": "pledges"
+    },
+    "purge": {
+      "desc": "Purges between 1 to 20 messages. Admins only.",
+      "usage": "purge [number]"
+    },
+    "roast": {
+      "desc": "Get toasted!",
+      "usage": "roast"
+    },
+    "roles": {
+      "desc": "Show roles for yourself, or get an aggregate.",
+      "usage": "roles <count> | <all>"
+    },
+    "set": {
+      "desc": "Gets a set from eso-sets.",
+      "usage": "set [query]"
+    },
+    "skill": {
+      "desc": "Gets a skill from eso-skillbook.",
+      "usage": "skill [query]"
+    },
+    "urban": {
+      "desc": "Random UD definition. Moderately NSFW.",
+      "usage": "urban [query]"
+    }
+  },
+  "specialized": {
+    "imgen": {
+      "desc": "Image manipulation for the memes.",
+      "options": "egg, rip, shit, slap"
+    },
+    "quotes": {
+      "desc": "Quotes from ESO / others.",
+      "options": "warrior, rakkhat, zmaja, dragon, ramsay"
+    },
+    "trial": {
+      "desc": "Manage raids. See !trial help for more info.",
+      "options": "create, join, delete"
+    }
+  }
+}
