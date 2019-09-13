@@ -40,20 +40,19 @@ async function getUrbanDefinition(term) {
   if (res.status === 200) {
     let json = await res.json();
     let results = json.list;
+    const characterLimit = 300;
+    results.forEach((r) => {
+      console.log(r.definition.length);
+    });
+    results = results.filter((r) => {
+      return r.definition.length <= characterLimit;
+    });
     let length = results.length;
-    if (length === 0) {
+    if (!length) {
       return;
     }
     let definition = results[Math.floor(Math.random() * length)]['definition'];
-    let tries = 10;
-    let characterLimit = 200;
-    while (definition.length > characterLimit && tries > 0) {
-      definition = results[Math.floor(Math.random() * length)]['definition'];
-      tries--;
-    }
-    if (tries < 1) {
-      definition = `After 10 tries, I could not find a definition that is less than ${characterLimit} characters.`;
-    }
+    
     // Use Regex to replace all square brackets
     definition = (definition + '').replace(/[\[\]']+/g, '');
     return definition;
