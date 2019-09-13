@@ -41,9 +41,6 @@ async function getUrbanDefinition(term) {
     let json = await res.json();
     let results = json.list;
     const characterLimit = 300;
-    results.forEach((r) => {
-      console.log(r.definition.length);
-    });
     results = results.filter((r) => {
       return r.definition.length <= characterLimit;
     });
