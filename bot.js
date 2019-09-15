@@ -335,12 +335,19 @@ bot.on('message', async (message) => {
   }
 
   if (command === 'meme') {
-    let m = await message.channel.send('Fetching random meme from reddit...');
+    let subreddit = args[0];
+    let m;
+    if (subreddit) {
+      m = await message.channel.send(`Fetching meme from r/${subreddit}`);
+    } else {
+      m = await message.channel.send('Fetching random meme from r/memes, r/dankmemes, and r/meirl');
+    }
     try {
-      let meme = await memes.getRandomMeme();
+      let meme = await memes.getRandomMeme(subreddit);
       return m.edit(`From \`r/${meme.subreddit}\`: ${meme.url}`);
     } catch (err) {
-      return m.edit(`There was an error: ${err}`);
+      console.log(`There was an error: ${err}`);
+      return m.edit('Sorry, an error occured.');
     }
   }
 

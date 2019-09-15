@@ -17,8 +17,8 @@
       "usage": "help"
     },
     "meme": {
-      "desc": "Random meme from Reddit. Hit or miss :eyes:",
-      "usage": "meme"
+      "desc": "Random meme from r/memes, r/dankmemes, r/meirl.",
+      "usage": "meme <subreddit>"
     },
     "meow": {
       "desc": "Companion command of doggo -- random cats!",
