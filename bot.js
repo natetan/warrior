@@ -344,6 +344,9 @@ bot.on('message', async (message) => {
     }
     try {
       let meme = await memes.getRandomMeme(subreddit);
+      if (meme.status_code && meme.status_code === 404) {
+        return m.edit(`Subreddit r/${subreddit} not found.`);
+      }
       let embed = EmbedCreator.createMemeEmbed(meme);
       return m.edit(embed);
     } catch (err) {
