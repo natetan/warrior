@@ -119,6 +119,22 @@ function createEmbed(day, time, title, eventName, roster) {
   return embed;
 }
 
+function createDefinitionEmbed(term) {
+  let embed = new Discord.RichEmbed()
+    .setColor('#ff6600')
+    .setTitle(`${term.term} - *${term.lexicalCategory}*`)
+    .setThumbnail(logos['2'])
+    .setDescription(`*${term.definition}*`);
+  if (term.examples) {
+    let count = 1;
+    term.examples.forEach((e) => {
+      embed.addField(`Example #${count}`, e.text);
+      count++;
+    });
+  }
+  return embed;
+}
+
 function createGeneralHelpEmbed(commands) {
   let embed = new Discord.RichEmbed()
     .setColor('#ff6600')
@@ -293,5 +309,6 @@ module.exports = {
   createSkillEmbed: createSkillEmbed,
   createPledgesEmbed: createPledgesEmbed,
   createGeneralHelpEmbed: createGeneralHelpEmbed,
-  createSpecializedHelpEmbed: createSpecializedHelpEmbed
+  createSpecializedHelpEmbed: createSpecializedHelpEmbed,
+  createDefinitionEmbed: createDefinitionEmbed
 }

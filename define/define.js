@@ -1,10 +1,11 @@
 const fetch = require('node-fetch');
 
-const oxfordBaseUrl = 'https://od-api.oxforddictionaries.com/api/v1/entries/en';
+const oxfordBaseUrl = 'https://od-api.oxforddictionaries.com/api/v2/entries/en';
 const urbanDictionaryBaseUrl = `http://api.urbandictionary.com/v0/define?term=`;
 
+
 /**
- * Gets the definition from Oxford dictionary. Chooses the first definition
+ * Gets the definition from Oxford dictionary. Randomly chooses a definition
  * 
  * @param {String} term 
  */
@@ -19,7 +20,23 @@ async function getDefinition(term) {
   term = term.toLowerCase();
   let res = await fetch(`${oxfordBaseUrl}/${term}`, options);
   if (res.status === 200) {
-    return res.json();
+    let json = await res.json();
+
+    const results = json.results;
+    const lexicalEntries = results[getRandomArrayIndex(results)];
+    const entries = lexicalEntries.lexicalEntries[getRandomArrayIndex(Object.keys(lexicalEntries.lexicalEntries))];
+    const senses = entries.entries[getRandomArrayIndex(Object.keys(entries.entries))];
+    const definitions = senses.senses[getRandomArrayIndex(Object.keys(senses.senses))];
+
+    let definition = definitions.definitions[getRandomArrayIndex(definitions.definitions)];
+    let examples = definitions.examples;
+    let lexicalCategory = entries.lexicalCategory.text;
+    return {
+      term: term,
+      definition: definition,
+      examples: examples,
+      lexicalCategory: lexicalCategory
+    }
   } else {
     return {
       'error': res.status,
@@ -28,9 +45,13 @@ async function getDefinition(term) {
   }
 }
 
+function getRandomArrayIndex(array) {
+  return Math.floor(Math.random() * array.length);
+}
+
 /**
  * Gets the definition from urban dictionary. Randomly chooses a definition that is less
- * than 160 words.
+ * than 300 characters.
  * 
  * @param {String} term 
  */

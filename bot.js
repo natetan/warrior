@@ -173,15 +173,14 @@ bot.on('message', async (message) => {
    */
   if (command === 'define') {
     try {
-      let word = args[0];
-      let defObject = await define.getDefinition(word);
-      let definition;
-      if (defObject.error) {
-        definition = `Error ${defObject.error}: **${defObject.errorMessage}**`;
-      } else {
-        definition = defObject.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0];
+      let word = args.join(' ');
+      let term = await define.getDefinition(word);
+      if (term.error) {
+        return message.channel.send(term.errorMessage);
       }
-      message.channel.send(`*${definition}*`);
+
+      let embed = EmbedCreator.createDefinitionEmbed(term);
+      return message.channel.send(embed);
     } catch (err) {
       console.log(`ERROR: Command <define> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
