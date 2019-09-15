@@ -143,10 +143,8 @@ function createGeneralHelpEmbed(commands) {
   let desc = '';
   let generalCommands = Object.keys(commands.general);
   generalCommands.forEach((c) => {
-    // desc += `**${c}** - *${commands.general[c].desc}* | \`!${commands.general[c].usage}\`\n`;
     embed.addField(`**${c}** - *${commands.general[c].desc}*`, `\`!${commands.general[c].usage}\`\n`);
   });
-  //embed.setDescription(desc);
   return embed;
 }
 
@@ -159,6 +157,16 @@ function createSpecializedHelpEmbed(commands) {
   specializedCommands.forEach((c) => {
     embed.addField(`${c} - ${commands.specialized[c].desc}`, commands.specialized[c].options);
   });
+  return embed;
+}
+
+function createMemeEmbed(meme) {
+  let embed = new Discord.RichEmbed()
+    .setColor('#ff6600')
+    .setTitle(`r/${meme.subreddit}`)
+    .setDescription(meme.title)
+    .setImage(meme.url)
+    .setURL(meme.postLink);
   return embed;
 }
 
@@ -310,5 +318,6 @@ module.exports = {
   createPledgesEmbed: createPledgesEmbed,
   createGeneralHelpEmbed: createGeneralHelpEmbed,
   createSpecializedHelpEmbed: createSpecializedHelpEmbed,
-  createDefinitionEmbed: createDefinitionEmbed
+  createDefinitionEmbed: createDefinitionEmbed,
+  createMemeEmbed: createMemeEmbed
 }

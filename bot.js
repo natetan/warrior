@@ -344,7 +344,8 @@ bot.on('message', async (message) => {
     }
     try {
       let meme = await memes.getRandomMeme(subreddit);
-      return m.edit(`From \`r/${meme.subreddit}\`: ${meme.url}`);
+      let embed = EmbedCreator.createMemeEmbed(meme);
+      return m.edit(embed);
     } catch (err) {
       console.log(`There was an error: ${err}`);
       return m.edit('Sorry, an error occured.');
