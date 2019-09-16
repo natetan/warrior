@@ -302,21 +302,15 @@ bot.on('message', async (message) => {
     }
   }
 
-  // The actual help command. Deletes after a minute.
+  // The actual help command.
   if (command === 'halp') {
     try {
-      let helpMessage = 'You\'ve reached ZOS Customer Support! Here are your available game-breaking commands:\n';
-      let helpStrings = Object.keys(strings.commands);
-      helpStrings.forEach((c) => {
-        helpMessage += `${c}: ${strings.commands[c]}\n\n`;
-      });
-      let m = await message.channel.send(helpMessage);
-      setTimeout(async () => {
-        await message.delete();
-        await m.delete();
-      }, 60000);
+      let general = EmbedCreator.createGeneralHelpEmbed(commands);
+      let special = EmbedCreator.createSpecializedHelpEmbed(commands);
+      await message.channel.send(general);
+      return message.channel.send(special);
     } catch (err) {
-      console.log(`ERROR: Command <halp> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`Test failed: ${err}`);
     }
   }
 

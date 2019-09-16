@@ -9,7 +9,7 @@
       "usage": "doggo"
     },
     "halp": {
-      "desc": "List of commands - self deletes after a minute.",
+      "desc": "List of commands",
       "usage": "halp"
     },
     "help": {
