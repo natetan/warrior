@@ -4,6 +4,11 @@ const millisToMinutesAndSeconds = millis => {
   return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 }
 
+const dateToShortISO = dateString => {
+  return new Date(dateString).toISOString().substring(0, 10);
+}
+
 module.exports = {
-  millisToMinutesAndSeconds
+  millisToMinutesAndSeconds,
+  dateToShortISO
 }

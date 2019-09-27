@@ -1,5 +1,5 @@
 let base64 = require('base-64');
-let client = require('../client/RestClient');
+let client = require('../services/client');
 
 const eso_pledges_api_base_url = 'https://beast.pathfindermediagroup.com/api/eso/pledges';
 const eso_sets_auth = process.env.eso_sets_token || require('../auth.json').eso_sets_token;

@@ -8,6 +8,10 @@
       "desc": "Gets a random dog media (png, jpg, gif, wmv).",
       "usage": "doggo"
     },
+    "expose": {
+      "desc": "Find out who someone really is.",
+      "usage": "expose"
+    },
     "halp": {
       "desc": "List of commands",
       "usage": "halp"

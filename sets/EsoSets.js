@@ -1,5 +1,5 @@
 let base64 = require('base-64');
-let client = require('../client/RestClient');
+let client = require('../services/client');
 
 const eso_sets_api_base_url = 'https://beast.pathfindermediagroup.com/api/eso/sets';
 const eso_sets_base_url = 'https://eso-sets.com/set';

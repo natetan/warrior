@@ -1,4 +1,4 @@
-let restClient = require('../client/RestClient');
+let restClient = require('../services/client');
 
 const memes_base_url = 'https://meme-api.herokuapp.com/gimme';
 

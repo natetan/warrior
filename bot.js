@@ -141,18 +141,6 @@ client.on('message', async (message) => {
     message.reply(`there was an error trying to execute that command: ${command.name}`);
   }
 
-  // if (command === 'expose') {
-  //   try {
-  //     let user = message.author;
-  //     if (message.mentions.users.size) {
-  //       user = message.mentions.users.first();
-  //     }
-  //     return message.channel.send(`That is **${user.username}**. This person joined discord on ${new Date(user.createdAt).toISOString().substring(0, 10)}`);
-  //   } catch (err) {
-  //     console.log('error in expose');
-  //   }
-  // }
-
   // /**
   //  * Get the user's ID, and then deletes the message
   //  */

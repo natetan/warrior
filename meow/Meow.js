@@ -1,4 +1,4 @@
-let client = require('../client/RestClient');
+let client = require('../services/client');
 let catUrl = 'https://aws.random.cat/meow';
 
 async function getRandomCat() {
