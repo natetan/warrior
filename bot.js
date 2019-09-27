@@ -116,8 +116,8 @@ bot.on('message', async (message) => {
       console.log(`The ID of channel #${message.channel.name} in guild <${message.guild.name}>: ${message.channel.id}`);
       let allChannels = message.guild.channels.sort((a, b) => {
         return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
-      }).filter((c) => { 
-        return c.type === 'text'; 
+      }).filter((c) => {
+        return c.type === 'text';
       }).map((c) => {
         return {
           name: c.name,
@@ -138,6 +138,18 @@ bot.on('message', async (message) => {
     } catch (err) {
       console.log(`ERROR: Command <doggo> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
       message.channel.send('There was an error. No doggos for you.');
+    }
+  }
+
+  if (command === 'expose') {
+    try {
+      let user = message.author;
+      if (message.mentions.users.size) {
+        user = message.mentions.users.first();
+      }
+      return message.channel.send(`That is **${user.username}**. This person joined discord on ${new Date(user.createdAt).toISOString().substring(0, 10)}`);
+    } catch (err) {
+      console.log('error in expose');
     }
   }
 
@@ -579,7 +591,6 @@ bot.on('message', async (message) => {
       return m.edit('There was an error.');
     }
     let songEmbed = EmbedCreator.createSongEmbed(song);
-    console.log(song);
     return m.edit(songEmbed);
   }
 
@@ -680,17 +691,42 @@ bot.on('message', async (message) => {
   /**
    * THIS IS A TEST - do experimental stuff here
    */
-  // if (command === 'test') {
-  //   try {
-  //     let general = EmbedCreator.createGeneralHelpEmbed(commands);
-  //     let special = EmbedCreator.createSpecializedHelpEmbed(commands);
-  //     let channel = require('./auth.json').snf_bot_commands_channel_id;
-  //     bot.channels.get(channel).send(general);
-  //     return bot.channels.get(channel).send(special);
-  //   } catch (err) {
-  //     console.log(`Test failed: ${err}`);
-  //   }
-  // }
+  if (command === 'test') {
+    let testEmbed = EmbedCreator.createExampleEmbed();
+    try {
+      let m = await message.channel.send(testEmbed);
+      await m.react(emojis.examples.mt);
+      await m.react(emojis.examples.ot);
+      await m.react(emojis.examples.heals);
+      await m.react(emojis.examples.stam);
+      await m.react(emojis.examples.mag);
+      await m.react(emojis.examples.cancel);
+
+      const filter = (reaction, user) => {
+        return Object.values(emojis.examples).includes(reaction.emoji.name) && user.id !== m.author.id;
+      }
+
+      m.awaitReactions(filter, { max: 2, time: 604800, errors: ['time'] })
+        .then((collected) => {
+          console.log('test');
+          console.log(`<@${collected.first().users.first().id}>`);
+          let usersList = [];
+          collected.first().users.forEach((u) => {
+            if (!u.bot) {
+              usersList.push(u.username);
+            }
+          })
+          message.channel.send(usersList);
+        })
+        .catch((collected) => {
+          console.log('end');
+          console.log(`After 1 second, we got ${collected.size} reactions`);
+        });
+
+    } catch (err) {
+      console.log(`Error in testing: ${err}`);
+    }
+  }
 
   /**
    * Uses the google translate api to translate text

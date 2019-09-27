@@ -16,7 +16,7 @@ function getRaidInfo(raidName) {
   if (raidName === 'vmaw') {
     raidName = 'vmol';
   }
-  
+
   return RaidInfo[raidName] ? RaidInfo[raidName] : null;
 }
 
@@ -317,12 +317,21 @@ function createPledgesEmbed(pledges) {
     return '';
   }
   let embed = new Discord.RichEmbed()
-      .setColor('#ff6600')
-      .setTitle(`Pledges - ${new Date().toDateString().substring(0, 10)}`)
-      .setThumbnail(logos['2'])
-      .addField('Maj', pledges['1'])
-      .addField('Glirion', pledges['2'])
-      .addField('Urgalarg', pledges['3']);
+    .setColor('#ff6600')
+    .setTitle(`Pledges - ${new Date().toDateString().substring(0, 10)}`)
+    .setThumbnail(logos['2'])
+    .addField('Maj', pledges['1'])
+    .addField('Glirion', pledges['2'])
+    .addField('Urgalarg', pledges['3']);
+  return embed;
+}
+
+function createExampleEmbed() {
+  let embed = new Discord.RichEmbed()
+    .setColor('#ff6600')
+    .setTitle('Example Embed - Testing Purposes')
+    .setDescription('These are used for debugging and trying things out. !trial')
+    .setThumbnail(logos['2']);
   return embed;
 }
 
