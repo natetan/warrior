@@ -21,6 +21,7 @@ module.exports = {
     'leave test'
   ],
   commandType: 'special',
+  category: 'trials',
   async execute(message, args, client) {
     let guildId = message.guild.id;
     let trialCommand = args[0];

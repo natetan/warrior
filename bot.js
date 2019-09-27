@@ -9,6 +9,8 @@ const emojis = require('./resources/emojis');
 const strings = require('./resources/strings');
 const firebase = require('./db/firebaseHelper');
 const imgen = require('./imgen/ImageManipulator');
+const quotes = require('./resources/quotes.json');
+const quoteUtils = require('./utils/quoteUtils');
 
 const fs = require('fs');
 
@@ -110,7 +112,7 @@ client.on('message', async (message) => {
   // If someone @'s the bot, send them a nasty retort.
   if (message.isMemberMentioned(client.user) && !message.mentions.everyone) {
     let retorts = quotes.retort;
-    let randomQuote = quoteHelper.getQuote(retorts);
+    let randomQuote = quoteUtils.getQuote(retorts);
     try {
       await message.channel.send(randomQuote);
     } catch (err) {
@@ -157,38 +159,11 @@ client.on('message', async (message) => {
   //   }
   // }
 
-  // /**
-  //  * Upon popular demand, this will randomly display a quote from the warrior
-  //  */
-  // if (command === 'warrior') {
-  //   try {
-  //     let results = message.mentions.users.map((u) => {
-  //       return `<@${u.id}>`;
-  //     });
-  //     if (results.length > 0) {
-  //       let warriorQuotes = destroy.warrior;
-  //       results.forEach((p) => {
-  //         let randomQuote = quoteHelper.getQuote(warriorQuotes);
-  //         randomQuote = randomQuote.replace('@', p);
-  //         return message.channel.send(randomQuote);
-  //       });
-  //     } else {
-  //       let warriorQuotes = quotes.warrior;
-  //       let randomQuote = quoteHelper.getQuote(warriorQuotes);
-  //       let warriorEmoji = client.emojis.get(emojis.customEmojis.warrior);
-  //       return message.channel.send(`${warriorEmoji} ${randomQuote}`);
-  //     }
-
-  //   } catch (err) {
-  //     console.log(`ERROR: Command <warrior> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-  //   }
-  // }
-
-  // /**
-  //  * This uses quotes from other bosses if it exists.
-  //  * 
-  //  * options: !rakkhat, !zmaja
-  //  */
+  /**
+   * This uses quotes from other bosses if it exists.
+   * 
+   * options: !rakkhat, !zmaja
+   */
   // if (quoteHelper.quoteOptions.includes(command)) {
   //   try {
   //     let results = message.mentions.users.map((u) => {
