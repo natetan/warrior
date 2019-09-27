@@ -10,10 +10,10 @@ module.exports = {
     const specialArray = [];
     const { commands } = message.client;
     let generalCommands = commands.filter((command) => {
-      return command.commandType === 'general' && !command.private;
+      return command.commandType === 'general';
     });
     let specialCommands = commands.filter((command) => {
-      return command.commandType === 'special' && !command.private;
+      return command.commandType === 'special';
     });
     generalArray.push(generalCommands);
     specialArray.push(specialCommands);

@@ -6,7 +6,12 @@ let doggoUrl = 'https://random.dog/woof.json';
  */
 async function getRandomDoggo() {
   let res = await client.get(doggoUrl);
-  return res;
+  if (res.status === 200) {
+    return res.json();
+  } else {
+    return null;
+  }
+
 }
 
 module.exports = getRandomDoggo;

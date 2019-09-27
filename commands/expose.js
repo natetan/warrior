@@ -4,6 +4,7 @@ module.exports = {
   name: 'expose',
   description: 'Find out who someone really is.',
   usage: '[username]',
+  commandType: 'general',
   execute(message, args, client) {
     try {
       let user = message.author;

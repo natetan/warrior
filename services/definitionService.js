@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+const client = require('./client');
 
 const oxfordBaseUrl = 'https://od-api.oxforddictionaries.com/api/v2/entries/en';
 const urbanDictionaryBaseUrl = `http://api.urbandictionary.com/v0/define?term=`;
@@ -18,7 +18,7 @@ async function getDefinition(term) {
     }
   }
   term = term.toLowerCase();
-  let res = await fetch(`${oxfordBaseUrl}/${term}`, options);
+  let res = await client.get(`${oxfordBaseUrl}/${term}`, options);
   if (res.status === 200) {
     let json = await res.json();
 
@@ -57,7 +57,7 @@ function getRandomArrayIndex(array) {
  */
 async function getUrbanDefinition(term) {
   term = term.toLowerCase();
-  let res = await fetch(`${urbanDictionaryBaseUrl}${term}`);
+  let res = await client.get(`${urbanDictionaryBaseUrl}${term}`);
   if (res.status === 200) {
     let json = await res.json();
     let results = json.list;
@@ -70,7 +70,7 @@ async function getUrbanDefinition(term) {
       return;
     }
     let definition = results[Math.floor(Math.random() * length)]['definition'];
-    
+
     // Use Regex to replace all square brackets
     definition = (definition + '').replace(/[\[\]']+/g, '');
     return definition;
@@ -83,6 +83,6 @@ async function getUrbanDefinition(term) {
 }
 
 module.exports = {
-  getDefinition: getDefinition,
-  getUrbanDefinition: getUrbanDefinition
+  getDefinition,
+  getUrbanDefinition
 }

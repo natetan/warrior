@@ -1,9 +1,9 @@
 const Discord = require('discord.js');
 const _ = require('lodash');
 
-const RaidInfo = require('./RaidInfo.json');
+const RaidInfo = require('../raid/RaidInfo.json');
 const logos = require('../resources/logos.json');
-const displayUtils = require('../utils/displayUtils');
+const displayUtils = require('./displayUtils');
 
 /**
  * Returns the json object related to the raid

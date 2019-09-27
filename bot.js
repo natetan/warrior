@@ -7,9 +7,7 @@ const quotes = require('./resources/quotes.json');
 const destroy = require('./resources/destroy.json');
 const commands = require('./resources/commands.json');
 const languages = require('./translate/TranslateHelper');
-const define = require('./define/define');
 const emojis = require('./resources/emojis');
-const EmbedCreator = require('./raid/EmbedCreator');
 const strings = require('./resources/strings');
 const firebase = require('./db/FirebaseHelper');
 const sets = require('./sets/EsoSets');
@@ -140,194 +138,6 @@ client.on('message', async (message) => {
     console.error(error);
     message.reply(`there was an error trying to execute that command: ${command.name}`);
   }
-
-  // /**
-  //  * Get the user's ID, and then deletes the message
-  //  */
-  // if (command === 'uid') {
-  //   try {
-  //     console.log(`The ID of user ${message.author.username} is ${message.author.id}`);
-  //     await message.delete();
-  //   } catch (err) {
-  //     console.log(`ERROR: Command <uid> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-  //   }
-  // }
-
-  // // Logs out all the members and their ids in the channel and deletes the message
-  // if (command === 'ids') {
-  //   try {
-  //     let res = {};
-  //     message.channel.members.forEach((member) => {
-  //       res[member.user.username] = member.user.id
-  //     });
-  //     console.log(res);
-  //     await message.delete();
-  //   } catch (err) {
-  //     console.log(`ERROR: Command <ids> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-  //   }
-  // }
-
-  // /**
-  //  * Uses the Oxford dictionary API to define words
-  //  * 
-  //  * @arg word - the word to define
-  //  */
-  // if (command === 'define') {
-  //   try {
-  //     let word = args.join(' ');
-  //     let term = await define.getDefinition(word);
-  //     if (term.error) {
-  //       return message.channel.send(term.errorMessage);
-  //     }
-
-  //     let embed = EmbedCreator.createDefinitionEmbed(term);
-  //     return message.channel.send(embed);
-  //   } catch (err) {
-  //     console.log(`ERROR: Command <define> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-  //   }
-  // }
-
-  // // Firebase stuff
-  // if (command === 'fb') {
-  //   let fbCommand = args[0];
-  //   if (!fbCommand) {
-  //     return await message.channel.send(`Command !fb requires parameters: !fb <command>`);
-  //   }
-  //   if (fbCommand === 'init') {
-  //     let guildId = message.guild.id;
-  //     let guildName = message.guild.name;
-  //     let guildOwner = message.guild.owner.displayName;
-  //     await firebase.initializeGuild(guildId, guildName, guildOwner);
-  //     return message.delete();
-  //   }
-  // }
-
-  // /**GAMBLING GAME */
-  // if (command === 'game') {
-  //   let gameCommand = args[0];
-  //   if (!gameCommand) {
-  //     return await message.channel.send(`Command !game requires parameters: !game <command>`);
-  //   }
-  //   let guildId = message.guild.id;
-  //   if (gameCommand === 'setup') {
-  //     let hasPermission = message.member.roles.some(r => permissionRoles.includes(r.name));
-  //     if (!hasPermission) {
-  //       return message.channel.send(`${message.author}, you do not have permission to use this command`);
-  //     }
-  //     try {
-  //       args.shift();
-  //       let amount = args[0];
-  //       let members = message.guild.members;
-  //       let players = [];
-  //       let startingAmount = Number(amount) || 200000;
-  //       members.forEach((m) => {
-  //         let member = {
-  //           name: m.user.username,
-  //           funds: startingAmount
-  //         };
-  //         players.push(member)
-  //       });
-  //       let errorNames = await firebase.setUpPlayers(guildId, players);
-  //       if (errorNames.length === 0) {
-  //         message.channel.send(`Setup complete! All players in this server have been setup with $${startingAmount}`);
-  //       } else {
-  //         message.channel.send(`Setup complete! However, here are the players that could not be added: \`${errorNames.toString()}\` because their names contained: \`.\`, \`#\`, \`$\`, \`[\`, or \`]\``);
-  //       }
-  //     } catch (err) {
-  //       console.log(`ERROR: Command <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-  //     }
-  //   } else if (gameCommand === 'funds') {
-  //     let userExists = await firebase.userExists(guildId, message.author.username);
-  //     if (!userExists) {
-  //       return message.channel.send('You do not exist in the database. I cannot retrieve your funds. I\'d add you in, but that\'s against protocol. Try `!help`.');
-  //     }
-  //     let funds = await firebase.getPlayerFunds(guildId, message.author.username);
-  //     let msg = `${message.author}, you have $${funds}`;
-  //     if (!funds && funds > 0) {
-  //       msg = `Sorry, ${message.author} I could not retrieve your funds. Either there was an error on my end, or you're just a bum.`;
-  //     }
-  //     message.channel.send(msg);
-  //   } else if (gameCommand === 'give') {
-  //     let userExists = await firebase.userExists(guildId, message.author.username);
-  //     if (!userExists) {
-  //       return message.channel.send('You do not exist in the database. I cannot retrieve your funds. I\'d add you in, but that\'s against protocol. Try `!help`.');
-  //     }
-  //     args.shift();
-  //     let receiver = args[0];
-  //     // Receiver looks like this: <@123456789>
-  //     receiver = receiver.replace(/\</g, '').replace(/\>/g, '').replace(/@/g, '');
-  //     let user;
-
-  //     // We'll try to parse a user from an @, and if that fails, use what they typed
-  //     // i.e. @Aerovertics vs aerovertics
-  //     try {
-  //       user = await client.fetchUser(receiver);
-  //     } catch (err) {
-  //       console.log(`SUPPRESSING ERROR: ${err}. Attempting to use actual string.`);
-  //       user = receiver;
-  //     }
-
-  //     let receiverName = user.username || user;
-  //     let receiverExists = await firebase.userExists(guildId, receiverName);
-  //     if (!receiverExists) {
-  //       return message.channel.send(`${receiverName} does not exist in the database.`);
-  //     }
-
-  //     args.shift();
-  //     let amount = args[0];
-
-  //     if (!amount) {
-  //       return message.channel.send(`${message.author}, you must input an amount to give.`);
-  //     }
-
-  //     if (!Number(amount)) {
-  //       return message.channel.send(`${message.author}, that's not an integer I can parse, you vitamin-d deficient clown.`);
-  //     }
-
-  //     amount = Math.floor(amount);
-
-  //     if (amount < 1) {
-  //       return message.channel.send(`${message.author}, you must give an amount greater than 0 you frugally poor dweeb.`);
-  //     }
-
-  //     let senderFunds = await firebase.getPlayerFunds(guildId, message.author.username);
-  //     if (amount > senderFunds) {
-  //       return message.channel.send(`${message.author}, you can't send more than you have. Balance: $${senderFunds}`);
-  //     }
-
-  //     receiverFunds = await firebase.updatePlayerFunds(guildId, receiverName, amount);
-  //     senderFunds = await firebase.updatePlayerFunds(guildId, message.author.username, amount * -1);
-  //     return message.channel.send(`Transfer complete!\n\t${message.author.username}: $${senderFunds}\n\t${receiverName}: $${receiverFunds}`);
-  //   } else {
-  //     return await message.channel.send(`!game ${gameCommand} is not valid.`);
-  //   }
-  // }
-
-  // // The actual help command.
-  // if (command === 'halp') {
-  //   try {
-  //     let general = EmbedCreator.createGeneralHelpEmbed(commands);
-  //     let special = EmbedCreator.createSpecializedHelpEmbed(commands);
-  //     await message.channel.send(general);
-  //     return message.channel.send(special);
-  //   } catch (err) {
-  //     console.log(`Test failed: ${err}`);
-  //   }
-  // }
-
-  // // Snail's first command lmao
-  // if (command === 'help') {
-  //   try {
-  //     await message.channel.send('Git Gud');
-  //   } catch (err) {
-  //     console.log(`ERROR: Command <help> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-  //   }
-  // }
-
-  // if (command === 'inviteurl') {
-  //   console.log(`Invite link: https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=0&scope=bot`);
-  //   return message.delete();
-  // }
 
   // if (command === 'meme') {
   //   let subreddit = args[0];
@@ -829,5 +639,8 @@ client.on('message', async (message) => {
   //     console.log(`ERROR: Command <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
   //   }
   // }
+
+
+  
 });
 

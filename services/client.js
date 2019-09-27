@@ -12,7 +12,7 @@ let fs = require('fs');
 async function get(url, options = {}) {
   try {
     let res = await fetch(url, options);
-    return res.json();
+    return res;
   } catch (err) {
     console.log(`Error in <RestClient.getAsync()>: ${err}`);
     return null;
