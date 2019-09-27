@@ -9,12 +9,12 @@ let fs = require('fs');
  * 
  * Returns json
  */
-async function GetAsync(url, options = {}) {
+async function get(url, options = {}) {
   try {
     let res = await fetch(url, options);
     return res.json();
   } catch (err) {
-    console.log(`Error in <RestClient.GetAsync()>: ${err}`);
+    console.log(`Error in <RestClient.getAsync()>: ${err}`);
     return null;
   }
 }
@@ -22,15 +22,15 @@ async function GetAsync(url, options = {}) {
 /**
  * Saves json into a file
  * 
- * @param {string} url - url
- * @param {string} fileName - name of the file to save
- * @param {Object} options - request options (optional)
+ * @param {string} url url
+ * @param {string} fileName name of the file to save
+ * @param {Object} options request options (optional)
  * 
  * Returns true if successful and false otherwise
  */
-async function SaveJsonAsync(url, fileName, options = {}) {
+async function saveJson(url, fileName, options = {}) {
   try {
-    let json = await GetAsync(url, options);
+    let json = await get(url, options);
     await fs.writeFileSync(fileName, JSON.stringify(json, null, 2), (err) => {
       console.log(`File save error: ${err}`);
     });
@@ -42,6 +42,6 @@ async function SaveJsonAsync(url, fileName, options = {}) {
 }
 
 module.exports = {
-  GetAsync: GetAsync,
-  SaveJsonAsync: SaveJsonAsync
+  get,
+  saveJson
 }

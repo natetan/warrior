@@ -15,7 +15,6 @@ const firebase = require('./db/FirebaseHelper');
 const sets = require('./sets/EsoSets');
 const skills = require('./skills/EsoSkills');
 const pledges = require('./pledges/EsoPledges');
-const doggo = require('./doggo/Doggo');
 const meow = require('./meow/Meow');
 const memes = require('./memes/Memes');
 const imgen = require('./imgen/ImageManipulator');
@@ -136,45 +135,11 @@ client.on('message', async (message) => {
   }
 
   try {
-    command.execute(message, args);
+    command.execute(message, args, client);
   } catch (error) {
     console.error(error);
     message.reply(`there was an error trying to execute that command: ${command.name}`);
   }
-
-
-  // /**
-  //  * Logs the channel's name and ID, and then deletes the message.
-  //  */
-  // if (command === 'cid') {
-  //   try {
-  //     console.log(`The ID of channel #${message.channel.name} in guild <${message.guild.name}>: ${message.channel.id}`);
-  //     let allChannels = message.guild.channels.sort((a, b) => {
-  //       return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
-  //     }).filter((c) => {
-  //       return c.type === 'text';
-  //     }).map((c) => {
-  //       return {
-  //         name: c.name,
-  //         id: c.id
-  //       };
-  //     });
-  //     console.log(allChannels);
-  //     await message.delete();
-  //   } catch (err) {
-  //     console.log(`ERROR: Command <cid> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-  //   }
-  // }
-
-  // if (command === 'doggo') {
-  //   try {
-  //     let doggoUrl = await doggo.getRandomDoggo();
-  //     message.channel.send(doggoUrl.url);
-  //   } catch (err) {
-  //     console.log(`ERROR: Command <doggo> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-  //     message.channel.send('There was an error. No doggos for you.');
-  //   }
-  // }
 
   // if (command === 'expose') {
   //   try {

@@ -8,6 +8,7 @@ module.exports = {
   usage: '<user> <role>',
   guildOnly: true,
   cooldown: 5,
+  commandType: 'general',
   execute(message, args) {
     if (args[0] === 'foo') {
       return message.channel.send('bar');
