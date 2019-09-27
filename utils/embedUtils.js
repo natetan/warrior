@@ -349,5 +349,6 @@ module.exports = {
   createSpecializedHelpEmbed,
   createDefinitionEmbed,
   createMemeEmbed,
-  createSongEmbed
+  createSongEmbed,
+  createExampleEmbed
 }
