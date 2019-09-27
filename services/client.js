@@ -7,7 +7,7 @@ let fs = require('fs');
  * @param {string} url url
  * @param {Object} options request options (optional)
  * 
- * Returns json
+ * @returns {Promise} Promise
  */
 async function get(url, options = {}) {
   try {

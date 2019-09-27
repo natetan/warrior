@@ -1,0 +1,18 @@
+const getPledges = require('../services/getPledges');
+const eu = require('../utils/embedUtils');
+
+module.exports = {
+  name: 'pledges',
+  description: 'Gets the daily pledges.',
+  commandType: 'general',
+  async execute(message, args, client) {
+    try {
+      let m = await message.channel.send('Grabbing pledges from Dwemer Automaton...');
+      let dailies = await getPledges();
+      let embed = eu.createPledgesEmbed(dailies);
+      return m.edit(embed);
+    } catch (err) {
+      console.log(`ERROR: Command <pledges> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+}

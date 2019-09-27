@@ -12,9 +12,6 @@ const strings = require('./resources/strings');
 const firebase = require('./db/FirebaseHelper');
 const sets = require('./sets/EsoSets');
 const skills = require('./skills/EsoSkills');
-const pledges = require('./pledges/EsoPledges');
-const meow = require('./meow/Meow');
-const memes = require('./memes/Memes');
 const imgen = require('./imgen/ImageManipulator');
 const getMusic = require('./spotify/getMusic');
 
@@ -39,9 +36,6 @@ logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
   colorize: true
 });
-
-// Important roles that have permission
-const permissionRoles = ['Admin', 'bot', 'Core'];
 
 // Image manipulation commands
 const imgenCommands = ['airpods', 'egg', 'rip', 'shit', 'slap', 'vma'];
@@ -138,78 +132,6 @@ client.on('message', async (message) => {
     console.error(error);
     message.reply(`there was an error trying to execute that command: ${command.name}`);
   }
-
-  // if (command === 'meme') {
-  //   let subreddit = args[0];
-  //   let m;
-  //   if (subreddit) {
-  //     m = await message.channel.send(`Fetching meme from r/${subreddit}`);
-  //   } else {
-  //     m = await message.channel.send('Fetching random meme from r/memes, r/dankmemes, and r/meirl');
-  //   }
-  //   try {
-  //     let meme = await memes.getRandomMeme(subreddit);
-  //     if (meme.status_code && meme.status_code === 404) {
-  //       return m.edit(`Subreddit r/${subreddit} not found.`);
-  //     }
-  //     let embed = EmbedCreator.createMemeEmbed(meme);
-  //     return m.edit(embed);
-  //   } catch (err) {
-  //     console.log(`There was an error: ${err}`);
-  //     return m.edit('Sorry, an error occured.');
-  //   }
-  // }
-
-  // if (command === 'meow') {
-  //   try {
-  //     let catResponse = await meow.getRandomCat();
-  //     message.channel.send(catResponse.file);
-  //   } catch (err) {
-  //     console.log(`ERROR: Command <meow> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-  //     message.channel.send('There was an error. No cats for you.');
-  //   }
-  // }
-
-  // // Calculates the ping 
-  // if (command === 'ping') {
-
-  // }
-
-  // /**
-  //  * Gets the daily pledges
-  //  */
-  // if (command === 'pledges') {
-  //   try {
-  //     let m = await message.channel.send('Grabbing pledges from Dwemer Automaton...');
-  //     let dailies = await pledges.getPledges();
-  //     let embed = EmbedCreator.createPledgesEmbed(dailies);
-  //     m.edit(embed);
-  //   } catch (err) {
-  //     console.log(`ERROR: Command <pledges> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-  //   }
-  // }
-
-  // // Purge
-  // if (command === 'purge') {
-  //   // Checks if the user is in a role that has permission
-  //   // So far, roles include: Admin
-  //   let hasPermission = message.member.roles.some(r => permissionRoles.includes(r.name));
-  //   if (!hasPermission) {
-  //     return message.channel.send(`${message.author}, you do not have permission to use this command`);
-  //   }
-  //   const deleteCount = Number(args[0]);
-  //   let min = 1;
-  //   let max = 20;
-  //   if (!deleteCount || deleteCount <= min || deleteCount > max) {
-  //     return message.reply(`Please provide a number between ${min} (exclusive) and ${max} (inclusive) for the number of messages to delete.`);
-  //   }
-  //   try {
-  //     const recentMessages = await message.channel.fetchMessages({ limit: deleteCount });
-  //     message.channel.bulkDelete(recentMessages).catch(error => message.reply(`Couldn't delete messages because of: ${error}`));
-  //   } catch (err) {
-  //     console.log(`ERROR: Command <purge> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-  //   }
-  // }
 
   // if (command === 'roast') {
   //   let retorts = quotes.retort;

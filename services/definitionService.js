@@ -8,6 +8,8 @@ const urbanDictionaryBaseUrl = `http://api.urbandictionary.com/v0/define?term=`;
  * Gets the definition from Oxford dictionary. Randomly chooses a definition
  * 
  * @param {String} term 
+ * 
+ * @returns {Object} json object
  */
 async function getDefinition(term) {
   let options = {

@@ -1,4 +1,4 @@
-const getRandomDoggo = require('../services/getRandomDoggo');;
+const getRandomDoggo = require('../services/getRandomDoggo');
 
 module.exports = {
   name: 'doggo',
