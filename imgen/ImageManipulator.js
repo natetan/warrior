@@ -11,10 +11,10 @@ const memes = {
 
 /**
  * 
- * @param {String} command -- meme command
- * @param {Array} avatars -- list of avatarURLs
- * @param {String} originUser -- Username of message sender
- * @param {String} targetUser -- Username of target - NULLABLE
+ * @param {String} command meme command
+ * @param {Array} avatars list of avatarURLs
+ * @param {String} originUser Username of message sender
+ * @param {String} targetUser Username of target - NULLABLE
  */
 async function determineMeme(command, avatars, originUser, targetUser) {
   let fn = memes[command];

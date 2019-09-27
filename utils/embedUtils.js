@@ -5,6 +5,8 @@ const RaidInfo = require('../raid/RaidInfo.json');
 const logos = require('../resources/logos.json');
 const displayUtils = require('./displayUtils');
 
+const prefix = process.env.prefix || '?';
+
 /**
  * Returns the json object related to the raid
  * 
@@ -65,7 +67,7 @@ function createRoster(raid) {
  * 
  * @returns {Discord.RichEmbed} - Discord Embed
  */
-function createEmbed(day, time, title, eventName, roster) {
+function createTrialEmbed(day, time, title, eventName, roster) {
   let raid = getRaidInfo(title);
   // let date = DateHelper.getNextDay(day);
   // if (date instanceof Error) {
@@ -85,7 +87,7 @@ function createEmbed(day, time, title, eventName, roster) {
   let embed = new Discord.RichEmbed()
     .setColor('#ff6600')
     .setTitle(`${eventName.toUpperCase()}\n${day} @ ${time}est\nTrial: ${raid['short_name']}`)
-    .setDescription(`!trial join ${eventName} <role> <optional-note>`)
+    .setDescription(`join: ${prefix}trial join ${eventName} <role> [optional-note]\nleave: ${prefix}trial leave ${eventName}`)
     .setThumbnail(logos['2']);
 
   // Sort by their priority (the usual postings)
@@ -271,10 +273,10 @@ function createSetEmbed(set) {
 }
 
 /**
- * Creates an embed for a set. If multiple sets are found, they 
+ * Creates an embed for a skill. If multiple skill are found, they 
  * will be shown in a list format.
  * 
- * @param {Object} set - json representing an eso set
+ * @param {Object} skill - json representing an eso skill
  * 
  * @returns {Discord.RichEmbed} - Discord Embed
  */
@@ -338,7 +340,7 @@ function createExampleEmbed() {
 module.exports = {
   getRaidInfo,
   createRoster,
-  createEmbed,
+  createTrialEmbed,
   createRoleEmbed,
   createSetEmbed,
   createSkillEmbed,

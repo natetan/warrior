@@ -1,4 +1,4 @@
-const dateHelper = require('../helpers/DateHelper');
+const displayUtils = require('../utils/displayUtils');
 const eu = require('../utils/embedUtils');
 
 // Firebase setup
@@ -174,7 +174,7 @@ async function createRaid(guildId, day, time, trial, eventName) {
   try {
     trial = trial.toLowerCase();
     eventName = eventName.toLowerCase();
-    day = dateHelper.getNextDay(day);
+    day = displayUtils.getNextDay(day);
     let roster = eu.createRoster(eu.getRaidInfo(trial));
     let ref = db.ref(`guilds/${guildId}/trials/${eventName}`);
     ref.set({

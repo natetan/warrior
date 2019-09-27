@@ -2,18 +2,13 @@ const Discord = require('discord.js');
 const logger = require('winston');
 const _ = require('lodash');
 
-const quoteHelper = require('./quotes/QuoteHelper');
-const quotes = require('./resources/quotes.json');
 const destroy = require('./resources/destroy.json');
 const commands = require('./resources/commands.json');
 const languages = require('./translate/TranslateHelper');
 const emojis = require('./resources/emojis');
 const strings = require('./resources/strings');
-const firebase = require('./db/FirebaseHelper');
-const sets = require('./sets/EsoSets');
-const skills = require('./skills/EsoSkills');
+const firebase = require('./db/firebaseHelper');
 const imgen = require('./imgen/ImageManipulator');
-const getMusic = require('./spotify/getMusic');
 
 const fs = require('fs');
 
@@ -36,9 +31,6 @@ logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
   colorize: true
 });
-
-// Image manipulation commands
-const imgenCommands = ['airpods', 'egg', 'rip', 'shit', 'slap', 'vma'];
 
 
 // Logs in with the given token
@@ -133,134 +125,8 @@ client.on('message', async (message) => {
     message.reply(`there was an error trying to execute that command: ${command.name}`);
   }
 
-  // if (command === 'roast') {
-  //   let retorts = quotes.retort;
-  //   let randomQuote = quoteHelper.getQuote(retorts);
-  //   try {
-  //     await message.channel.send(randomQuote);
-  //   } catch (err) {
-  //     console.log(`ERROR: on roast.\n\tMessage: [${message}]\n\tError: [${err}]`);
-  //   }
-  // }
-
-  // /**
-  //  * Handles the roles of the members of the server
-  //  * 
-  //  * @arg all - gets all the roles and shows every user in those roles
-  //  * @arg count - gets all the roles and the counts of how many people are in those roles
-  //  * @arg default - gets the message sender's roles
-  //  */
-  // if (command === 'roles') {
-  //   try {
-  //     let channel = message.channel;
-  //     let results = {};
-  //     if (args[0] === 'all') {
-  //       message.guild.roles.forEach((v) => {
-  //         let members = v.members.map((m) => {
-  //           return m.displayName;
-  //         });
-  //         // Ignore the @everyone tag since that can have a lot of users
-  //         if (v.name !== '@everyone') {
-  //           results[v.name] = members;
-  //         }
-  //       });
-  //       results = EmbedCreator.createRoleEmbed(results, 'ALL');
-  //     } else if (args[0] === 'count') {
-  //       message.guild.roles.forEach((v) => {
-  //         results[v.name] = v.members.keyArray().length;
-  //       });
-  //       results = EmbedCreator.createRoleEmbed(results, 'COUNT');
-  //     } else {
-  //       message.member.roles.forEach((v, k) => {
-  //         results[k] = v.name;
-  //       });
-  //       results = EmbedCreator.createRoleEmbed(results, message.author.username);
-  //     }
-  //     await channel.send(results);
-  //   } catch (err) {
-  //     console.log(`ERROR: Command <roles> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-  //   }
-  // }
-
-  // /**
-  //  * Gets sets from https://eso-sets.com
-  //  * 
-  //  * Users can either look for an item string or its ID.
-  //  * 
-  //  * @arg query - name of item or id of item
-  //  */
-  // if (command === 'set') {
-  //   let query = args.join(' ');
-  //   if (!query) {
-  //     return message.channel.send('Command `!set` requires arguments: `!set <name>` or `!set <id>`.');
-  //   }
-  //   let m = await message.channel.send('Grabbing set from `eso-sets`...');
-  //   let set;
-  //   if (Number(query)) {
-  //     set = await sets.GetSetById(query);
-  //   } else {
-  //     set = await sets.GetSetByName(query);
-  //   }
-
-  //   if (!set) {
-  //     return m.edit('There was an error with your query.');
-  //   }
-
-  //   if (set.length < 1) {
-  //     return m.edit(`Nothing found for set ${query}`);
-  //   }
-
-  //   if (set.length > 1) {
-  //     message.channel.send(`Found more than one set for your query: ${set.length} results.`);
-  //   }
-
-  //   try {
-  //     return m.edit(EmbedCreator.createSetEmbed(set))
-  //   } catch (err) {
-  //     console.log(`ERROR: Command <set> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-  //     return m.edit('There was an error. I am sorry for your loss.');
-  //   }
-  // }
-
-  // /**
-  //  * Gets skills from https://eso-skillbook.com
-  //  * 
-  //  * Users can either look for an item string or its ID.
-  //  * 
-  //  * @arg query - name of item or id of item
-  //  */
-  // if (command === 'skill') {
-  //   let query = args.join(' ');
-  //   if (!query) {
-  //     return message.channel.send('Command `!skill` requires arguments: `!skill <name>` or `!skill <id>`.');
-  //   }
-  //   let m = await message.channel.send('Grabbing set from `eso-skillbook`...');
-  //   let skill;
-  //   if (Number(query)) {
-  //     skill = await skills.GetSkillById(query);
-  //   } else {
-  //     skill = await skills.GetSkillByName(query);
-  //   }
-
-  //   if (!skill) {
-  //     return m.edit('There was an error with your query.');
-  //   }
-
-  //   if (skill.length < 1) {
-  //     return m.edit(`Nothing found for skill ${query}`);
-  //   }
-
-  //   if (skill.length > 1) {
-  //     message.channel.send(`Found more than one skill for your query: ${skill.length} results.`);
-  //   }
-
-  //   try {
-  //     return m.edit(EmbedCreator.createSkillEmbed(skill))
-  //   } catch (err) {
-  //     console.log(`ERROR: Command <skill> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-  //     return m.edit('There was an error. I am sorry for your loss.');
-  //   }
-  // }
+  // Image manipulation commands
+  // const imgenCommands = ['airpods', 'egg', 'rip', 'shit', 'slap', 'vma'];
 
   // if (imgenCommands.includes(command)) {
   //   try {
@@ -291,117 +157,6 @@ client.on('message', async (message) => {
   //   }
   // }
 
-  // if (command === 'song') {
-  //   let query = args.join(' ');
-  //   if (!query) {
-  //     return message.channel.send('There was nothing queried you doofus.');
-  //   }
-  //   let m = await message.channel.send('Fetching song from spotify...');
-  //   let song = await getMusic(query);
-  //   if (song instanceof Error) {
-  //     return m.edit(song.message);
-  //   }
-  //   song = song.tracks.items[0];
-  //   if (!song) {
-  //     return m.edit('There was an error.');
-  //   }
-  //   let songEmbed = EmbedCreator.createSongEmbed(song);
-  //   return m.edit(songEmbed);
-  // }
-
-  // /**
-  //  * Join trials!
-  //  * 
-  //  * Usage: 
-  //  *  - trial create <day> <time> <trial> <eventName>
-  //  *  - trial join <eventName> <role> <?note>
-  //  *  - trial leave <eventName>
-  //  */
-  // if (command === 'trial') {
-  //   let guildId = message.guild.id;
-  //   let trialCommand = args[0];
-  //   args.shift();
-  //   if (trialCommand === 'create') {
-  //     let [day, time, trial, eventName] = args;
-  //     if (day !== undefined && time !== undefined && trial !== undefined && eventName !== undefined) {
-  //       if (!EmbedCreator.getRaidInfo(trial)) {
-  //         return message.channel.send(`There is no trial called ${trial}.`);
-  //       }
-  //       await firebase.createRaid(guildId, day, time, trial, eventName);
-  //       let raid = await firebase.getRaid(guildId, eventName);
-  //       return message.channel.send(EmbedCreator.createEmbed(raid.day, raid.time, raid.trial, raid.name, raid.roster));
-  //     } else {
-  //       return message.channel.send('Could not create trial - please check command params: `trial create <day> <time> <trial> <eventName>`')
-  //     }
-  //   } else if (trialCommand === 'join') {
-  //     let [eventName, role, note] = args;
-  //     if (eventName !== undefined && role !== undefined) {
-  //       role = role.toLowerCase();
-  //       let eventExists = await firebase.raidExists(guildId, eventName);
-  //       if (!eventExists) {
-  //         return message.channel.send(`Event \`${eventName}\` does not exist.`);
-  //       }
-  //       let raid = await firebase.getRaid(guildId, eventName);
-  //       let roster = raid.roster;
-  //       let mt = ['mt', 'main-tank', 'maintank', 'main'];
-  //       let ot = ['ot', 'off-tank', 'offtank', 'off'];
-  //       let h = ['heal', 'heals', 'healer'];
-  //       let stam = ['stam', 'stam-dps'];
-  //       let mag = ['mag', 'mag-dps'];
-
-  //       if (mt.includes(role)) {
-  //         role = 'mt';
-  //       } else if (ot.includes(role)) {
-  //         role = 'ot';
-  //       } else if (h.includes(role)) {
-  //         role = 'healer';
-  //       } else if (stam.includes(role)) {
-  //         role = 'stam';
-  //       } else if (mag.includes(role)) {
-  //         role = 'mag';
-  //       } else {
-  //         return message.channel.send(`Invalid role: ${role}`);
-  //       }
-  //       let players = roster[role].players;
-  //       if (!players) {
-  //         players = {};
-  //       }
-
-  //       if (Object.keys(players).length < roster[role].count) {
-  //         players[message.author.username] = {
-  //           note: note ? `${message.author.username} - ${note}` : message.author.username
-  //         }
-  //       }
-  //       roster[role].players = players;
-  //       await firebase.updateRaid(guildId, eventName, roster);
-  //       raid = await firebase.getRaid(guildId, eventName);
-  //       return message.channel.send(EmbedCreator.createEmbed(raid.day, raid.time, raid.trial, raid.name, raid.roster));
-  //     } else {
-  //       return message.channel.search('Could not join trial -- please check params: `trial join <eventName> <role> (note -- optional one word note)`');
-  //     }
-  //   } else if (trialCommand === 'leave') {
-  //     let [eventName] = args;
-  //     if (eventName !== undefined) {
-  //       let eventExists = await firebase.raidExists(guildId, eventName);
-  //       if (!eventExists) {
-  //         return message.channel.send(`Event \`${eventName}\` does not exist.`);
-  //       }
-  //       let raid = await firebase.getRaid(guildId, eventName);
-  //       let roster = raid.roster;
-  //       Object.keys(roster).forEach((role) => {
-  //         let players = roster[role].players;
-  //         if (players) {
-  //           delete players[message.author.username];
-  //         }
-  //       })
-  //       await firebase.updateRaid(guildId, eventName, roster);
-  //       raid = await firebase.getRaid(guildId, eventName);
-  //       return message.channel.send(EmbedCreator.createEmbed(raid.day, raid.time, raid.trial, raid.name, raid.roster));
-  //     }
-  //   } else if (trialCommand === 'help') {
-  //     return message.channel.send('`!trial create <day> <time> <trial-name> <event-name>` -- Creates a trial in the database. Trial options are currently all in vet. **Warning**: Creating one with the same name will replace the current one.\n`!trial join <event-name> <role> <optional-note>` -- Joins the given trial with the given role -- mt, ot, heals, stam, mag. The optional note should not contain any spaces.\n`!trial leave <event-name>` -- leaves the sign-up');
-  //   }
-  // }
 
   // /**
   //  * THIS IS A TEST - do experimental stuff here
@@ -563,6 +318,6 @@ client.on('message', async (message) => {
   // }
 
 
-  
+
 });
 

@@ -1,4 +1,4 @@
-const getPledges = require('../services/getPledges');
+const esoService = require('../services/esoService');
 const eu = require('../utils/embedUtils');
 
 module.exports = {
@@ -8,7 +8,7 @@ module.exports = {
   async execute(message, args, client) {
     try {
       let m = await message.channel.send('Grabbing pledges from Dwemer Automaton...');
-      let dailies = await getPledges();
+      let dailies = await esoService.getPledges();
       let embed = eu.createPledgesEmbed(dailies);
       return m.edit(embed);
     } catch (err) {

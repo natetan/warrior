@@ -5,6 +5,12 @@ const spotify = new Spotify({
   secret: process.env.spotify_client_secret || require('../auth.json').spotify_client_secret
 });
 
+/**
+ * Gets song data from Spotify
+ * 
+ * @param {String} query queries a song from Spotify
+ * @returns {Object} json representing a song
+ */
 async function getMusic(query) {
   let err, data = await spotify.search({ type: 'track', query: query })
   if (err) {

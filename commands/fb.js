@@ -1,4 +1,4 @@
-const firebase = require('../db/FirebaseHelper');
+const firebase = require('../db/firebaseHelper');
 
 module.exports = {
   name: 'fb',
