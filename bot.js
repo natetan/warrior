@@ -571,6 +571,9 @@ bot.on('message', async (message) => {
     }
     let m = await message.channel.send('Fetching song from spotify...');
     let song = await getMusic(query);
+    if (song instanceof Error) {
+      return m.edit(song.message);
+    }
     song = song.tracks.items[0];
     if (!song) {
       return m.edit('There was an error.');

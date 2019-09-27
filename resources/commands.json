@@ -52,6 +52,10 @@
       "desc": "Gets a skill from eso-skillbook.",
       "usage": "skill [query]"
     },
+    "song": {
+      "desc": "Gets a song from Spotify",
+      "usage": "song [query]"
+    },
     "urban": {
       "desc": "Random UD definition. Moderately NSFW.",
       "usage": "urban [query]"

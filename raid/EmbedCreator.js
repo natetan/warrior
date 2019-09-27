@@ -3,6 +3,7 @@ const _ = require('lodash');
 
 const RaidInfo = require('./RaidInfo.json');
 const logos = require('../resources/logos.json');
+const displayUtils = require('../utils/displayUtils');
 
 /**
  * Returns the json object related to the raid
@@ -183,6 +184,7 @@ function createSongEmbed(song) {
   embed.addField('Artist', song.artists[0].name);
   embed.addField('Album', song.album.name);
   embed.addField('Track', `${song.track_number} of ${song.album.total_tracks}`);
+  embed.addField('Length', displayUtils.millisToMinutesAndSeconds(song.duration_ms));
   return embed;
 }
 
