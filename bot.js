@@ -20,6 +20,7 @@ const doggo = require('./doggo/Doggo');
 const meow = require('./meow/Meow');
 const memes = require('./memes/Memes');
 const imgen = require('./imgen/ImageManipulator');
+const getMusic = require('./spotify/getMusic');
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -561,6 +562,22 @@ bot.on('message', async (message) => {
       console.log(err);
       return message.delete();
     }
+  }
+
+  if (command === 'song') {
+    let query = args.join(' ');
+    if (!query) {
+      return message.channel.send('There was nothing queried you doofus.');
+    }
+    let m = await message.channel.send('Fetching song from spotify...');
+    let song = await getMusic(query);
+    song = song.tracks.items[0];
+    if (!song) {
+      return m.edit('There was an error.');
+    }
+    let songEmbed = EmbedCreator.createSongEmbed(song);
+    console.log(song);
+    return m.edit(songEmbed);
   }
 
   /**

@@ -16,6 +16,7 @@
     "jimp": "^0.6.4",
     "lodash": "^4.17.15",
     "node-fetch": "^2.3.0",
+    "node-spotify-api": "^1.1.1",
     "npm": "^6.10.3",
     "puppeteer": "^1.17.0",
     "request": "^2.88.0",

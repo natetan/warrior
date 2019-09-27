@@ -170,6 +170,22 @@ function createMemeEmbed(meme) {
   return embed;
 }
 
+function createSongEmbed(song) {
+  let embed = new Discord.RichEmbed()
+    .setColor('#ff6600')
+    .setTitle(song.name)
+    .setThumbnail(song.album.images[0].url)
+    .setURL(song.external_urls.spotify);
+  let desc = `Artist: ${song.artists[0].name}\n`
+    + `Album: ${song.album.name}\n`
+    + `Track ${song.track_number} of ${song.album.total_tracks}\n`
+  // embed.setDescription(desc);
+  embed.addField('Artist', song.artists[0].name);
+  embed.addField('Album', song.album.name);
+  embed.addField('Track', `${song.track_number} of ${song.album.total_tracks}`);
+  return embed;
+}
+
 /**
  * Create a Discord embed for roles
  * 
@@ -311,13 +327,14 @@ function createPledgesEmbed(pledges) {
 module.exports = {
   getRaidInfo,
   createRoster,
-  createEmbed: createEmbed,
-  createRoleEmbed: createRoleEmbed,
-  createSetEmbed: createSetEmbed,
-  createSkillEmbed: createSkillEmbed,
-  createPledgesEmbed: createPledgesEmbed,
-  createGeneralHelpEmbed: createGeneralHelpEmbed,
-  createSpecializedHelpEmbed: createSpecializedHelpEmbed,
-  createDefinitionEmbed: createDefinitionEmbed,
-  createMemeEmbed: createMemeEmbed
+  createEmbed,
+  createRoleEmbed,
+  createSetEmbed,
+  createSkillEmbed,
+  createPledgesEmbed,
+  createGeneralHelpEmbed,
+  createSpecializedHelpEmbed,
+  createDefinitionEmbed,
+  createMemeEmbed,
+  createSongEmbed
 }
