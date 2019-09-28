@@ -1,18 +1,10 @@
 const Discord = require('discord.js');
 const logger = require('winston');
-const _ = require('lodash');
+const fs = require('fs');
 
-const destroy = require('./resources/destroy.json');
-const commands = require('./resources/commands.json');
-const languages = require('./translate/TranslateHelper');
-const emojis = require('./resources/emojis');
-const strings = require('./resources/strings');
 const firebase = require('./db/firebaseHelper');
-const imgen = require('./imgen/ImageManipulator');
 const quotes = require('./resources/quotes.json');
 const quoteUtils = require('./utils/quoteUtils');
-
-const fs = require('fs');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -126,65 +118,5 @@ client.on('message', async (message) => {
     console.error(error);
     message.reply(`there was an error trying to execute that command: ${command.name}`);
   }
-
-  // Image manipulation commands
-  // const imgenCommands = ['airpods', 'egg', 'rip', 'shit', 'slap', 'vma'];
-
-  // if (imgenCommands.includes(command)) {
-  //   try {
-  //     let users = message.mentions.users.map((u) => {
-  //       return u;
-  //     });
-  //     let avatars = [];
-  //     let avatar1;
-  //     let avatar2;
-  //     if (users.length) {
-  //       avatar1 = message.author.avatarURL;
-  //       avatar2 = users[0].avatarURL;
-  //     } else {
-  //       avatar1 = client.user.avatarURL;
-  //       avatar2 = message.author.avatarURL;
-  //     }
-  //     avatars.push(avatar1, avatar2);
-  //     imgen.determineMeme(command, avatars, message.author.username, users.length ? users[0].username : null)
-  //       .then(async (imageName) => {
-  //         await message.channel.send('', {
-  //           file: imageName
-  //         });
-  //         return fs.unlinkSync(imageName);
-  //       })
-  //   } catch (err) {
-  //     console.log(err);
-  //     return message.delete();
-  //   }
-  // }
-
-  /**
-   * This uses quotes from other bosses if it exists.
-   * 
-   * options: !rakkhat, !zmaja
-   */
-  // if (quoteHelper.quoteOptions.includes(command)) {
-  //   try {
-  //     let results = message.mentions.users.map((u) => {
-  //       return `<@${u.id}>`;
-  //     });
-  //     if (results.length > 0 && destroy[command]) {
-  //       results.forEach((p) => {
-  //         let randomQuote = quoteHelper.getQuote(destroy[command]);
-  //         randomQuote = randomQuote.replace('@', p);
-  //         return message.channel.send(`*${randomQuote}*`);
-  //       });
-  //     } else {
-  //       let randomQuote = quoteHelper.getQuote(quotes[command]);
-  //       return message.channel.send(randomQuote);
-  //     }
-  //   } catch (err) {
-  //     console.log(`ERROR: Command <${command}> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-  //   }
-  // }
-
-
-
 });
 
