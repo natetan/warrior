@@ -146,7 +146,7 @@ function createGeneralHelpEmbed(commands) {
   let desc = '';
   let generalCommands = Object.keys(commands.general);
   generalCommands.forEach((c) => {
-    embed.addField(`**${c}** - *${commands.general[c].desc}*`, `\`!${commands.general[c].usage}\`\n`);
+    embed.addField(`**${c}** - *${commands.general[c].desc}*`, `\`${prefix}${c} ${commands.general[c].usage}\`\n`);
   });
   return embed;
 }
