@@ -78,7 +78,20 @@ client.on('message', async (message) => {
 
   // It's good practice to ignore other bots. This also makes your bot ignore itself
   // and not get into a spam loop called 'botception'
-  if (!message.content.startsWith(prefix) || message.author.bot) return;
+  if (message.author.bot) return;
+
+  // If someone @'s the bot, send them a nasty retort.
+  if (message.isMemberMentioned(client.user) && !message.mentions.everyone) {
+    let retorts = quotes.retort;
+    let randomQuote = quoteUtils.getQuote(retorts);
+    try {
+      await message.channel.send(randomQuote);
+    } catch (err) {
+      console.log(`ERROR: on bot mention.\n\tMessage: [${message}]\n\tError: [${err}]`);
+    }
+  }
+  
+  if (!message.content.startsWith(prefix)) return;
 
   const args = message.content.slice(prefix.length).trim().split(/ +/g);
   const commandName = args.shift().toLowerCase();
@@ -99,17 +112,6 @@ client.on('message', async (message) => {
 
   if (command.guildOnly && message.channel.type !== 'text') {
     return message.reply('I can\'t execute that command inside DMs!');
-  }
-
-  // If someone @'s the bot, send them a nasty retort.
-  if (message.isMemberMentioned(client.user) && !message.mentions.everyone) {
-    let retorts = quotes.retort;
-    let randomQuote = quoteUtils.getQuote(retorts);
-    try {
-      await message.channel.send(randomQuote);
-    } catch (err) {
-      console.log(`ERROR: on bot mention.\n\tMessage: [${message}]\n\tError: [${err}]`);
-    }
   }
 
   try {
