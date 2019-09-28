@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const _ = require('lodash');
 
-const RaidInfo = require('../raid/RaidInfo.json');
+const raidInfo = require('../resources/RaidInfo.json');
 const logos = require('../resources/logos.json');
 const displayUtils = require('./displayUtils');
 
@@ -19,7 +19,7 @@ function getRaidInfo(raidName) {
     raidName = 'vmol';
   }
 
-  return RaidInfo[raidName] ? RaidInfo[raidName] : null;
+  return raidInfo[raidName] ? raidInfo[raidName] : null;
 }
 
 /**
