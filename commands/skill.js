@@ -4,7 +4,7 @@ const eu = require('../utils/embedUtils');
 // Gets skills from https://eso-skillbook.com
 module.exports = {
   name: 'skill',
-  description: 'Gets a skill from eso-skillbook.',
+  desc: 'Gets a skill from eso-skillbook.',
   args: true,
   usage: '<query>',
   commandType: 'general',

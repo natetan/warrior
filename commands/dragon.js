@@ -4,7 +4,7 @@ const quoteUtils = require('../utils/quoteUtils');
 
 module.exports = {
   name: 'dragon',
-  description: 'Dragon quotes from ESO (Sunspire).',
+  desc: 'Dragon quotes from ESO (Sunspire).',
   commandType: 'special',
   category: 'quotes',
   async execute(message, args, client) {

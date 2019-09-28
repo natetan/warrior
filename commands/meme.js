@@ -3,7 +3,7 @@ const eu = require('../utils/embedUtils');
 
 module.exports = {
   name: 'meme',
-  description: 'Random meme from r/memes, r/dankmemes, r/meirl.',
+  desc: 'Random meme from r/memes, r/dankmemes, r/meirl.',
   usage: '[subreddit]',
   async execute(message, args, client) {
     let subreddit = args[0];

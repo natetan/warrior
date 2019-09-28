@@ -4,7 +4,7 @@ const quoteUtils = require('../utils/quoteUtils');
 
 module.exports = {
   name: 'mage',
-  description: 'Mage quotes from ESO.',
+  desc: 'Mage quotes from ESO.',
   commandType: 'special',
   category: 'quotes',
   async execute(message, args, client) {

@@ -61,14 +61,14 @@ client.on("guildDelete", guild => {
 
 client.on('guildMemberAdd', (member) => {
   let retorts = quotes.retort;
-  let randomQuote = quoteHelper.getQuote(retorts);
+  let randomQuote = quoteUtils.getQuote(retorts);
   let welcome = `Welcome <@${member.user.id}>! ${randomQuote}`;
   member.guild.channels.find(c => c.name === "general").send(welcome);
 });
 
 client.on('guildMemberRemove', (member) => {
   let warriorQuotes = quotes.warrior;
-  let randomQuote = quoteHelper.getQuote(warriorQuotes);
+  let randomQuote = quoteUtils.getQuote(warriorQuotes);
   let farewell = `${member.user.username} has left the guild. ${randomQuote}`;
   member.guild.channels.find(c => c.name === "general").send(farewell);
 })

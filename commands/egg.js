@@ -4,7 +4,7 @@ const fs = require('fs');
 
 module.exports = {
   name: 'egg',
-  description: 'Duck pooping out an egg',
+  desc: 'Duck pooping out an egg',
   commandType: 'special',
   category: 'imgen',
   async execute(message, args, client) {

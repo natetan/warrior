@@ -1,6 +1,6 @@
 module.exports = {
   name: 'ids',
-  description: 'Logs out all the members and their ids in the channel and deletes the message.',
+  desc: 'Logs out all the members and their ids in the channel and deletes the message.',
   commandType: 'private',
   async execute(message, args, client) {
     try {

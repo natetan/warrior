@@ -2,7 +2,7 @@ const eu = require('../utils/embedUtils');
 
 module.exports = {
   name: 'roles',
-  description: 'Show roles for yourself, or get an aggregate.',
+  desc: 'Show roles for yourself, or get an aggregate.',
   usage: '[option] - all, count',
   commandType: 'general',
   async execute(message, args, client) {

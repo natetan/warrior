@@ -5,7 +5,7 @@ const Jimp = require('jimp');
 
 module.exports = {
   name: 'rip',
-  description: 'RIP',
+  desc: 'RIP',
   commandType: 'special',
   category: 'imgen',
   async execute(message, args, client) {

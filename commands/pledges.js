@@ -3,7 +3,7 @@ const eu = require('../utils/embedUtils');
 
 module.exports = {
   name: 'pledges',
-  description: 'Gets the daily pledges.',
+  desc: 'Gets the daily pledges.',
   commandType: 'general',
   async execute(message, args, client) {
     try {

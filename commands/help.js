@@ -1,6 +1,6 @@
 module.exports = {
   name: 'help',
-  description: 'Not a fun way to sseek help.',
+  desc: 'Not a fun way to sseek help.',
   commandType: 'general',
   async execute(message, args, client) {
     try {

@@ -2,7 +2,7 @@ const permissions= require('../constants/permissions')
 
 module.exports = {
   name: 'purge',
-  description: 'Purges between 1 to 20 messages. Admins only.',
+  desc: 'Purges between 1 to 20 messages. Admins only.',
   args: true,
   usage: '<number>',
   commandType: 'general',

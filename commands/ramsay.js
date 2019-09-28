@@ -4,7 +4,7 @@ const quoteUtils = require('../utils/quoteUtils');
 
 module.exports = {
   name: 'ramsay',
-  description: 'Ramsay quotes.',
+  desc: 'Ramsay quotes.',
   commandType: 'special',
   category: 'quotes',
   async execute(message, args, client) {

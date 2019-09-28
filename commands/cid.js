@@ -1,6 +1,6 @@
 module.exports = {
   name: 'cid',
-  description: 'Logs the channel\'s name and ID, and then deletes the message.',
+  desc: 'Logs the channel\'s name and ID, and then deletes the message.',
   args: false,
   commandType: 'private',
   async execute(message, args) {

@@ -1,6 +1,6 @@
 module.exports = {
   name: 'uid',
-  description: 'Get the user\'s ID, and then deletes the message.',
+  desc: 'Get the user\'s ID, and then deletes the message.',
   commandType: 'private',
   async execute(message, args, client) {
     try {

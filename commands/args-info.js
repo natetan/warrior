@@ -3,7 +3,7 @@
  */
 module.exports = {
   name: 'args-info',
-  description: 'Information about the arguments provided.',
+  desc: 'Information about the arguments provided.',
   args: true,
   usage: '<user> <role>',
   guildOnly: true,

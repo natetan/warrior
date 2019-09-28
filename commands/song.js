@@ -3,7 +3,7 @@ const eu = require('../utils/embedUtils');
 
 module.exports = {
   name: 'song',
-  description: 'Gets a song from Spotify.',
+  desc: 'Gets a song from Spotify.',
   args: true,
   usage: '<query>',
   commandType: 'general',

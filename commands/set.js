@@ -4,7 +4,7 @@ const eu = require('../utils/embedUtils');
 // Gets sets from https://eso-sets.com
 module.exports = {
   name: 'set',
-  description: 'Gets a set from eso-sets.',
+  desc: 'Gets a set from eso-sets.',
   args: true,
   usage: '<query>',
   commandType: 'general',

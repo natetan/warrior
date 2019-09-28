@@ -2,7 +2,7 @@ const displayUtils = require('../utils/displayUtils');
 
 module.exports = {
   name: 'expose',
-  description: 'Find out who someone really is.',
+  desc: 'Find out who someone really is.',
   usage: '[username]',
   commandType: 'general',
   execute(message, args, client) {

@@ -3,7 +3,7 @@ const emojis = require('../resources/emojis');
 
 module.exports = {
   name: 'test',
-  description: 'Testing shit goes here.',
+  desc: 'Testing shit goes here.',
   commandType: 'private',
   async execute(message, args, client) {
     let testEmbed = eu.createExampleEmbed();

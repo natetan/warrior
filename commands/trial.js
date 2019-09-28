@@ -12,7 +12,7 @@ const eu = require('../utils/embedUtils');
  */
 module.exports = {
   name: 'trial',
-  description: 'Manage raids. See !trial help for more info.',
+  desc: 'Manage raids. See !trial help for more info.',
   args: true,
   usage: '<create>, <join>, <delete>, <help>',
   examples: [

@@ -3,7 +3,7 @@ const quoteUtils = require('../utils/quoteUtils');
 
 module.exports = {
   name: 'roast',
-  description: 'Get toasted!',
+  desc: 'Get toasted!',
   usage: '[username]',
   commandType: 'general',
   async execute(message, arg, client) {

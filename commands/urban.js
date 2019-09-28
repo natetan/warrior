@@ -2,7 +2,7 @@ const ds = require('../services/definitionService');
 
 module.exports = {
   name: 'urban',
-  description: 'Random UD definition. Moderately NSFW.',
+  desc: 'Random UD definition. Moderately NSFW.',
   args: true,
   usage: '<query>',
   commandType: 'general',

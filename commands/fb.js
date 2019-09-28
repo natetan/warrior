@@ -2,7 +2,7 @@ const firebase = require('../db/firebaseHelper');
 
 module.exports = {
   name: 'fb',
-  description: 'Sets up the guild in Google Firebase.',
+  desc: 'Sets up the guild in Google Firebase.',
   args: true,
   usage: '<command>',
   commandType: 'private',

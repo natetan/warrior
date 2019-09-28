@@ -1,6 +1,6 @@
 module.exports = {
   name: 'ping',
-  description: 'Calculates the ping',
+  desc: 'Calculates the ping',
   commandType: 'general',
   async execute(message, args, client) {
     try {

@@ -4,7 +4,7 @@ const Jimp = require('jimp');
 
 module.exports = {
   name: 'airpods',
-  description: 'Old man with airpods and iPad.',
+  desc: 'Old man with airpods and iPad.',
   commandType: 'special',
   category: 'imgen',
   async execute(message, args, client) {

@@ -4,7 +4,7 @@ const Jimp = require('jimp');
 
 module.exports = {
   name: 'vma',
-  description: 'Someone does not know how to run vMA effectively.',
+  desc: 'Someone does not know how to run vMA effectively.',
   commandType: 'special',
   category: 'imgen',
   async execute(message, args, client) {

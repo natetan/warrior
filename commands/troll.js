@@ -1,6 +1,6 @@
 module.exports = {
   name: 'troll',
-  description: 'Sends a message to SnF general chat.',
+  desc: 'Sends a message to SnF general chat.',
   commandType: 'private',
   async execute(message, args, client) {
     try {

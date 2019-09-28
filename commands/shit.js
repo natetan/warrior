@@ -4,7 +4,7 @@ const Jimp = require('jimp');
 
 module.exports = {
   name: 'shit',
-  description: 'You stepped in some shit.',
+  desc: 'You stepped in some shit.',
   commandType: 'special',
   category: 'imgen',
   async execute(message, args, client) {
