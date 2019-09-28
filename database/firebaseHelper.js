@@ -4,6 +4,7 @@ const eu = require('../utils/embedUtils');
 // Firebase setup
 let admin = require('firebase-admin');
 
+
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: process.env.firebase_project_id ||
