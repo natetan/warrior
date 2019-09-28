@@ -1,4 +1,4 @@
-const firebase = require('../db/firebaseHelper');
+const firebase = require('../database/firebaseHelper');
 const eu = require('../utils/embedUtils');
 
 /**

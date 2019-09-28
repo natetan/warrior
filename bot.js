@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const logger = require('winston');
 const fs = require('fs');
 
-const firebase = require('./db/firebaseHelper');
+const firebase = require('./database/firebaseHelper');
 const quotes = require('./resources/quotes.json');
 const quoteUtils = require('./utils/quoteUtils');
 
