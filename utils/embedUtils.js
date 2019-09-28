@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const _ = require('lodash');
 
-const raidInfo = require('../resources/RaidInfo.json');
+const raidInfo = require('../resources/raidInfo.json');
 const logos = require('../resources/logos.json');
 const displayUtils = require('./displayUtils');
 
