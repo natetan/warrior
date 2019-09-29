@@ -14,6 +14,10 @@ const days = {
  * @returns {String}
  */
 const millisToMinutesAndSeconds = millis => {
+  if (!millis) {
+    return '0:00';
+  }
+  millis = Number(millis);
   let minutes = Math.floor(millis / 60000);
   let seconds = ((millis % 60000) / 1000).toFixed(0);
   return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;

@@ -5,7 +5,8 @@
   "main": "bot.js",
   "author": "Aerovertics",
   "scripts": {
-    "start": "node bot.js"
+    "start": "node bot.js",
+    "test": "./node_modules/.bin/mocha"
   },
   "dependencies": {
     "base-64": "^0.1.0",
@@ -25,6 +26,8 @@
     "winston": "^3.1.0"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.0",
     "nodemon": "^1.19.1"
   }
 }
