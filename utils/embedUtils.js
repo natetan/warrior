@@ -186,6 +186,7 @@ function createSongEmbed(song) {
   // embed.setDescription(desc);
   embed.addField('Artist', song.artists[0].name);
   embed.addField('Album', song.album.name);
+  embed.addField('Release Date', song.album.release_date);
   embed.addField('Track', `${song.track_number} of ${song.album.total_tracks}`);
   embed.addField('Length', displayUtils.millisToMinutesAndSeconds(song.duration_ms));
   return embed;
