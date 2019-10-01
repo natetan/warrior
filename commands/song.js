@@ -1,4 +1,4 @@
-const getMusic = require('../services/getMusic');
+const { getMusic } = require('../services/spotifyService');
 const eu = require('../utils/embedUtils');
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
     let query = args.join(' ');
     try {
       let m = await message.channel.send('Fetching song from spotify...');
-      let song = await getMusic(query);
+      let song = await getMusic('track', query);
       if (song instanceof Error) {
         return m.edit(song.message);
       }

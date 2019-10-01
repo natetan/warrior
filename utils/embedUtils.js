@@ -181,12 +181,33 @@ function createSongEmbed(song) {
     .setURL(song.external_urls.spotify);
   let desc = `Artist: ${song.artists[0].name}\n`
     + `Album: ${song.album.name}\n`
+    + `Release Date: ${song.album.release_date}\n`
     + `Track ${song.track_number} of ${song.album.total_tracks}\n`
   // embed.setDescription(desc);
   embed.addField('Artist', song.artists[0].name);
   embed.addField('Album', song.album.name);
   embed.addField('Track', `${song.track_number} of ${song.album.total_tracks}`);
   embed.addField('Length', displayUtils.millisToMinutesAndSeconds(song.duration_ms));
+  return embed;
+}
+
+function createAlbumEmbed(album, tracks) {
+  let embed = new Discord.RichEmbed()
+    .setColor('#ff6600')
+    .setTitle(album.name)
+    .setThumbnail(album.images[0].url)
+    .setURL(album.external_urls.spotify);
+  let desc = `Artist: ${album.artists[0].name}\n`
+    + `Release Date: ${album.release_date}\n`
+    + `Tracks: ${album.total_tracks}\n`;
+  let tracksDisplay = '';
+  tracks.forEach((t) => {
+    tracksDisplay += `${t.track_number}:\t`
+      + `**${t.name}**\t`
+      + `(${displayUtils.millisToMinutesAndSeconds(t.duration_ms)})\n`;
+  });
+  desc += `\n${tracksDisplay}`
+  embed.setDescription(desc);
   return embed;
 }
 
@@ -350,5 +371,6 @@ module.exports = {
   createDefinitionEmbed,
   createMemeEmbed,
   createSongEmbed,
+  createAlbumEmbed,
   createExampleEmbed
 }
