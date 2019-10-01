@@ -18,7 +18,6 @@ async function getMusic(type, query) {
     console.log(message);
     return null;
   }
-  console.log(data);
   if (type === 'track') {
     if (!data.tracks.items.length) {
       return new Error('No tracks were found.');

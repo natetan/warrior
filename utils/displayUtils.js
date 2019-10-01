@@ -55,6 +55,9 @@ function getDayNum(day) {
  * @returns {Date}
  */
 function getNextDay(day) {
+  if (!day) {
+    return ''
+  }
   day = day.toLowerCase();
   if (day === 'today') {
     return new Date().toDateString().substring(0, 10);
