@@ -1,9 +1,11 @@
+const discordUtils = require('./discordUtils');
+
 const getCommaSplitMessage = (message) => {
   const res = {
     first: 'Separate the items with a',
     second: 'comma followed by a space'
   };
-  if (!message || !message.length()) {
+  if (!message || !message.length) {
     return res;
   }
   const [first, second] = message.split(', ');

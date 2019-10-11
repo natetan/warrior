@@ -23,7 +23,7 @@ module.exports = {
       await message.channel.send('', attachment);
       return m.delete();
     } catch (err) {
-      console.log(`ERROR: Command <slap> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`ERROR: Command <vma> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
       await m.edit('Sorry, there was an error.');
     }
   }
