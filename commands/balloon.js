@@ -19,6 +19,8 @@ module.exports = {
 
       let outputName = 'balloon.png';
 
+      const offset = 30;
+      base.crop(offset, 0, base.getWidth() - offset, base.getHeight());
       await base.print(font32, 120, 150, parts.first, 162);
       await base.print(font32, 90, 500, parts.first, 170);
       await base.print(font16, 525, 520, parts.first, 110);
