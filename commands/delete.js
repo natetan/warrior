@@ -16,9 +16,8 @@ module.exports = {
       let outputName = 'delete.png';
 
       target.resize(195, 195);
-      // const offset = 30;
-      // base.crop(offset, 0, base.getWidth() - offset, base.getHeight());
-      // await target.blur(6);
+      const offset = 30;
+      base.crop(offset, 0, base.getWidth() - offset, base.getHeight());
       await base.composite(target, 120, 135);
       let error, res = await base.getBufferAsync(Jimp.MIME_PNG);
       const attachment = new Discord.Attachment(res, outputName);
