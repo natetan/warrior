@@ -22,11 +22,10 @@ module.exports = {
       avatar2.resize(70, 70);
       avatarCopy.resize(70, 70);
 
-      // const offset = 30;
-      // base.crop(offset, 0, base.getWidth() - offset, base.getHeight());
+      const offset = 30;
+      base.crop(offset, 0, base.getWidth() - offset, base.getHeight());
 
       await base
-        .resize(500, 500)
         .composite(avatar1, 25, 100)
         .composite(avatar1, 25, 300)
         .composite(avatarCopy, 53, 450)
