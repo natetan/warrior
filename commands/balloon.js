@@ -21,10 +21,10 @@ module.exports = {
 
       const offset = 30;
       base.crop(offset, 0, base.getWidth() - offset, base.getHeight());
-      await base.print(font32, 120, 150, parts.first, 162);
-      await base.print(font32, 90, 500, parts.first, 170);
-      await base.print(font16, 525, 520, parts.first, 110);
-      await base.print(font16, 650, 155, parts.second, 125);
+      await base.print(font32, 100, 150, parts.first, 162);
+      await base.print(font32, 70, 500, parts.first, 170);
+      await base.print(font16, 505, 520, parts.first, 110);
+      await base.print(font16, 620, 155, parts.second, 125);
 
       let error, res = await base.getBufferAsync(Jimp.MIME_PNG);
       const attachment = new Discord.Attachment(res, outputName);
