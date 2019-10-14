@@ -1,13 +1,12 @@
 const eu = require('../utils/embedUtils');
-
-const prefix  = process.env.prefix || '?';
+const discordUtils = require('../utils/discordUtils');
 
 module.exports = {
   name: 'halp',
   desc: 'List all of my commands or info about a specific command.',
-  usage: '[command name]',
-  cooldown: 5,
+  usage: '[option] - update',
   async execute(message, args, client) {
+    let option = args.shift();
     const generalObj = {};
     const specialObj = {};
 
@@ -17,6 +16,10 @@ module.exports = {
       return command.commandType === 'general';
     });
 
+    generalObj[this.name] = {
+      desc: this.desc,
+      usage: this.usage
+    };
     generalCommands.forEach((c) => {
       let obj = {};
       obj.desc = c.desc;
@@ -62,7 +65,22 @@ module.exports = {
 
     const generalEmbed = eu.createGeneralHelpEmbed(mainObj);
     const specialEmbed = eu.createSpecializedHelpEmbed(mainObj);
-    await message.channel.send(generalEmbed);
-    return message.channel.send(specialEmbed);
+
+    let channel;
+    if (option && option.toLowerCase() === 'update') {
+      let channelId = process.env.snf_bot_commands_channel_id || require('../auth.json').snf_bot_commands_channel_id;
+      channel = client.channels.get(channelId);
+      await discordUtils.deleteMessages(client, channelId, 100);
+    } else {
+      channel = message.channel;
+    }
+    
+    try {
+      await channel.send(generalEmbed);
+      return channel.send(specialEmbed);
+    } catch (err) {
+      console.log(`ERROR: Command <halp> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      message.channel.send('There was an error.');
+    }
   }
 };

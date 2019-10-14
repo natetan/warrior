@@ -1,4 +1,5 @@
-const permissions= require('../constants/permissions')
+const permissions= require('../constants/permissions');
+const discordUtils = require('../utils/discordUtils');
 
 module.exports = {
   name: 'purge',
@@ -23,8 +24,7 @@ module.exports = {
       return message.reply(`Please provide a number between ${min} (exclusive) and ${max} (inclusive) for the number of messages to delete.`);
     }
     try {
-      const recentMessages = await message.channel.fetchMessages({ limit: deleteCount });
-      message.channel.bulkDelete(recentMessages).catch(error => message.reply(`Couldn't delete messages because of: ${error}`));
+      await discordUtils.deleteMessages(client, message.channel.id, deleteCount);
     } catch (err) {
       console.log(`ERROR: Command <purge> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }

@@ -26,7 +26,6 @@ logger.add(new logger.transports.Console, {
   colorize: true
 });
 
-
 // Logs in with the given token
 const token = process.env.token || require('./auth.json')['token_warrior'];
 client.login(token);

@@ -38,7 +38,25 @@ const getUsernames = (message) => {
   return usernames;
 }
 
+/**
+ * Deletes messages from a given channel
+ * 
+ * @param {Discord.client} client discord client
+ * @param {Number} channelId channelId
+ * @param {Number} limit number of messages to delete (max 100)
+ */
+const deleteMessages = async (client, channelId, limit) => {
+  try {
+    let channel = client.channels.get(channelId);
+    const recentMessages = await channel.fetchMessages({ limit: limit });
+    channel.bulkDelete(recentMessages).catch(error => message.reply(`Couldn't delete messages because of: ${error}`));
+  } catch (err) {
+    console.log(`Error in <deleteMessages>: channelId - ${channelId}\nMessage: ${err}`);
+  }
+}
+
 module.exports = {
   getAvatars,
-  getUsernames
+  getUsernames,
+  deleteMessages
 }
