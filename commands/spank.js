@@ -19,10 +19,14 @@ module.exports = {
 
       spanker.resize(140, 140);
       spankee.resize(120, 120);
+
+      const offset = 30;
+      base.crop(offset, 0, base.getWidth() - offset, base.getHeight());
+
       await base
         .resize(500, 500)
-        .composite(spanker, 225, 5)
-        .composite(spankee, 350, 220);
+        .composite(spanker, 225, 2.5)
+        .composite(spankee, 370, 220);
 
       let error, res = await base.getBufferAsync(Jimp.MIME_PNG);
       const attachment = new Discord.Attachment(res, outputName);
