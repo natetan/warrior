@@ -11,15 +11,15 @@ module.exports = {
     let m = await message.channel.send('Processing imgen...');
     try {
       const avatars = discordUtils.getAvatars(message, client);
-      const imageURL = 'https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/fakenews.bmp';
+      const imageURL = 'https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/failure.bmp';
       let avatar = await Jimp.read(avatars.target);
       let base = await Jimp.read(imageURL);
-      let outputName = 'fakenews.png';
+      let outputName = 'failure.png';
 
       avatar.resize(215, 215);
 
-      // const offset = 30;
-      // base.crop(offset, 0, base.getWidth() - offset, base.getHeight());
+      const offset = 30;
+      base.crop(offset, 0, base.getWidth() - offset, base.getHeight());
 
       await base
         .composite(avatar, 143, 525);
