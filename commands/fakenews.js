@@ -14,20 +14,30 @@ module.exports = {
       const imageURL = 'https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/fakenews.bmp';
       let avatar = await Jimp.read(avatars.target);
       let base = await Jimp.read(imageURL);
-      let baseFinal = await Jimp.read(base);
       let outputName = 'fakenews.png';
 
-      avatar.resize(400, 400);
+      const avatarWidth = 300;
+      const avatarHeight = 260;
+      const overlayHeight = 55;
 
-      await baseFinal
-        .composite(avatar, 390, 0)
-        .composite(base, 0, 0, {
-          mode: Jimp.BLEND_SOURCE_OVER,
-          opacityDest: 1,
-          opacitySource: 0.5
-        });
+      const bottomTvToTopRemoteOffset = 65;
+      const rightCropX = 210;
 
-      let error, res = await baseFinal.getBufferAsync(Jimp.MIME_PNG);
+      avatar.resize(avatarWidth, avatarHeight);
+
+      let leftAvatar = avatar.clone();
+      let rightAvatar = avatar.clone();
+
+      avatar.crop(0, 0, avatar.getWidth(), avatarHeight - bottomTvToTopRemoteOffset);
+      leftAvatar.crop(0, avatarHeight - bottomTvToTopRemoteOffset, 110, bottomTvToTopRemoteOffset);
+      rightAvatar.crop(rightCropX, avatarHeight - bottomTvToTopRemoteOffset, avatarWidth - rightCropX, bottomTvToTopRemoteOffset);
+
+      await base
+        .composite(avatar, 450, overlayHeight)
+        .composite(leftAvatar, 450, overlayHeight + avatar.getHeight())
+        .composite(rightAvatar, 450 + rightCropX, overlayHeight + avatar.getHeight());
+
+      let error, res = await base.getBufferAsync(Jimp.MIME_PNG);
       const attachment = new Discord.Attachment(res, outputName);
       await message.channel.send('', attachment);
       return m.delete();
