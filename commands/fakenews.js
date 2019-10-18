@@ -14,6 +14,7 @@ module.exports = {
       const imageURL = 'https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/fakenews.bmp';
       let avatar = await Jimp.read(avatars.target);
       let base = await Jimp.read(imageURL);
+      let coverUp = base.clone();
       let outputName = 'fakenews.png';
 
       const avatarWidth = 300;
@@ -28,11 +29,14 @@ module.exports = {
       let leftAvatar = avatar.clone();
       let rightAvatar = avatar.clone();
 
+      coverUp.crop(0, 200, 200, 200);
+
       avatar.crop(0, 0, avatar.getWidth(), avatarHeight - bottomTvToTopRemoteOffset);
       leftAvatar.crop(0, avatarHeight - bottomTvToTopRemoteOffset, 110, bottomTvToTopRemoteOffset);
       rightAvatar.crop(rightCropX, avatarHeight - bottomTvToTopRemoteOffset, avatarWidth - rightCropX, bottomTvToTopRemoteOffset);
 
       await base
+        .composite(coverUp, 0 ,0)
         .composite(avatar, 450, overlayHeight)
         .composite(leftAvatar, 450, overlayHeight + avatar.getHeight())
         .composite(rightAvatar, 450 + rightCropX, overlayHeight + avatar.getHeight());
