@@ -1,0 +1,68 @@
+[
+  {
+    "modifier": "lighten",
+    "inputType": "amount",
+    "desc": "Lighten the color a given amount, from 0 to 100. Providing 100 will always return white.",
+    "range": [0, 75]
+  },
+  {
+    "modifier": "brighten",
+    "inputType": "amount",
+    "desc": "Brighten the color a given amount, from 0 to 100.",
+    "range": [0, 75]
+  },
+  {
+    "modifier": "darken",
+    "inputType": "amount",
+    "desc": "Darken the color a given amount, from 0 to 100. Providing 100 will always return black.",
+    "range": [0, 75]
+  },
+  {
+    "modifier": "desaturate",
+    "inputType": "amount",
+    "desc": "Desaturate the color a given amount, from 0 to 100. Providing 100 will is the same as calling greyscale.",
+    "range": [0, 75]
+  },
+  {
+    "modifier": "saturate",
+    "inputType": "amount",
+    "desc": "Saturate the color a given amount, from 0 to 100.",
+    "range": [0, 75]
+  },
+  {
+    "modifier": "greyscale",
+    "inputType": "amount",
+    "desc": "Completely desaturates a color into greyscale",
+    "range": [0, 75]
+  },
+  {
+    "modifier": "spin",
+    "inputType": "degree",
+    "desc": "Spin the hue a given amount, from -360 to 360. Calling with 0, 360, or -360 will do nothing - since it sets the hue back to what it was before.",
+    "range": [-360, 360]
+  },
+  {
+    "modifier": "mix",
+    "inputType": "color",
+    "desc": "Mixes colors by their RGB component values. Amount is opacity of overlaying color.",
+    "range": ["#ff0000", "#00ff00", "#0000ff", "#ffff00"]
+  },
+  {
+    "modifier": "red",
+    "inputType": "amount",
+    "desc": "Modify red component by a given amount",
+    "range": [0, 75]
+  },
+  {
+    "modifier": "green",
+    "inputType": "amount",
+    "desc": "Modify green component by a given amount",
+    "range": [0, 75]
+  },
+  {
+    "modifier": "blue",
+    "inputType": "amount",
+    "desc": "Modify blue component by a given amount",
+    "range": [0, 75]
+  }
+]

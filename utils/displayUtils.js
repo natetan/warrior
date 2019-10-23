@@ -72,8 +72,13 @@ function getNextDay(day) {
   return date.toDateString().substring(0, 10);
 }
 
+const getRandomHex = () => {
+  return `#${('000000' + Math.random().toString(16).slice(2, 8).toUpperCase()).slice(-6)}`;
+}
+
 module.exports = {
   millisToMinutesAndSeconds,
   dateToShortISO,
-  getNextDay
+  getNextDay,
+  getRandomHex
 }
