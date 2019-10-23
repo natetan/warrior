@@ -24,7 +24,7 @@ module.exports = {
       // Clone the array
       let mods = colorModifiers.slice();
       let color = displayUtils.getRandomHex();
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < modifyAmount; i++) {
         let randomIndex = Math.floor(Math.random() * mods.length);
         const mod = mods[randomIndex];
         const obj = { apply: mod.modifier };
