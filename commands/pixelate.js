@@ -15,7 +15,7 @@ module.exports = {
       let avatar = await Jimp.read(avatars.target);
       let outputName = 'pixelate.png';
 
-      avatar.resize(400, 400).pixelate(10);
+      avatar.resize(400, 400).pixelate(15);
 
       let error, res = await avatar.getBufferAsync(Jimp.MIME_PNG);
       const attachment = new Discord.Attachment(res, outputName);
