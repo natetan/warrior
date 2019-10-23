@@ -36,7 +36,7 @@
     "range": [0, 75]
   },
   {
-    "modifier": "spin",
+    "modifier": "hue",
     "inputType": "degree",
     "desc": "Spin the hue a given amount, from -360 to 360. Calling with 0, 360, or -360 will do nothing - since it sets the hue back to what it was before.",
     "range": [-360, 360]
