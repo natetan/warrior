@@ -3,10 +3,11 @@ const eu = require('../utils/embedUtils');
 
 module.exports = {
   name: 'meme',
-  desc: 'Random meme from r/memes, r/dankmemes, r/meirl.',
+  desc: 'Random meme from r/memes, r/dankmemes, r/meirl, or a specified one.',
   usage: '[subreddit]',
+  commandType: 'General',
   async execute(message, args, client) {
-    let subreddit = args[0];
+    let subreddit = args.join(' ');
     let m;
     if (subreddit) {
       m = await message.channel.send(`Fetching meme from r/${subreddit}`);
