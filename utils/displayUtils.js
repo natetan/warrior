@@ -38,7 +38,7 @@ const dateToShortISO = dateString => {
  * @param {String} day day of the week string
  * @returns {Number} number representing the day of the week. 0 - Sunday, 6 - Saturday
  */
-function getDayNum(day) {
+const getDayNum =(day) => {
   let result = null;
   Object.keys(days).forEach((n) => {
     if (days[n].includes(day)) {
@@ -54,7 +54,7 @@ function getDayNum(day) {
  * @param {string} day day of the week
  * @returns {Date}
  */
-function getNextDay(day) {
+const getNextDay = (day) => {
   if (!day) {
     return ''
   }
@@ -76,9 +76,21 @@ const getRandomHex = () => {
   return `#${('000000' + Math.random().toString(16).slice(2, 8).toUpperCase()).slice(-6)}`;
 }
 
+/**
+ * Gets a range inclusive number between the min and max
+ * @param {Number} min min
+ * @param {Number} max max
+ */
+const getRandomIntInclusive = (min, max) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 module.exports = {
   millisToMinutesAndSeconds,
   dateToShortISO,
   getNextDay,
-  getRandomHex
+  getRandomHex,
+  getRandomIntInclusive
 }
