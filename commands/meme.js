@@ -7,7 +7,7 @@ module.exports = {
   usage: '[subreddit]',
   commandType: 'General',
   async execute(message, args, client) {
-    let subreddit = args.join(' ');
+    let subreddit = args.join('');
     let m;
     if (subreddit) {
       m = await message.channel.send(`Fetching meme from r/${subreddit}`);
