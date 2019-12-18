@@ -139,11 +139,12 @@ function createDefinitionEmbed(term) {
 }
 
 function createGeneralHelpEmbed(commands) {
+  let desc = '`[param]` = optional\n`<param>` = required\n';
   let embed = new Discord.RichEmbed()
     .setColor('#ff6600')
     .setTitle('General Commands')
-    .setThumbnail(logos['2']);
-  let desc = '';
+    .setThumbnail(logos['2'])
+    .setDescription(desc);
   let generalCommands = Object.keys(commands.general);
   generalCommands.forEach((c) => {
     embed.addField(`**${c}** - *${commands.general[c].desc}*`, `\`${prefix}${c} ${commands.general[c].usage}\`\n`);
