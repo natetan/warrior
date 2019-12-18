@@ -1,5 +1,6 @@
 const discordUtils = require('../utils/discordUtils');
 const displayUtils = require('../utils/displayUtils');
+const embedUtils = require('../utils/embedUtils');
 
 module.exports = {
   name: 'waifu',
@@ -28,6 +29,8 @@ module.exports = {
     } else {
       emoji = ':heart_eyes: :heart:'
     }
-    return message.channel.send(`${target} is ${rating}/100 waifu ${emoji}`);
+    let desc = `${target} is ${rating}/100 waifu ${emoji}`;
+    let embed = embedUtils.createSimpleMessageEmbed('Waifu rank', desc);
+    return message.channel.send(embed);
   }
 }

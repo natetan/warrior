@@ -62,6 +62,7 @@ client.on('guildMemberAdd', (member) => {
   let retorts = quotes.retort;
   let randomQuote = quoteUtils.getQuote(retorts);
   let welcome = `Welcome <@${member.user.id}>! ${randomQuote}`;
+  console.log(`Member: ${member}`);
   member.guild.channels.find(c => c.name === "general").send(welcome);
 });
 
@@ -69,6 +70,7 @@ client.on('guildMemberRemove', (member) => {
   let warriorQuotes = quotes.warrior;
   let randomQuote = quoteUtils.getQuote(warriorQuotes);
   let farewell = `${member.user.username} has left the guild. ${randomQuote}`;
+  console.log(`Member: ${member}`);
   member.guild.channels.find(c => c.name === "general").send(farewell);
 })
 

@@ -350,6 +350,14 @@ function createPledgesEmbed(pledges) {
   return embed;
 }
 
+const createSimpleMessageEmbed = (name, message) => {
+  let embed = new Discord.RichEmbed()
+    .setColor('#ff6600')
+    .setTitle(name)
+    .setDescription(message);
+  return embed;
+}
+
 function createExampleEmbed() {
   let embed = new Discord.RichEmbed()
     .setColor('#ff6600')
@@ -373,5 +381,6 @@ module.exports = {
   createMemeEmbed,
   createSongEmbed,
   createAlbumEmbed,
+  createSimpleMessageEmbed,
   createExampleEmbed
 }
