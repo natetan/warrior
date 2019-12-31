@@ -5,7 +5,7 @@ module.exports = {
   name: 'meme',
   desc: 'Random meme from r/memes, r/dankmemes, r/meirl, or a specified one.',
   usage: '[subreddit]',
-  commandType: 'General',
+  commandType: 'general',
   async execute(message, args, client) {
     let subreddit = args.join('');
     let m;
