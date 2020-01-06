@@ -1,7 +1,7 @@
-# Arcane-Vortex
+# Warrior
 Discord Bot for ESO.  
 
-Author: [Aerovertics](https://github.com/yulongtan)
+Author: [Nate](https://github.com/natetan)
 
 ## This bot is a fun bot with commands for ESO (The Elder Scrolls Online).
 ### Commands
