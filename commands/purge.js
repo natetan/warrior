@@ -1,4 +1,3 @@
-const permissions= require('../constants/permissions');
 const discordUtils = require('../utils/discordUtils');
 
 module.exports = {
@@ -8,9 +7,9 @@ module.exports = {
   usage: '<number>',
   commandType: 'general',
   async execute(message, args, client) {
+
     // Checks if the user is in a role that has permission
-    // So far, roles include: Admin
-    let hasPermission = message.member.roles.some(r => permissions.adminRoles.includes(r.name));
+    let hasPermission = message.member.hasPermission('MANAGE_MESSAGES');
     if (!hasPermission) {
       return message.channel.send(`${message.author}, you do not have permission to use this command`);
     }
