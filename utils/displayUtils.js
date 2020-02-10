@@ -87,10 +87,19 @@ const getRandomIntInclusive = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+/**
+ * 
+ * @param {Array} array - array
+ */
+const getRandomArrayIndex = array => {
+  return Math.floor(Math.random() * array.length);
+}
+
 module.exports = {
   millisToMinutesAndSeconds,
   dateToShortISO,
   getNextDay,
   getRandomHex,
-  getRandomIntInclusive
+  getRandomIntInclusive,
+  getRandomArrayIndex
 }

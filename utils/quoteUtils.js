@@ -1,3 +1,5 @@
+const displayUtils = require('../utils/displayUtils');
+
 /**
  * 
  * @param {Array} quotes array of quotes
@@ -6,8 +8,8 @@ const getQuote = quotes => {
   if (!quotes) {
     return null;
   }
-  let length = quotes.length;
-  let randomQuote = quotes[Math.floor(Math.random() * length)];
+  let index = displayUtils.getRandomArrayIndex(quotes);
+  let randomQuote = quotes[index];
   return randomQuote;
 }
 
