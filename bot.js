@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const logger = require('winston');
+const { createLogger, format, transports } = require('winston');
 const fs = require('fs');
 
 const firebase = require('./database/firebaseHelper');
@@ -20,10 +20,19 @@ for (const file of commandFiles) {
   client.commands.set(command.name, command);
 }
 
-// Configure logger settings
-logger.remove(logger.transports.Console);
-logger.add(new logger.transports.Console, {
-  colorize: true
+// Configure logger
+let date = new Date().toISOString();
+const logFormat = format.printf(info => {
+  return `${date}-${info.level}: ${JSON.stringify(info.message, null, 2)}`;
+});
+
+const logger = createLogger({
+  transports: [
+    new transports.Console({
+      // level: level,
+      format: format.combine(format.colorize(), logFormat)
+    })
+  ]
 });
 
 // Logs in with the given token
@@ -37,7 +46,7 @@ client.on('ready', () => {
   logger.info('Connected');
   logger.info(`Client ID: ${client.user.id}`);
   logger.info(client.user.tag);
-  console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
+  logger.info(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
   client.user.setActivity(`Serving ${client.guilds.size} servers`);
 });
 
@@ -91,7 +100,7 @@ client.on('message', async (message) => {
       console.log(`ERROR: on bot mention.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }
   }
-  
+
   if (!message.content.startsWith(prefix)) return;
 
   const args = message.content.slice(prefix.length).trim().split(/ +/g);
@@ -116,7 +125,7 @@ client.on('message', async (message) => {
   }
 
   try {
-    command.execute(message, args, client);
+    command.execute(message, args, client, logger);
   } catch (error) {
     console.error(error);
     message.reply(`there was an error trying to execute that command: ${command.name}`);

@@ -6,7 +6,7 @@ module.exports = {
   desc: 'Random meme from r/memes, r/dankmemes, r/meirl, or a specified one.',
   usage: '[subreddit]',
   commandType: 'general',
-  async execute(message, args, client) {
+  async execute(message, args, client, logger) {
     let subreddit = args.join('');
     let m;
     if (subreddit) {
@@ -16,13 +16,26 @@ module.exports = {
     }
     try {
       let meme = await getMeme(subreddit);
-      if (meme.status_code && meme.status_code === 404) {
+      logger.info({
+        user: message.author.username,
+        content: message.content,
+        query: subreddit,
+        meme: meme,
+      });
+      if (meme.status_code === 404) {
         return m.edit(`Subreddit r/${subreddit} not found.`);
+      }
+      if (meme.status_code === 500) {
+        return m.edit(meme.message);
       }
       let embed = eu.createMemeEmbed(meme);
       return m.edit(embed);
     } catch (err) {
-      console.log(`There was an error: ${err}`);
+      logger.error({
+        user: message.author.username,
+        content: message.content,
+        error: err
+      });
       return m.edit('Sorry, an error occured.');
     }
   }
