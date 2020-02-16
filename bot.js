@@ -39,6 +39,9 @@ const logger = createLogger({
 const token = process.env.token || require('./auth.json')['token_warrior'];
 client.login(token);
 
+// This uses SnF's general channel ID
+const defaultChannel = process.env.troll_channel_id || require('./auth.json').bot_test_general_channel_id;
+
 /**
  * The setup for when the bot launches 
  */
@@ -72,7 +75,7 @@ client.on('guildMemberAdd', (member) => {
   let randomQuote = quoteUtils.getQuote(retorts);
   let welcome = `Welcome <@${member.user.id}>! ${randomQuote}`;
   console.log(`Member: ${member}`);
-  member.guild.channels.find(c => c.name === "general").send(welcome);
+  member.guild.channels.get(defaultChannel).send(welcome);
 });
 
 client.on('guildMemberRemove', (member) => {
@@ -80,7 +83,7 @@ client.on('guildMemberRemove', (member) => {
   let randomQuote = quoteUtils.getQuote(warriorQuotes);
   let farewell = `${member.user.username} has left the guild. ${randomQuote}`;
   console.log(`Member: ${member}`);
-  member.guild.channels.find(c => c.name === "general").send(farewell);
+  member.guild.channels.get(defaultChannel).send(farewell);
 })
 
 client.on('message', async (message) => {
@@ -131,4 +134,3 @@ client.on('message', async (message) => {
     message.reply(`there was an error trying to execute that command: ${command.name}`);
   }
 });
-
