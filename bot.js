@@ -70,7 +70,7 @@ client.on("guildDelete", guild => {
   client.user.setActivity(`Serving ${client.guilds.size} servers`);
 });
 
-client.on('guildMemberAdd', (member) => {
+client.on('guildMemberAdd', member => {
   let retorts = quotes.retort;
   let randomQuote = quoteUtils.getQuote(retorts);
   let welcome = `Welcome <@${member.user.id}>! ${randomQuote}`;
@@ -78,7 +78,7 @@ client.on('guildMemberAdd', (member) => {
   member.guild.channels.get(defaultChannel).send(welcome);
 });
 
-client.on('guildMemberRemove', (member) => {
+client.on('guildMemberRemove', member => {
   let warriorQuotes = quotes.warrior;
   let randomQuote = quoteUtils.getQuote(warriorQuotes);
   let farewell = `${member.user.username} has left the guild. ${randomQuote}`;
@@ -86,7 +86,7 @@ client.on('guildMemberRemove', (member) => {
   member.guild.channels.get(defaultChannel).send(farewell);
 })
 
-client.on('message', async (message) => {
+client.on('message', async message => {
   const prefix = process.env.prefix ? '!' : '?';
 
   // It's good practice to ignore other bots. This also makes your bot ignore itself
