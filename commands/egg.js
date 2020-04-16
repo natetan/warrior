@@ -12,7 +12,7 @@ module.exports = {
     try {
       const avatars = discordUtils.getAvatars(message, client);
       let egg = await Jimp.read(avatars.target);
-      let base = await Jimp.read('https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/egg.bmp');
+      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/egg.bmp');
       let outputName = 'egg.png';
 
       egg.resize(50, 50);

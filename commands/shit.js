@@ -15,7 +15,7 @@ module.exports = {
       let shit1 = await Jimp.read(avatars.target);
       let shit2 = await Jimp.read(avatars.target);
       let shit3 = await Jimp.read(avatars.target);
-      let base = await Jimp.read('https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/shit.bmp');
+      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/shit.bmp');
       let outputName = 'shit.png';
 
       shit1.resize(80, 80);

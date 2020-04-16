@@ -14,7 +14,7 @@ module.exports = {
 
       let spanker = await Jimp.read(avatars.self);
       let spankee = await Jimp.read(avatars.target);
-      let base = await Jimp.read('https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/spank.bmp');
+      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/spank.bmp');
       let outputName = 'spank.png';
 
       spanker.resize(140, 140);

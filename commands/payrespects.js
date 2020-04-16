@@ -3,27 +3,26 @@ const discordUtils = require('../utils/discordUtils');
 const Jimp = require('jimp');
 
 module.exports = {
-  name: 'vma',
-  desc: 'Someone does not know how to run vMA effectively.',
+  name: 'payrespects',
+  desc: 'F in chat',
   commandType: 'special',
   category: 'imgen',
   async execute(message, args, client) {
     let m = await message.channel.send('Processing imgen...');
     try {
-      const usernames = discordUtils.getUsernames(message);
-      let name = usernames.target ? usernames.target : usernames.self;
-      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/low-vma.png');
-      let font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE);
-      let outputName = 'vma.png';
+      const avatars = discordUtils.getAvatars(message, client);
+      let person = await Jimp.read(avatars.target);
+      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/pay-respects.jpg');
+      let outputName = 'payrespects.png';
 
-      await base.print(font, 576, 475, name)
-
+      person.resize(48, 75).rotate(4.8);
+      await base.composite(person, 257.5, 59);
       let error, res = await base.getBufferAsync(Jimp.MIME_PNG);
       const attachment = new Discord.Attachment(res, outputName);
       await message.channel.send('', attachment);
       return m.delete();
     } catch (err) {
-      console.log(`ERROR: Command <vma> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`ERROR: Command <payrespects> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
       await m.edit('Sorry, there was an error.');
     }
   }

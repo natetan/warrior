@@ -14,7 +14,7 @@ module.exports = {
 
       let slapper = await Jimp.read(avatars.self);
       let slapee = await Jimp.read(avatars.target);
-      let base = await Jimp.read('https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/slap.bmp');
+      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/slap.bmp');
       let outputName = 'slap.png';
 
       slapper.resize(200, 200);

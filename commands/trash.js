@@ -12,7 +12,7 @@ module.exports = {
     try {
       const avatars = discordUtils.getAvatars(message, client);
       let target = await Jimp.read(avatars.target);
-      let base = await Jimp.read('https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/trash.bmp');
+      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/trash.bmp');
       let outputName = 'trash.png';
 
       target.resize(483, 483);

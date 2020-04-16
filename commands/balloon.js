@@ -13,7 +13,7 @@ module.exports = {
     try {
       const params = args.join(' ');
       const parts = stringUtils.getCommaSplitMessage(params);
-      let base = await Jimp.read('https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/balloon.bmp');
+      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/balloon.bmp');
       let font32 = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
       let font16 = await Jimp.loadFont(Jimp.FONT_SANS_16_BLACK);
 

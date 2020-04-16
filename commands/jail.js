@@ -11,7 +11,7 @@ module.exports = {
     let m = await message.channel.send('Processing imgen...');
     try {
       const avatars = discordUtils.getAvatars(message, client);
-      const imageURL = 'https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/jail.bmp';
+      const imageURL = 'https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/jail.bmp';
       let avatar = await Jimp.read(avatars.target);
       let base = await Jimp.read(imageURL);
       let outputName = 'jail.png';

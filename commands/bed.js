@@ -15,7 +15,7 @@ module.exports = {
       let avatar1 = await Jimp.read(avatars.self);
       let avatar2 = await Jimp.read(avatars.target);
       let avatarCopy = await Jimp.read(avatars.self);
-      let base = await Jimp.read('https://raw.githubusercontent.com/fu-snail/Arcane-Vortex/master/resources/images/memes/bed.bmp');
+      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/bed.bmp');
       let outputName = 'spank.png';
 
       avatar1.resize(100, 100);
