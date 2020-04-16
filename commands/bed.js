@@ -15,15 +15,12 @@ module.exports = {
       let avatar1 = await Jimp.read(avatars.self);
       let avatar2 = await Jimp.read(avatars.target);
       let avatarCopy = await Jimp.read(avatars.self);
-      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/bed.bmp');
+      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/bed.png');
       let outputName = 'spank.png';
 
       avatar1.resize(100, 100);
       avatar2.resize(70, 70);
       avatarCopy.resize(70, 70);
-
-      const offset = 30;
-      base.crop(offset, 0, base.getWidth() - offset, base.getHeight());
 
       await base
         .composite(avatar1, 25, 100)

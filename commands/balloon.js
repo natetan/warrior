@@ -13,14 +13,12 @@ module.exports = {
     try {
       const params = args.join(' ');
       const parts = stringUtils.getCommaSplitMessage(params);
-      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/balloon.bmp');
+      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/balloon.png');
       let font32 = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
       let font16 = await Jimp.loadFont(Jimp.FONT_SANS_16_BLACK);
 
       let outputName = 'balloon.png';
 
-      const offset = 30;
-      base.crop(offset, 0, base.getWidth() - offset, base.getHeight());
       await base.print(font32, 100, 150, parts.first, 162);
       await base.print(font32, 70, 500, parts.first, 170);
       await base.print(font16, 505, 520, parts.first, 110);

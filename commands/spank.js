@@ -14,14 +14,11 @@ module.exports = {
 
       let spanker = await Jimp.read(avatars.self);
       let spankee = await Jimp.read(avatars.target);
-      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/spank.bmp');
+      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/spank.png');
       let outputName = 'spank.png';
 
       spanker.resize(140, 140);
       spankee.resize(120, 120);
-
-      const offset = 30;
-      base.crop(offset, 0, base.getWidth() - offset, base.getHeight());
 
       await base
         .resize(500, 500)

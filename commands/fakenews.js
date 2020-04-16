@@ -11,7 +11,7 @@ module.exports = {
     let m = await message.channel.send('Processing imgen...');
     try {
       const avatars = discordUtils.getAvatars(message, client);
-      const imageURL = 'https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/fakenews.bmp';
+      const imageURL = 'https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/fakenews.png';
       let avatar = await Jimp.read(avatars.target);
       let base = await Jimp.read(imageURL);
       let coverUp = base.clone();

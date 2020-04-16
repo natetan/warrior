@@ -11,15 +11,12 @@ module.exports = {
     let m = await message.channel.send('Processing imgen...');
     try {
       const avatars = discordUtils.getAvatars(message, client);
-      const imageURL = 'https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/failure.bmp';
+      const imageURL = 'https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/failure.png';
       let avatar = await Jimp.read(avatars.target);
       let base = await Jimp.read(imageURL);
       let outputName = 'failure.png';
 
       avatar.resize(215, 215);
-
-      const offset = 30;
-      base.crop(offset, 0, base.getWidth() - offset, base.getHeight());
 
       await base
         .composite(avatar, 143, 525);

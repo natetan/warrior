@@ -11,7 +11,7 @@ module.exports = {
     let m = await message.channel.send('Processing imgen...');
     try {
       const avatars = discordUtils.getAvatars(message, client);
-      const imageURL = 'https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/jail.bmp';
+      const imageURL = 'https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/jail.png';
       let avatar = await Jimp.read(avatars.target);
       let base = await Jimp.read(imageURL);
       let outputName = 'jail.png';
@@ -23,9 +23,8 @@ module.exports = {
         .composite(base, 0, 0, {
           mode: Jimp.BLEND_SOURCE_OVER,
           opacityDest: 1,
-          opacitySource: 0.5
-        })
-        .grayscale();
+          opacitySource: 1
+        }).grayscale();
 
       let error, res = await avatar.getBufferAsync(Jimp.MIME_PNG);
       const attachment = new Discord.Attachment(res, outputName);
