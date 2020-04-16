@@ -8,6 +8,7 @@ Author: [Nate](https://github.com/natetan)
 **General**
 - `album` `<query>`: Gets an album from Spotify.
 - `args-info` `<user> <role>`: Information about the arguments provided.
+- `ask` `<question>`: Ask and you shall receive
 - `define` `<query>`: Defines a given word.
 - `doggo`: Gets a random dog media (png, jpg, gif, wmv).
 - `expose` `[username]`: Find out who someone really is.
@@ -33,6 +34,7 @@ Author: [Nate](https://github.com/natetan)
 - `rakkhat`: Rakkhat quotes from ESO.
 - `ramsay`: Ramsay quotes.
 - `serpent`: Serpent quotes from ESO.
+- `tigerking`: Tiger King documentary
 - `warrior`: Warrior quotes from ESO.
 - `zmaja`: Z'Maja quotes from ESO.
 
@@ -48,6 +50,8 @@ Author: [Nate](https://github.com/natetan)
 - `fakenews`: FOX is not the only fake news channel.
 - `invert`: inverts someone.
 - `jail`: Them them to jail!
+- `laid`: The kind of person who does not get laid.
+- `payrespects`: F in chat
 - `pixelate`: pixelates someone.
 - `rip`: RIP
 - `sepia`: sepias someone.
@@ -56,3 +60,4 @@ Author: [Nate](https://github.com/natetan)
 - `spank`: Spanks someone.
 - `trash`: Someone here is trash, and it's not me.
 - `vma`: Someone does not know how to run vMA effectively.
+- `wanted`: You aren't wanted. None of us are wanted!
