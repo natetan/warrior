@@ -18,7 +18,9 @@ module.exports = {
       let meme = await getMeme(subreddit);
       logger.info({
         user: message.author.username,
+        channel: message.channel.type === 'text' ? message.channel.name : null,
         content: message.content,
+        guild: message.guild ? message.guild.name : null,
         query: subreddit,
         meme: meme,
       });
@@ -33,8 +35,9 @@ module.exports = {
     } catch (err) {
       logger.error({
         user: message.author.username,
+        channel: message.channel.name,
         content: message.content,
-        error: err
+        error: err,
       });
       return m.edit('Sorry, an error occured.');
     }
