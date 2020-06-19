@@ -41,8 +41,10 @@ Author: [Nate](https://github.com/natetan)
 **Imgen**
 - `airpods`: Old man with airpods and iPad.
 - `balloon`: The blade [2] does not break the balloon [1].
+- `ban`: I am sick of this filth.
 - `bed`: Brothers are mean.
 - `cancer`: Who is cancerous af?
+- `chidori`: When the beat hits you like a chidori to the heart
 - `color`: colors someone.
 - `delete`: delet.
 - `egg`: Duck pooping out an egg
@@ -51,13 +53,16 @@ Author: [Nate](https://github.com/natetan)
 - `invert`: inverts someone.
 - `jail`: Them them to jail!
 - `laid`: The kind of person who does not get laid.
+- `nothing`: You are nothing.
 - `payrespects`: F in chat
 - `pixelate`: pixelates someone.
 - `rip`: RIP
+- `screams`: WHY CAN'T YOU JUST BE NORMAL
 - `sepia`: sepias someone.
 - `shit`: You stepped in some shit.
 - `slap`: Slaps someone.
 - `spank`: Spanks someone.
 - `trash`: Someone here is trash, and it's not me.
+- `ugly`: I can't stand the sight of you.
 - `vma`: Someone does not know how to run vMA effectively.
 - `wanted`: You aren't wanted. None of us are wanted!
