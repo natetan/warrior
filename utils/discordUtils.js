@@ -48,7 +48,7 @@ const getUsernames = (message) => {
 const deleteMessages = async (client, channelId, limit) => {
   try {
     let channel = client.channels.get(channelId);
-    const recentMessages = await channel.fetchMessages({ limit: limit });
+    const recentMessages = await channel.fetchMessages({ limit: limit + 1 });
     channel.bulkDelete(recentMessages).catch(error => message.reply(`Couldn't delete messages because of: ${error}`));
   } catch (err) {
     console.log(`Error in <deleteMessages>: channelId - ${channelId}\nMessage: ${err}`);

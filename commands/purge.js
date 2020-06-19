@@ -17,10 +17,10 @@ module.exports = {
     if (!deleteCount) {
       return message.channel.send('That\'s not even a fucking number, you expired milk carton.');
     }
-    let min = 1;
+    let min = 0;
     let max = 20;
     if (!deleteCount || deleteCount <= min || deleteCount > max) {
-      return message.reply(`Please provide a number between ${min} (exclusive) and ${max} (inclusive) for the number of messages to delete.`);
+      return message.reply(`Please provide a number between ${min} and ${max} for the number of messages to delete.`);
     }
     try {
       await discordUtils.deleteMessages(client, message.channel.id, deleteCount);
