@@ -26,7 +26,7 @@ module.exports = {
       await message.channel.send('', attachment);
       return m.delete();
     } catch (err) {
-      console.log(`ERROR: Command <airpods> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      console.log(`ERROR: Command <rip> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
       await m.edit('Sorry, there was an error.');
     }
   }
