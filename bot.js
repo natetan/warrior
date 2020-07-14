@@ -42,15 +42,12 @@ client.login(token);
 // This uses SnF's general channel ID
 const defaultChannel = process.env.troll_channel_id || require('./auth.json').bot_test_general_channel_id;
 
-/**
- * The setup for when the bot launches 
- */
 client.on('ready', () => {
   logger.info('Connected');
   logger.info(`Client ID: ${client.user.id}`);
   logger.info(client.user.tag);
-  logger.info(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
-  client.user.setActivity(`Serving ${client.guilds.size} servers`);
+  logger.info(`Bot has started, with ${client.users.cache.size} users, in ${client.channels.cache.size} channels of ${client.guilds.cache.size} guilds.`);
+  client.user.setActivity(`Serving ${client.guilds.cache.size} servers`);
 });
 
 /**
@@ -58,7 +55,7 @@ client.on('ready', () => {
  */
 client.on("guildCreate", guild => {
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
-  client.user.setActivity(`Serving ${client.guilds.size} servers`);
+  client.user.setActivity(`Serving ${client.guilds.cache.size} servers`);
   firebase.initializeGuild(guild.id, guild.name, guild.owner.displayName);
 });
 
@@ -67,7 +64,7 @@ client.on("guildCreate", guild => {
  */
 client.on("guildDelete", guild => {
   console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
-  client.user.setActivity(`Serving ${client.guilds.size} servers`);
+  client.user.setActivity(`Serving ${client.guilds.cache.size} servers`);
 });
 
 client.on('guildMemberAdd', member => {
@@ -75,7 +72,7 @@ client.on('guildMemberAdd', member => {
   let randomQuote = quoteUtils.getQuote(retorts);
   let welcome = `Welcome <@${member.user.id}>! ${randomQuote}`;
   console.log(`Member: ${member}`);
-  member.guild.channels.get(defaultChannel).send(welcome);
+  member.guild.channels.cache.get(defaultChannel).send(welcome);
 });
 
 client.on('guildMemberRemove', member => {
@@ -83,7 +80,7 @@ client.on('guildMemberRemove', member => {
   let randomQuote = quoteUtils.getQuote(warriorQuotes);
   let farewell = `${member.user.username} has left the guild. ${randomQuote}`;
   console.log(`Member: ${member}`);
-  member.guild.channels.get(defaultChannel).send(farewell);
+  member.guild.channels.cache.get(defaultChannel).send(farewell);
 })
 
 client.on('message', async message => {
