@@ -91,7 +91,7 @@ client.on('message', async message => {
   if (message.author.bot) return;
 
   // If someone @'s the bot, send them a nasty retort.
-  if (message.isMemberMentioned(client.user) && !message.mentions.everyone) {
+  if (message.mentions.has(client.user) && !message.mentions.everyone) {
     let retorts = quotes.retort;
     let randomQuote = quoteUtils.getQuote(retorts);
     try {

@@ -10,7 +10,7 @@ module.exports = {
       let channel = message.channel;
       let results = {};
       if (args[0] === 'all') {
-        message.guild.roles.forEach((v) => {
+        message.guild.roles.cache.forEach((v) => {
           let members = v.members.map((m) => {
             return m.displayName;
           });
@@ -21,12 +21,12 @@ module.exports = {
         });
         results = eu.createRoleEmbed(results, 'ALL');
       } else if (args[0] === 'count') {
-        message.guild.roles.forEach((v) => {
+        message.guild.roles.cache.forEach((v) => {
           results[v.name] = v.members.keyArray().length;
         });
         results = eu.createRoleEmbed(results, 'COUNT');
       } else {
-        message.member.roles.forEach((v, k) => {
+        message.member.roles.cache.forEach((v, k) => {
           results[k] = v.name;
         });
         results = eu.createRoleEmbed(results, message.author.username);

@@ -12,11 +12,11 @@ const getAvatars = (message, client) => {
   });
   let avatars = {};
   if (users.length) {
-    avatars.self = message.author.avatarURL;
-    avatars.target = users[0].avatarURL;
+    avatars.self = message.author.avatarURL({ format: 'png' });
+    avatars.target = users[0].avatarURL({ format: 'png' });
   } else {
-    avatars.self = client.user.avatarURL;
-    avatars.target = message.author.avatarURL;
+    avatars.self = client.user.avatarURL({ format: 'png' });
+    avatars.target = message.author.avatarURL({ format: 'png' });
   }
   return avatars;
 }
@@ -47,8 +47,8 @@ const getUsernames = (message) => {
  */
 const deleteMessages = async (client, channelId, limit) => {
   try {
-    let channel = client.channels.get(channelId);
-    const recentMessages = await channel.fetchMessages({ limit: limit + 1 });
+    let channel = client.channels.cache.get(channelId);
+    const recentMessages = await channel.messages.fetch({ limit: limit + 1 });
     channel.bulkDelete(recentMessages).catch(error => message.reply(`Couldn't delete messages because of: ${error}`));
   } catch (err) {
     console.log(`Error in <deleteMessages>: channelId - ${channelId}\nMessage: ${err}`);

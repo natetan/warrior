@@ -18,7 +18,7 @@ module.exports = {
       avatar.resize(400, 400).pixelate(15);
 
       let error, res = await avatar.getBufferAsync(Jimp.MIME_PNG);
-      const attachment = new Discord.Attachment(res, outputName);
+      const attachment = new Discord.MessageAttachment(res, outputName);
       await message.channel.send('', attachment);
       return m.delete();
     } catch (err) {

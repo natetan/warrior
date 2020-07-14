@@ -20,7 +20,7 @@ module.exports = {
       await target.blur(6);
       await base.composite(target, 480, 0)
       let error, res = await base.getBufferAsync(Jimp.MIME_PNG);
-      const attachment = new Discord.Attachment(res, outputName);
+      const attachment = new Discord.MessageAttachment(res, outputName);
       await message.channel.send('', attachment);
       return m.delete();
     } catch (err) {

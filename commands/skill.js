@@ -20,21 +20,22 @@ module.exports = {
       }
 
       if (!skill) {
-        return m.edit('There was an error with your query.');
+        message.channel.send('There was an error with your query.');
       }
 
       if (skill.length < 1) {
-        return m.edit(`Nothing found for skill ${query}`);
+        message.channel.send(`Nothing found for skill ${query}`);
       }
 
       if (skill.length > 1) {
         message.channel.send(`Found more than one skill for your query: ${skill.length} results.`);
       }
       
-      return m.edit(eu.createSkillEmbed(skill))
+      await message.channel.send(eu.createSkillEmbed(skill));
+      return m.delete();
     } catch (err) {
       console.log(`ERROR: Command <skill> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-      return m.edit('There was an error. I am sorry for your loss.');
+      message.channel.send('There was an error. I am sorry for your loss.');
     }
   }
 }

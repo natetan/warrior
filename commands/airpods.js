@@ -18,7 +18,7 @@ module.exports = {
       person.resize(325, 500).rotate(21.6);
       await base.composite(person, 480, 365)
       let error, res = await base.getBufferAsync(Jimp.MIME_PNG);
-      const attachment = new Discord.Attachment(res, outputName);
+      const attachment = new Discord.MessageAttachment(res, outputName);
       await message.channel.send('', attachment);
       return m.delete();
     } catch (err) {

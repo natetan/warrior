@@ -65,7 +65,7 @@ function createRoster(raid) {
  * @param {String} title - raidName
  * @param {Object} roster - Roster object
  * 
- * @returns {Discord.RichEmbed} - Discord Embed
+ * @returns {Discord.MessageEmbed} - Discord Embed
  */
 function createTrialEmbed(day, time, title, eventName, roster) {
   let raid = getRaidInfo(title);
@@ -84,11 +84,11 @@ function createTrialEmbed(day, time, title, eventName, roster) {
     //cpDisplay += `${setup.type}:\n ${JSON.stringify(setup.points)}\n`;
   });
 
-  let embed = new Discord.RichEmbed()
+  let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle(`${eventName.toUpperCase()}\n${day} @ ${time}est\nTrial: ${raid['short_name']}`)
     .setDescription(`join: ${prefix}trial join ${eventName} <role> [optional-note]\nleave: ${prefix}trial leave ${eventName}`)
-    .setThumbnail(logos['2']);
+    .setThumbnail(logos.sap['2']);
 
   // Sort by their priority (the usual postings)
   let roles = Object.keys(roster).sort((a, b) => {
@@ -123,10 +123,10 @@ function createTrialEmbed(day, time, title, eventName, roster) {
 }
 
 function createDefinitionEmbed(term) {
-  let embed = new Discord.RichEmbed()
+  let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle(`${term.term} - *${term.lexicalCategory}*`)
-    .setThumbnail(logos['2'])
+    .setThumbnail(logos.oxford)
     .setDescription(`*${term.definition}*`);
   if (term.examples) {
     let count = 1;
@@ -140,10 +140,10 @@ function createDefinitionEmbed(term) {
 
 function createGeneralHelpEmbed(commands) {
   let desc = '`[param]` = optional\n`<param>` = required\n';
-  let embed = new Discord.RichEmbed()
+  let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle('General Commands')
-    .setThumbnail(logos['2'])
+    .setThumbnail(logos.sap['2'])
     .setDescription(desc);
   let generalCommands = Object.keys(commands.general);
   generalCommands.forEach((c) => {
@@ -153,10 +153,10 @@ function createGeneralHelpEmbed(commands) {
 }
 
 function createSpecializedHelpEmbed(commands) {
-  let embed = new Discord.RichEmbed()
+  let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle('Specialized Commands')
-    .setThumbnail(logos['2']);
+    .setThumbnail(logos.sap['2']);
   let specializedCommands = Object.keys(commands.specialized);
   specializedCommands.forEach((c) => {
     embed.addField(`${c} - ${commands.specialized[c].desc}`, commands.specialized[c].options);
@@ -165,7 +165,7 @@ function createSpecializedHelpEmbed(commands) {
 }
 
 function createMemeEmbed(meme) {
-  let embed = new Discord.RichEmbed()
+  let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle(`r/${meme.subreddit}`)
     .setDescription(meme.title)
@@ -175,7 +175,7 @@ function createMemeEmbed(meme) {
 }
 
 function createSongEmbed(song) {
-  let embed = new Discord.RichEmbed()
+  let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle(song.name)
     .setThumbnail(song.album.images[0].url)
@@ -194,7 +194,7 @@ function createSongEmbed(song) {
 }
 
 function createAlbumEmbed(album, tracks) {
-  let embed = new Discord.RichEmbed()
+  let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle(album.name)
     .setThumbnail(album.images[0].url)
@@ -218,13 +218,13 @@ function createAlbumEmbed(album, tracks) {
  * 
  * @param {Object} - Discord's role object 
  * @param {String} - The type of role categorization 
- * @returns {Discord.RichEmbed} - Discord Embed
+ * @returns {Discord.MessageEmbed} - Discord Embed
  */
 function createRoleEmbed(data, type) {
-  let embed = new Discord.RichEmbed()
+  let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle(`Roles: ${type}`)
-    .setThumbnail(logos['2']);
+    .setThumbnail(logos.sap['2']);
 
   if (type.toLowerCase() === 'all') {
     Object.keys(data).forEach((role) => {
@@ -254,16 +254,16 @@ function createRoleEmbed(data, type) {
  * 
  * @param {Object} set - json representing an eso set
  * 
- * @returns {Discord.RichEmbed} - Discord Embed
+ * @returns {Discord.MessageEmbed} - Discord Embed
  */
 function createSetEmbed(set) {
   let display = '';
   if (set.length > 1) {
-    let embed = new Discord.RichEmbed()
+    let embed = new Discord.MessageEmbed()
       .setColor('#ff6600')
       .setTitle('Multiple sets')
-      .setDescription('Try grabbing the ID instead. `!set <id>`')
-      .setThumbnail(logos['2']);
+      .setDescription(`Try grabbing the ID instead. \`${prefix}set <id>\``)
+      .setThumbnail(logos.sap['2']);
     set.forEach((s) => {
       display += `[${s.id}] - [${s.name}](${s.url})\n`;
     });
@@ -275,12 +275,12 @@ function createSetEmbed(set) {
   }
   let url = set.url;
   let traits = set.traits_needed ? ` (${set.traits_needed} traits)` : '';
-  let embed = new Discord.RichEmbed()
+  let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle(set.name)
     .setDescription(`**ID**: ${set.id}\n**Type**: ${set.type}${traits}\n**Location**: ${set.location}`)
     .setURL(url)
-    .setThumbnail(logos['2']);
+    .setThumbnail(logos.sap['2']);
 
   for (let i = 1; i <= 5; i++) {
     let bonus = set[`bonus_item_${i}`];
@@ -301,16 +301,16 @@ function createSetEmbed(set) {
  * 
  * @param {Object} skill - json representing an eso skill
  * 
- * @returns {Discord.RichEmbed} - Discord Embed
+ * @returns {Discord.MessageEmbed} - Discord Embed
  */
 function createSkillEmbed(skill) {
   let display = '';
   if (skill.length > 1) {
-    let embed = new Discord.RichEmbed()
+    let embed = new Discord.MessageEmbed()
       .setColor('#ff6600')
       .setTitle('Multiple skills')
-      .setDescription('Try grabbing the ID instead. `!skill <id>`')
-      .setThumbnail(logos['2']);
+      .setDescription(`Try grabbing the ID instead. \`${prefix}skill <id>\``)
+      .setThumbnail(logos.sap['2']);
     skill.forEach((s) => {
       display += `[${s.id}] - [${s.name}](${s.url})\n`;
     });
@@ -322,7 +322,7 @@ function createSkillEmbed(skill) {
   }
   let url = skill.url;
   let cost = skill.cost !== 'Nothing' ? `**Cost**: ${skill.cost}\n` : '';
-  let embed = new Discord.RichEmbed()
+  let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle(skill.name)
     .setURL(url)
@@ -335,16 +335,16 @@ function createSkillEmbed(skill) {
 /**
  * Creates an embed for pledges
  * 
- * @returns {Discord.RichEmbed} - Discord Embed
+ * @returns {Discord.MessageEmbed} - Discord Embed
  */
 function createPledgesEmbed(pledges) {
   if (!pledges) {
     return '';
   }
-  let embed = new Discord.RichEmbed()
+  let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle(`Pledges - ${new Date().toDateString().substring(0, 10)}`)
-    .setThumbnail(logos['2'])
+    .setThumbnail(logos.sap['2'])
     .addField('Maj', pledges['1'])
     .addField('Glirion', pledges['2'])
     .addField('Urgalarg', pledges['3']);
@@ -352,7 +352,7 @@ function createPledgesEmbed(pledges) {
 }
 
 const createSimpleMessageEmbed = (name, message) => {
-  let embed = new Discord.RichEmbed()
+  let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle(name)
     .setDescription(message);
@@ -360,11 +360,11 @@ const createSimpleMessageEmbed = (name, message) => {
 }
 
 function createExampleEmbed() {
-  let embed = new Discord.RichEmbed()
+  let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle('Example Embed - Testing Purposes')
     .setDescription('These are used for debugging and trying things out. !trial')
-    .setThumbnail(logos['2']);
+    .setThumbnail(logos.sap['2']);
   return embed;
 }
 

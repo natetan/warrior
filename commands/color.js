@@ -58,7 +58,7 @@ module.exports = {
       modifierString += `\nProcessing time took ${Math.round((end - start) / 1000)} seconds.`;
 
       let error, res = await avatar.getBufferAsync(Jimp.MIME_PNG);
-      const attachment = new Discord.Attachment(res, outputName);
+      const attachment = new Discord.MessageAttachment(res, outputName);
       await message.channel.send(modifierString, attachment);
       return m.delete();
     } catch (err) {

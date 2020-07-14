@@ -11,18 +11,15 @@ module.exports = {
     let m = await message.channel.send('Processing imgen...');
     try {
       const avatars = discordUtils.getAvatars(message, client);
-      const imageURL = 'https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/cancer.png';
-      let avatar = await Jimp.read(avatars.target);
-      let base = await Jimp.read(imageURL);
+      let target = await Jimp.read(avatars.target);
+      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/cancer.png');
       let outputName = 'cancer.png';
 
-      avatar.resize(100, 100);
-
-      await base
-        .composite(avatar, 351, 200);
+      target.resize(100, 100);
+      await base.composite(target, 351, 200);
 
       let error, res = await base.getBufferAsync(Jimp.MIME_PNG);
-      const attachment = new Discord.Attachment(res, outputName);
+      const attachment = new Discord.MessageAttachment(res, outputName);
       await message.channel.send('', attachment);
       return m.delete();
     } catch (err) {

@@ -20,11 +20,11 @@ module.exports = {
       }
 
       if (!set) {
-        return m.edit('There was an error with your query.');
+        return message.channel.send('There was an error with your query.');
       }
 
       if (set.length < 1) {
-        return m.edit(`Nothing found for set ${query}`);
+        return message.channel.send(`Nothing found for set ${query}`);
       }
 
       if (set.length > 1) {
@@ -32,10 +32,11 @@ module.exports = {
       }
 
 
-      return m.edit(eu.createSetEmbed(set))
+      await message.channel.send(eu.createSetEmbed(set));
+      return m.delete();
     } catch (err) {
       console.log(`ERROR: Command <set> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-      return m.edit('There was an error. I am sorry for your loss.');
+      return message.channel.send('There was an error. I am sorry for your loss.');
     }
   }
 }

@@ -6,7 +6,7 @@ module.exports = {
   async execute(message, args) {
     try {
       console.log(`The ID of channel #${message.channel.name} in guild <${message.guild.name}>: ${message.channel.id}`);
-      let allChannels = message.guild.channels.sort((a, b) => {
+      let allChannels = message.guild.channels.cache.sort((a, b) => {
         return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
       }).filter((c) => {
         return c.type === 'text';

@@ -1,5 +1,8 @@
 {
-  "1": "https://cdn.discordapp.com/attachments/519377459737788417/539958206458363904/image0.jpg",
-  "2": "https://cdn.discordapp.com/attachments/519377459737788417/539958278403391509/image0.jpg",
-  "3": "https://cdn.discordapp.com/attachments/519377459737788417/539958329955581953/image0.jpg"
+  "sap": {
+    "1": "https://cdn.discordapp.com/attachments/519377459737788417/539958206458363904/image0.jpg",
+    "2": "https://cdn.discordapp.com/attachments/519377459737788417/539958278403391509/image0.jpg",
+    "3": "https://cdn.discordapp.com/attachments/519377459737788417/539958329955581953/image0.jpg"
+  },
+  "oxford": "https://cdn.discordapp.com/attachments/410960222559928321/732478096363749437/51VDi1DSQjL.png"
 }
