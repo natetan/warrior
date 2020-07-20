@@ -13,17 +13,21 @@ module.exports = {
       let m = await message.channel.send('Fetching song from spotify...');
       let song = await getMusic('track', query);
       if (song instanceof Error) {
-        return m.edit(song.message);
+        message.channel.send(song.message);
+        return m.delete();
       }
       song = song.tracks.items[0];
       if (!song) {
-        return m.edit('There was an error.');
+        message.channel.send('There was an error.');
+        return m.delete();
       }
-      let songEmbed = eu.createSongEmbed(song);
-      return m.edit(songEmbed);
+      const songEmbed = eu.createSongEmbed(song);
+      message.channel.send(songEmbed);
+      return m.delete();
     } catch (err) {
       console.log(`ERROR: Command <song> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
-      return m.edit('There was an error. I am sorry for your loss.');
+      message.channel.send('There was an error. I am sorry for your loss.');
+      return m.delete();
     }
   }
 }

@@ -13,7 +13,8 @@ module.exports = {
       let m = await message.channel.send('Fetching album from spotify...');
       let album = await getMusic('album', query);
       if (album instanceof Error) {
-        return message.channel.send(album.message);
+        message.channel.send(album.message);
+        return m.delete();
       }
       album = album.albums.items[0];
       if (!album) {
@@ -21,7 +22,8 @@ module.exports = {
       }
       let tracks = await getTracksForAlbum(album.id);
       if (tracks instanceof Error) {
-        return message.channel.send(tracks.message);
+        message.channel.send(tracks.message);
+        return m.delete();
       }
       tracks = tracks.items;
       let albumEmbed = eu.createAlbumEmbed(album, tracks);

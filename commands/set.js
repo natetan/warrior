@@ -20,19 +20,19 @@ module.exports = {
       }
 
       if (!set) {
-        return message.channel.send('There was an error with your query.');
-      }
-
+        message.channel.send('There was an error with your query.');
+        return m.delete();
+      } 
+      
       if (set.length < 1) {
-        return message.channel.send(`Nothing found for set ${query}`);
-      }
-
+        message.channel.send(`Nothing found for set ${query}`);
+        return m.delete();
+      } 
+      
       if (set.length > 1) {
         message.channel.send(`Found more than one set for your query: ${set.length} results.`);
       }
-
-
-      await message.channel.send(eu.createSetEmbed(set));
+      message.channel.send(eu.createSetEmbed(set));
       return m.delete();
     } catch (err) {
       console.log(`ERROR: Command <set> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
