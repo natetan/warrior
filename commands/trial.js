@@ -34,7 +34,7 @@ module.exports = {
         }
         await firebase.createRaid(guildId, day, time, trial, eventName);
         let raid = await firebase.getRaid(guildId, eventName);
-        return message.channel.send(eu.createTrialEmbed(raid.day, raid.time, raid.trial, raid.name, raid.roster));
+        return message.channel.send(eu.createTrial(raid.day, raid.time, raid.trial, raid.name, raid.roster));
       } else {
         return message.channel.send('Could not create trial - please check command params: `trial create <day> <time> <trial> <eventName>`')
       }
@@ -80,7 +80,7 @@ module.exports = {
         roster[role].players = players;
         await firebase.updateRaid(guildId, eventName, roster);
         raid = await firebase.getRaid(guildId, eventName);
-        return message.channel.send(eu.createTrialEmbed(raid.day, raid.time, raid.trial, raid.name, raid.roster));
+        return message.channel.send(eu.createTrial(raid.day, raid.time, raid.trial, raid.name, raid.roster));
       } else {
         return message.channel.search('Could not join trial -- please check params: `trial join <eventName> <role> (note -- optional one word note)`');
       }
@@ -101,7 +101,7 @@ module.exports = {
         })
         await firebase.updateRaid(guildId, eventName, roster);
         raid = await firebase.getRaid(guildId, eventName);
-        return message.channel.send(eu.createTrialEmbed(raid.day, raid.time, raid.trial, raid.name, raid.roster));
+        return message.channel.send(eu.createTrial(raid.day, raid.time, raid.trial, raid.name, raid.roster));
       }
     } else if (trialCommand === 'help') {
       return message.channel.send('`!trial create <day> <time> <trial-name> <event-name>` -- Creates a trial in the database. Trial options are currently all in vet. **Warning**: Creating one with the same name will replace the current one.\n`!trial join <event-name> <role> <optional-note>` -- Joins the given trial with the given role -- mt, ot, heals, stam, mag. The optional note should not contain any spaces.\n`!trial leave <event-name>` -- leaves the sign-up');

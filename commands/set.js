@@ -32,7 +32,7 @@ module.exports = {
       if (set.length > 1) {
         message.channel.send(`Found more than one set for your query: ${set.length} results.`);
       }
-      message.channel.send(eu.createSetEmbed(set));
+      message.channel.send(eu.createSet(set));
       return m.delete();
     } catch (err) {
       console.log(`ERROR: Command <set> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);

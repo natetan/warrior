@@ -63,8 +63,8 @@ module.exports = {
       specialized: specialObj
     };
 
-    const generalEmbed = eu.createGeneralHelpEmbed(mainObj);
-    const specialEmbed = eu.createSpecializedHelpEmbed(mainObj);
+    const generalEmbed = eu.createGeneralHelp(mainObj);
+    const specialEmbed = eu.createSpecializedHelp(mainObj);
 
     let channel;
     if (option && option.toLowerCase() === 'update') {

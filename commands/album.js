@@ -26,7 +26,7 @@ module.exports = {
         return m.delete();
       }
       tracks = tracks.items;
-      let albumEmbed = eu.createAlbumEmbed(album, tracks);
+      let albumEmbed = eu.createAlbum(album, tracks);
       await message.channel.send(albumEmbed);
       return m.delete();
     } catch (err) {

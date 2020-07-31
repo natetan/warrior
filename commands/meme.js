@@ -30,7 +30,7 @@ module.exports = {
       if (meme.status_code === 500) {
         return m.edit(meme.message);
       }
-      let embed = eu.createMemeEmbed(meme);
+      let embed = eu.createMeme(meme);
       return m.edit(embed);
     } catch (err) {
       logger.error({

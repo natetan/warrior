@@ -33,7 +33,7 @@ module.exports = {
         message.channel.send(`Found more than one skill for your query: ${skill.length} results.`);
       }
 
-      message.channel.send(eu.createSkillEmbed(skill));
+      message.channel.send(eu.createSkill(skill));
       return m.delete();
     } catch (err) {
       console.log(`ERROR: Command <skill> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);

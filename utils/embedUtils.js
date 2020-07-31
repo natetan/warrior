@@ -13,7 +13,7 @@ const prefix = process.env.prefix || '?';
  * @param {String} raidName - name of the raid 
  * @returns {Object}
  */
-function getRaidInfo(raidName) {
+const getRaidInfo = raidName => {
   raidName = raidName.toLowerCase();
   if (raidName === 'vmaw') {
     raidName = 'vmol';
@@ -28,7 +28,7 @@ function getRaidInfo(raidName) {
  * @param {Object} raid - Raid object
  * @returns {Object}
  */
-function createRoster(raid) {
+const createRoster = raid => {
   let comp = raid.comp;
   let roles = Object.keys(comp);
   let roster = {};
@@ -67,7 +67,7 @@ function createRoster(raid) {
  * 
  * @returns {Discord.MessageEmbed} - Discord Embed
  */
-function createTrialEmbed(day, time, title, eventName, roster) {
+const createTrial = (day, time, title, eventName, roster) => {
   let raid = getRaidInfo(title);
   // let date = DateHelper.getNextDay(day);
   // if (date instanceof Error) {
@@ -122,7 +122,7 @@ function createTrialEmbed(day, time, title, eventName, roster) {
   return embed;
 }
 
-function createDefinitionEmbed(term) {
+const createDefinition = term => {
   let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle(`${term.term} - *${term.lexicalCategory}*`)
@@ -138,7 +138,7 @@ function createDefinitionEmbed(term) {
   return embed;
 }
 
-function createGeneralHelpEmbed(commands) {
+const createGeneralHelp = commands => {
   let desc = '`[param]` = optional\n`<param>` = required\n';
   let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
@@ -152,7 +152,7 @@ function createGeneralHelpEmbed(commands) {
   return embed;
 }
 
-function createSpecializedHelpEmbed(commands) {
+const createSpecializedHelp = commands => {
   let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle('Specialized Commands')
@@ -164,7 +164,7 @@ function createSpecializedHelpEmbed(commands) {
   return embed;
 }
 
-function createMemeEmbed(meme) {
+const createMeme = meme => {
   let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle(`r/${meme.subreddit}`)
@@ -174,7 +174,7 @@ function createMemeEmbed(meme) {
   return embed;
 }
 
-function createSongEmbed(song) {
+const createSong = song => {
   let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle(song.name)
@@ -193,7 +193,7 @@ function createSongEmbed(song) {
   return embed;
 }
 
-function createAlbumEmbed(album, tracks) {
+const createAlbum = (album, tracks) => {
   let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle(album.name)
@@ -220,7 +220,7 @@ function createAlbumEmbed(album, tracks) {
  * @param {String} - The type of role categorization 
  * @returns {Discord.MessageEmbed} - Discord Embed
  */
-function createRoleEmbed(data, type) {
+const createRole = (data, type) => {
   let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle(`Roles: ${type}`)
@@ -256,7 +256,7 @@ function createRoleEmbed(data, type) {
  * 
  * @returns {Discord.MessageEmbed} - Discord Embed
  */
-function createSetEmbed(set) {
+const createSet = set => {
   let display = '';
   if (set.length > 1) {
     let embed = new Discord.MessageEmbed()
@@ -303,7 +303,7 @@ function createSetEmbed(set) {
  * 
  * @returns {Discord.MessageEmbed} - Discord Embed
  */
-function createSkillEmbed(skill) {
+const createSkill = skill => {
   let display = '';
   if (skill.length > 1) {
     let embed = new Discord.MessageEmbed()
@@ -337,7 +337,7 @@ function createSkillEmbed(skill) {
  * 
  * @returns {Discord.MessageEmbed} - Discord Embed
  */
-function createPledgesEmbed(pledges) {
+const createPledges = pledges => {
   if (!pledges) {
     return '';
   }
@@ -351,7 +351,7 @@ function createPledgesEmbed(pledges) {
   return embed;
 }
 
-const createSimpleMessageEmbed = (name, message) => {
+const createSimpleMessage = (name, message) => {
   let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle(name)
@@ -359,7 +359,7 @@ const createSimpleMessageEmbed = (name, message) => {
   return embed;
 }
 
-function createExampleEmbed() {
+const createExample = () => {
   let embed = new Discord.MessageEmbed()
     .setColor('#ff6600')
     .setTitle('Example Embed - Testing Purposes')
@@ -371,17 +371,17 @@ function createExampleEmbed() {
 module.exports = {
   getRaidInfo,
   createRoster,
-  createTrialEmbed,
-  createRoleEmbed,
-  createSetEmbed,
-  createSkillEmbed,
-  createPledgesEmbed,
-  createGeneralHelpEmbed,
-  createSpecializedHelpEmbed,
-  createDefinitionEmbed,
-  createMemeEmbed,
-  createSongEmbed,
-  createAlbumEmbed,
-  createSimpleMessageEmbed,
-  createExampleEmbed
+  createTrial,
+  createRole,
+  createSet,
+  createSkill,
+  createPledges,
+  createGeneralHelp,
+  createSpecializedHelp,
+  createDefinition,
+  createMeme,
+  createSong,
+  createAlbum,
+  createSimpleMessage,
+  createExample
 }

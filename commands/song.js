@@ -21,7 +21,7 @@ module.exports = {
         message.channel.send('There was an error.');
         return m.delete();
       }
-      const songEmbed = eu.createSongEmbed(song);
+      const songEmbed = eu.createSong(song);
       message.channel.send(songEmbed);
       return m.delete();
     } catch (err) {

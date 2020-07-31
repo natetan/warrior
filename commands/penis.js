@@ -17,7 +17,7 @@ module.exports = {
     }
     penis += 'D';
     let desc = `${target} has a penis size of ${penis}`;
-    let embed = embedUtils.createSimpleMessageEmbed('Penis size', desc);
+    let embed = embedUtils.createSimpleMessage('Penis size', desc);
     return message.channel.send(embed);
   }
 }

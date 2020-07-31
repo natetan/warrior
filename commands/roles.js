@@ -19,17 +19,17 @@ module.exports = {
             results[v.name] = members;
           }
         });
-        results = eu.createRoleEmbed(results, 'ALL');
+        results = eu.createRole(results, 'ALL');
       } else if (args[0] === 'count') {
         message.guild.roles.cache.forEach((v) => {
           results[v.name] = v.members.keyArray().length;
         });
-        results = eu.createRoleEmbed(results, 'COUNT');
+        results = eu.createRole(results, 'COUNT');
       } else {
         message.member.roles.cache.forEach((v, k) => {
           results[k] = v.name;
         });
-        results = eu.createRoleEmbed(results, message.author.username);
+        results = eu.createRole(results, message.author.username);
       }
       await channel.send(results);
     } catch (err) {

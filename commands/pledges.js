@@ -9,7 +9,7 @@ module.exports = {
     try {
       let m = await message.channel.send('Grabbing pledges from Dwemer Automaton...');
       let dailies = await esoService.getPledges();
-      let embed = eu.createPledgesEmbed(dailies);
+      let embed = eu.createPledges(dailies);
       await message.channel.send(embed);
       return m.delete();
     } catch (err) {

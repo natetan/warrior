@@ -15,7 +15,7 @@ module.exports = {
         return message.channel.send(term.errorMessage);
       }
 
-      let embed = eu.createDefinitionEmbed(term);
+      let embed = eu.createDefinition(term);
       return message.channel.send(embed);
     } catch (err) {
       console.log(`ERROR: Command <define> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
