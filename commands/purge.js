@@ -18,7 +18,7 @@ module.exports = {
       return message.channel.send('That\'s not even a fucking number, you expired milk carton.');
     }
     let min = 0;
-    let max = 20;
+    let max = 100;
     if (!deleteCount || deleteCount <= min || deleteCount > max) {
       return message.reply(`Please provide a number between ${min} and ${max} for the number of messages to delete.`);
     }
