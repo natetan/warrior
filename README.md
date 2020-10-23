@@ -30,7 +30,10 @@ Author: [Nate](https://github.com/natetan)
 
 **Quotes**
 - `dragon`: Dragon quotes from ESO (Sunspire).
+- `felms`: Saint Felms the Bold quotes from ESO.
+- `llothis`: Saint Llothis the Pious quotes from ESO.
 - `mage`: Mage quotes from ESO.
+- `olms`: Saint Olms the Just quotes from ESO.
 - `rakkhat`: Rakkhat quotes from ESO.
 - `ramsay`: Ramsay quotes.
 - `serpent`: Serpent quotes from ESO.
@@ -39,20 +42,23 @@ Author: [Nate](https://github.com/natetan)
 - `zmaja`: Z'Maja quotes from ESO.
 
 **Imgen**
-- `airpods`: Old man with airpods and iPad.
 - `balloon`: The blade [2] does not break the balloon [1].
 - `ban`: I am sick of this filth.
+- `beautiful`: Someone is looking beautiful
 - `bed`: Brothers are mean.
 - `cancer`: Who is cancerous af?
 - `chidori`: When the beat hits you like a chidori to the heart
 - `color`: colors someone.
+- `cute`: Someone is looking cute
 - `delete`: delet.
+- `draw`: Draw me like one of your french girls.
 - `egg`: Duck pooping out an egg
 - `failure`: Who is a failure?
 - `fakenews`: FOX is not the only fake news channel.
 - `invert`: inverts someone.
 - `jail`: Them them to jail!
 - `laid`: The kind of person who does not get laid.
+- `lovely`: Tell someone that they are lovely
 - `nothing`: You are nothing.
 - `payrespects`: F in chat
 - `pixelate`: pixelates someone.
