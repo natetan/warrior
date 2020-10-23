@@ -8,12 +8,13 @@ module.exports = {
   commandType: 'special',
   category: 'imgen',
   async execute(message, args, client) {
-    let m = await message.channel.send('Processing imgen...');
+    let m = '';
     try {
+      m = await message.channel.send('Processing imgen...');
       const avatars = discordUtils.getAvatars(message, client);
-      let target = await Jimp.read(avatars.target);
-      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/wanted.png');
-      let outputName = 'wanted.png';
+      const target = await Jimp.read(avatars.target);
+      const base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/wanted.png');
+      const outputName = 'wanted.png';
 
       target.resize(447, 447);
       

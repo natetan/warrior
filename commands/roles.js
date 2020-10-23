@@ -7,7 +7,7 @@ module.exports = {
   commandType: 'general',
   async execute(message, args, client) {
     try {
-      let channel = message.channel;
+      const channel = message.channel;
       let results = {};
       if (args[0] === 'all') {
         message.guild.roles.cache.forEach((v) => {

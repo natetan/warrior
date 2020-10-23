@@ -8,14 +8,15 @@ module.exports = {
   commandType: 'special',
   category: 'imgen',
   async execute(message, args, client) {
-    let m = await message.channel.send('Processing imgen...');
+    let m = '';
     try {
+      m = await message.channel.send('Processing imgen...');
       const avatars = discordUtils.getAvatars(message, client);
       const imageURL = 'https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/fakenews.png';
-      let avatar = await Jimp.read(avatars.target);
-      let base = await Jimp.read(imageURL);
-      let coverUp = base.clone();
-      let outputName = 'fakenews.png';
+      const avatar = await Jimp.read(avatars.target);
+      const base = await Jimp.read(imageURL);
+      const coverUp = base.clone();
+      const outputName = 'fakenews.png';
 
       const avatarWidth = 300;
       const avatarHeight = 260;
@@ -26,8 +27,8 @@ module.exports = {
 
       avatar.resize(avatarWidth, avatarHeight);
 
-      let leftAvatar = avatar.clone();
-      let rightAvatar = avatar.clone();
+      const leftAvatar = avatar.clone();
+      const rightAvatar = avatar.clone();
 
       coverUp.crop(0, 200, 200, 200);
 

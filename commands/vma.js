@@ -8,13 +8,14 @@ module.exports = {
   commandType: 'special',
   category: 'imgen',
   async execute(message, args, client) {
-    let m = await message.channel.send('Processing imgen...');
+    let m = '';
     try {
+      m = await message.channel.send('Processing imgen...');
       const usernames = discordUtils.getUsernames(message);
-      let name = usernames.target ? usernames.target : usernames.self;
-      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/low-vma.png');
-      let font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE);
-      let outputName = 'vma.png';
+      const name = usernames.target ? usernames.target : usernames.self;
+      const base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/low-vma.png');
+      const font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE);
+      const outputName = 'vma.png';
 
       await base.print(font, 576, 475, name)
 

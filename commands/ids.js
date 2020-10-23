@@ -4,7 +4,7 @@ module.exports = {
   commandType: 'private',
   async execute(message, args, client) {
     try {
-      let res = {};
+      const res = {};
       message.channel.members.forEach((member) => {
         res[member.user.username] = member.user.id
       });

@@ -8,9 +8,10 @@ module.exports = {
   usage: '<query>',
   commandType: 'general',
   async execute(message, args, client) {
-    let query = args.join(' ');
+    const query = args.join(' ');
+    let m = '';
     try {
-      let m = await message.channel.send('Fetching album from spotify...');
+      m = await message.channel.send('Fetching album from spotify...');
       let album = await getMusic('album', query);
       if (album instanceof Error) {
         message.channel.send(album.message);
@@ -26,11 +27,12 @@ module.exports = {
         return m.delete();
       }
       tracks = tracks.items;
-      let albumEmbed = eu.createAlbum(album, tracks);
+      const albumEmbed = eu.createAlbum(album, tracks);
       await message.channel.send(albumEmbed);
       return m.delete();
     } catch (err) {
       console.log(`ERROR: Command <album> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
+      await m.delete();
       return message.channel.send('There was an error. I am sorry for your loss.');
     }
   }

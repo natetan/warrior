@@ -9,9 +9,8 @@ module.exports = {
   category: 'quotes',
   async execute(message, args, client) {
     try {
-      let m = quoteUtils.determineQuote(message, quotes.rakkhat, destroy.rakkhat);
+      const m = quoteUtils.determineQuote(message, quotes.rakkhat, destroy.rakkhat);
       return message.channel.send(m);
-
     } catch (err) {
       console.log(`ERROR: Command <rakkhat> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }

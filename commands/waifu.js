@@ -29,8 +29,8 @@ module.exports = {
     } else {
       emoji = ':heart_eyes: :heart:'
     }
-    let desc = `${target} is ${rating}/100 waifu ${emoji}`;
-    let embed = embedUtils.createSimpleMessage('Waifu rank', desc);
+    const desc = `${target} is ${rating}/100 waifu ${emoji}`;
+    const embed = embedUtils.createSimpleMessage('Waifu rank', desc);
     return message.channel.send(embed);
   }
 }

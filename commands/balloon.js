@@ -9,15 +9,16 @@ module.exports = {
   commandType: 'special',
   category: 'imgen',
   async execute(message, args, client) {
-    let m = await message.channel.send('Processing imgen...');
+    let m = '';
     try {
+      m = await message.channel.send('Processing imgen...');
       const params = args.join(' ');
       const parts = stringUtils.getCommaSplitMessage(params);
-      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/balloon.png');
-      let font32 = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
-      let font16 = await Jimp.loadFont(Jimp.FONT_SANS_16_BLACK);
+      const base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/balloon.png');
+      const font32 = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
+      const font16 = await Jimp.loadFont(Jimp.FONT_SANS_16_BLACK);
 
-      let outputName = 'balloon.png';
+      const outputName = 'balloon.png';
 
       await base.print(font32, 100, 150, parts.first, 162);
       await base.print(font32, 70, 500, parts.first, 170);

@@ -6,7 +6,7 @@ module.exports = {
   commandType: 'general',
   async execute(message, args, client) {
     try {
-      let catResponse = await getRandomCat();
+      const catResponse = await getRandomCat();
       if (catResponse) {
         message.channel.send(catResponse.file);
       } else {

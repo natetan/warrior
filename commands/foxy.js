@@ -6,7 +6,7 @@ module.exports = {
   commandType: 'general',
   async execute(message, args, client) {
     try {
-      let foxObj = await getRandomFox();
+      const foxObj = await getRandomFox();
       if (foxObj) {
         message.channel.send(foxObj.image);
       } else {

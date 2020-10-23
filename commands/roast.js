@@ -7,8 +7,8 @@ module.exports = {
   usage: '[username]',
   commandType: 'general',
   async execute(message, arg, client) {
-    let retorts = quotes.retort;
-    let randomQuote = quoteUtils.getQuote(retorts);
+    const retorts = quotes.retort;
+    const randomQuote = quoteUtils.getQuote(retorts);
     try {
       await message.channel.send(randomQuote);
     } catch (err) {

@@ -9,7 +9,7 @@ module.exports = {
   category: 'quotes',
   async execute(message, args, client) {
     try {
-      let m = quoteUtils.determineQuote(message, quotes.mage, destroy.mage);
+      const m = quoteUtils.determineQuote(message, quotes.mage, destroy.mage);
       return message.channel.send(m);
 
     } catch (err) {

@@ -9,7 +9,7 @@ module.exports = {
   async execute(message, args, client) {
 
     // Checks if the user is in a role that has permission
-    let hasPermission = message.member.hasPermission('MANAGE_MESSAGES');
+    const hasPermission = message.member.hasPermission('MANAGE_MESSAGES');
     if (!hasPermission) {
       return message.channel.send(`${message.author}, you do not have permission to use this command`);
     }
@@ -17,8 +17,8 @@ module.exports = {
     if (!deleteCount) {
       return message.channel.send('That\'s not even a fucking number, you expired milk carton.');
     }
-    let min = 0;
-    let max = 100;
+    const min = 0;
+    const max = 100;
     if (!deleteCount || deleteCount <= min || deleteCount > max) {
       return message.reply(`Please provide a number between ${min} and ${max} for the number of messages to delete.`);
     }

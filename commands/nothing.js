@@ -9,8 +9,9 @@ module.exports = {
   commandType: 'special',
   category: 'imgen',
   async execute(message, args, client) {
-    let m = await message.channel.send('Processing imgen...');
+    let m = '';
     try {
+      m = await message.channel.send('Processing imgen...');
       const base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/nothing.png');
       const outputName = 'nothing.png';
       const font32 = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);

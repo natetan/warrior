@@ -7,7 +7,7 @@ module.exports = {
   usage: '[subreddit]',
   commandType: 'general',
   async execute(message, args, client, logger) {
-    let subreddit = args.join('');
+    const subreddit = args.join('');
     let m;
     if (subreddit) {
       m = await message.channel.send(`Fetching meme from r/${subreddit}`);
@@ -15,7 +15,7 @@ module.exports = {
       m = await message.channel.send('Fetching random meme from r/memes, r/dankmemes, and r/meirl');
     }
     try {
-      let meme = await getMeme(subreddit);
+      const meme = await getMeme(subreddit);
       logger.info({
         user: message.author.username,
         channel: message.channel.type === 'text' ? message.channel.name : null,
@@ -30,7 +30,7 @@ module.exports = {
       if (meme.status_code === 500) {
         return m.edit(meme.message);
       }
-      let embed = eu.createMeme(meme);
+      const embed = eu.createMeme(meme);
       return m.edit(embed);
     } catch (err) {
       logger.error({

@@ -6,7 +6,7 @@ module.exports = {
   commandType: 'general',
   async execute(message, args, client) {
     try {
-      let doggoObj = await getRandomDoggo();
+      const doggoObj = await getRandomDoggo();
       if (doggoObj) {
         message.channel.send(doggoObj.url);
       } else {

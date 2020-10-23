@@ -6,7 +6,7 @@ module.exports = {
   desc: 'List all of my commands or info about a specific command.',
   usage: '[option] - update',
   async execute(message, args, client) {
-    let option = args.shift();
+    const option = args.shift();
     const generalObj = {};
     const specialObj = {};
 

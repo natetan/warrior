@@ -11,19 +11,20 @@ module.exports = {
   commandType: 'special',
   category: 'imgen',
   async execute(message, args, client) {
-    let m = await message.channel.send('Processing imgen...');
+    let m = '';
     try {
+      m = await message.channel.send('Processing imgen...');
       const avatars = discordUtils.getAvatars(message, client);
 
       let avatar = await Jimp.read(avatars.target);
       let outputName = 'color.png';
 
-      let modifiers = [];
-      let modifyAmount = Math.floor(Math.random() * colorModifiers.length);
+      const modifiers = [];
+      const modifyAmount = Math.floor(Math.random() * colorModifiers.length);
 
       // Clone the array
       let mods = colorModifiers.slice();
-      let color = displayUtils.getRandomHex();
+      const color = displayUtils.getRandomHex();
       for (let i = 0; i < modifyAmount; i++) {
         let randomIndex = Math.floor(Math.random() * mods.length);
         const mod = mods[randomIndex];
@@ -31,20 +32,20 @@ module.exports = {
         if (mod.inputType === 'color') {
           obj.params = [color];
         } else {
-          let min = mod.range[0];
-          let max = mod.range[1];
+          const min = mod.range[0];
+          const max = mod.range[1];
 
           // The maximum is inclusive and the minimum is inclusive
-          let value = Math.floor(Math.random() * (max - min + 1)) + min;
+          const value = Math.floor(Math.random() * (max - min + 1)) + min;
           obj.params = [value];
         }
         mods = mods.filter(m => m.modifier !== mod.modifier);
         modifiers.push(obj);
       }
 
-      let start = performance.now();
+      const start = performance.now();
       avatar.color(modifiers);
-      let end = performance.now();
+      const end = performance.now();
 
       let modifierString = 'These modifiers were applied:';
       modifiers.forEach(m => {

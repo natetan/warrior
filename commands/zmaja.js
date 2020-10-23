@@ -9,9 +9,8 @@ module.exports = {
   category: 'quotes',
   async execute(message, args, client) {
     try {
-      let m = quoteUtils.determineQuote(message, quotes.zmaja, destroy.zmaja);
+      const m = quoteUtils.determineQuote(message, quotes.zmaja, destroy.zmaja);
       return message.channel.send(m);
-
     } catch (err) {
       console.log(`ERROR: Command <zmaja> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }

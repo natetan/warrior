@@ -8,9 +8,8 @@ module.exports = {
   category: 'quotes',
   async execute(message, args, client) {
     try {
-      let m = quoteUtils.determineQuote(message, quotes.tigerking);
+      const m = quoteUtils.determineQuote(message, quotes.tigerking);
       return message.channel.send(m);
-
     } catch (err) {
       console.log(`ERROR: Command <tigerking> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
     }

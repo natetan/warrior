@@ -8,14 +8,15 @@ module.exports = {
   commandType: 'special',
   category: 'imgen',
   async execute(message, args, client) {
-    let m = await message.channel.send('Processing imgen...');
+    let m = '';
     try {
+      m = await message.channel.send('Processing imgen...');;
       const avatars = discordUtils.getAvatars(message, client);
 
-      let kakashi = await Jimp.read(avatars.self);
-      let rin = await Jimp.read(avatars.target);
-      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/chidori.jpg');
-      let outputName = 'chidori.jpg';
+      const kakashi = await Jimp.read(avatars.self);
+      const rin = await Jimp.read(avatars.target);
+      const base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/chidori.jpg');
+      const outputName = 'chidori.jpg';
 
       rin.resize(215, 215);
       kakashi.resize(225, 225);

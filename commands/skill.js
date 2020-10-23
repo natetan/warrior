@@ -9,10 +9,11 @@ module.exports = {
   usage: '<query>',
   commandType: 'general',
   async execute(message, args, client) {
-    let query = args.join(' ');
-    let m = await message.channel.send('Grabbing set from `eso-skillbook`...');
+    const query = args.join(' ');
+    let m = '';
     let skill;
     try {
+      m = await message.channel.send('Grabbing set from `eso-skillbook`...');
       if (Number(query)) {
         skill = await esoService.getSkillById(query);
       } else {
@@ -34,11 +35,10 @@ module.exports = {
       }
 
       message.channel.send(eu.createSkill(skill));
-      return m.delete();
     } catch (err) {
       console.log(`ERROR: Command <skill> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);
       message.channel.send('There was an error. I am sorry for your loss.');
-      return m.delete();
     }
+    return m.delete();
   }
 }

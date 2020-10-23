@@ -9,10 +9,11 @@ module.exports = {
   usage: '<query>',
   commandType: 'general',
   async execute(message, args, client) {
-    let query = args.join(' ');
-    let m = await message.channel.send('Grabbing set from `eso-sets`...');
+    const query = args.join(' ');
+    let m = '';
     let set;
     try {
+      m = await message.channel.send('Grabbing set from `eso-sets`...');
       if (Number(query)) {
         set = await esoService.getSetById(query);
       } else {

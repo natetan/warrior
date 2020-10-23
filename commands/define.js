@@ -9,13 +9,13 @@ module.exports = {
   commandType: 'general',
   async execute(message, args, client) {
     try {
-      let word = args.join(' ');
-      let term = await ds.getDefinition(word);
+      const word = args.join(' ');
+      const term = await ds.getDefinition(word);
       if (term.error) {
         return message.channel.send(term.errorMessage);
       }
 
-      let embed = eu.createDefinition(term);
+      const embed = eu.createDefinition(term);
       return message.channel.send(embed);
     } catch (err) {
       console.log(`ERROR: Command <define> failed.\n\tMessage: [${message}]\n\tError: [${err}]`);

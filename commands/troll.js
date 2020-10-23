@@ -4,8 +4,8 @@ module.exports = {
   commandType: 'private',
   async execute(message, args, client) {
     try {
-      let phrase = args.join(' ');
-      let channel = client.channels.cache.get(process.env.troll_channel_id || require('../auth.json').bot_test_general_channel_id);
+      const phrase = args.join(' ');
+      const channel = client.channels.cache.get(process.env.troll_channel_id || require('../auth.json').bot_test_general_channel_id);
 
       if (!channel) {
         return message.channel.send('Channel does not exist');

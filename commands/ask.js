@@ -9,9 +9,9 @@ module.exports = {
   commandType: 'general',
   async execute(message, arg, client, logger) {
     try {
-      let answers = quotes.answers;
-      let index = displayUtils.getRandomArrayIndex(answers);
-      let res = answers[index];
+      const answers = quotes.answers;
+      const index = displayUtils.getRandomArrayIndex(answers);
+      const res = answers[index];
       await message.channel.send(res);
     } catch (err) {
       logger.error({

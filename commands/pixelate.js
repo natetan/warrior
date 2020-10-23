@@ -8,12 +8,13 @@ module.exports = {
   commandType: 'special',
   category: 'imgen',
   async execute(message, args, client) {
-    let m = await message.channel.send('Processing imgen...');
+    let m = '';
     try {
+      m = await message.channel.send('Processing imgen...');
       const avatars = discordUtils.getAvatars(message, client);
 
-      let avatar = await Jimp.read(avatars.target);
-      let outputName = 'pixelate.png';
+      const avatar = await Jimp.read(avatars.target);
+      const outputName = 'pixelate.png';
 
       avatar.resize(400, 400).pixelate(15);
 

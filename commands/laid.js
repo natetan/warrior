@@ -8,13 +8,14 @@ module.exports = {
   commandType: 'special',
   category: 'imgen',
   async execute(message, args, client) {
-    let m = await message.channel.send('Processing imgen...');
+    let m = '';
     try {
+      m = await message.channel.send('Processing imgen...');
       const avatars = discordUtils.getAvatars(message, client);
-      let target = await Jimp.read(avatars.target);
-      let base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/laid.png');
-      let circleMask = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/circle-mask.png');
-      let outputName = 'laid.png';
+      const target = await Jimp.read(avatars.target);
+      const base = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/laid.png');
+      const circleMask = await Jimp.read('https://raw.githubusercontent.com/natetan/warrior/master/resources/images/memes/circle-mask.png');
+      const outputName = 'laid.png';
 
       // Put circle over image
       target.resize(115, 115);
