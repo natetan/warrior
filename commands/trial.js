@@ -1,4 +1,4 @@
-const firebase = require('../database/firebaseHelper');
+const raidHelper = require('../database/raid');
 const eu = require('../utils/embedUtils');
 
 /**
@@ -32,8 +32,8 @@ module.exports = {
         if (!eu.getRaidInfo(trial)) {
           return message.channel.send(`There is no trial called ${trial}.`);
         }
-        await firebase.createRaid(guildId, day, time, trial, eventName);
-        let raid = await firebase.getRaid(guildId, eventName);
+        await raidHelper.createRaid(guildId, day, time, trial, eventName);
+        let raid = await raidHelper.getRaid(guildId, eventName);
         return message.channel.send(eu.createTrial(raid.day, raid.time, raid.trial, raid.name, raid.roster));
       } else {
         return message.channel.send('Could not create trial - please check command params: `trial create <day> <time> <trial> <eventName>`')
@@ -42,11 +42,11 @@ module.exports = {
       let [eventName, role, note] = args;
       if (eventName !== undefined && role !== undefined) {
         role = role.toLowerCase();
-        let eventExists = await firebase.raidExists(guildId, eventName);
+        let eventExists = await raidHelper.raidExists(guildId, eventName);
         if (!eventExists) {
           return message.channel.send(`Event \`${eventName}\` does not exist.`);
         }
-        let raid = await firebase.getRaid(guildId, eventName);
+        let raid = await raidHelper.getRaid(guildId, eventName);
         let roster = raid.roster;
         let mt = ['mt', 'main-tank', 'maintank', 'main'];
         let ot = ['ot', 'off-tank', 'offtank', 'off'];
@@ -78,8 +78,8 @@ module.exports = {
           }
         }
         roster[role].players = players;
-        await firebase.updateRaid(guildId, eventName, roster);
-        raid = await firebase.getRaid(guildId, eventName);
+        await raidHelper.updateRaid(guildId, eventName, roster);
+        raid = await raidHelper.getRaid(guildId, eventName);
         return message.channel.send(eu.createTrial(raid.day, raid.time, raid.trial, raid.name, raid.roster));
       } else {
         return message.channel.search('Could not join trial -- please check params: `trial join <eventName> <role> (note -- optional one word note)`');
@@ -87,11 +87,11 @@ module.exports = {
     } else if (trialCommand === 'leave') {
       let [eventName] = args;
       if (eventName !== undefined) {
-        let eventExists = await firebase.raidExists(guildId, eventName);
+        let eventExists = await raidHelper.raidExists(guildId, eventName);
         if (!eventExists) {
           return message.channel.send(`Event \`${eventName}\` does not exist.`);
         }
-        let raid = await firebase.getRaid(guildId, eventName);
+        let raid = await raidHelper.getRaid(guildId, eventName);
         let roster = raid.roster;
         Object.keys(roster).forEach((role) => {
           let players = roster[role].players;
@@ -99,8 +99,8 @@ module.exports = {
             delete players[message.author.username];
           }
         })
-        await firebase.updateRaid(guildId, eventName, roster);
-        raid = await firebase.getRaid(guildId, eventName);
+        await raidHelper.updateRaid(guildId, eventName, roster);
+        raid = await raidHelper.getRaid(guildId, eventName);
         return message.channel.send(eu.createTrial(raid.day, raid.time, raid.trial, raid.name, raid.roster));
       }
     } else if (trialCommand === 'help') {

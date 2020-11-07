@@ -2,7 +2,9 @@ const Discord = require('discord.js');
 const { createLogger, format, transports } = require('winston');
 const fs = require('fs');
 
-const firebase = require('./database/firebaseHelper');
+const guildHelper = require('./database/guild');
+const userHelper = require('./database/member');
+
 const quotes = require('./resources/quotes.json');
 const quoteUtils = require('./utils/quoteUtils');
 
@@ -56,7 +58,8 @@ client.on('ready', () => {
 client.on("guildCreate", guild => {
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
   client.user.setActivity(`Serving ${client.guilds.cache.size} servers`);
-  firebase.initializeGuild(guild.id, guild.name, guild.owner.displayName);
+  guildHelper.create(guild, guild.name, guild.owner.user);
+  userHelper.setUpMembers(guild.id, guild.members.cache.array());
 });
 
 /**
