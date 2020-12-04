@@ -3,7 +3,7 @@ const userHelper = require('../database/member');
 
 module.exports = {
   name: 'db',
-  desc: 'Sets up the guild in Google Firebase.',
+  desc: 'Google Firebase commands',
   args: true,
   usage: '<command>',
   commandType: 'private',
@@ -21,13 +21,21 @@ module.exports = {
         }
       } else if (type === 'member') {
         const command = args.shift();
+        const members = guild.members.cache.array();
         if (command === 'init') {
-          const members = guild.members.cache.array();
-          await userHelper.setUpMembers(guild, members);
-          return message.delete();
+          const response = await userHelper.setUpMembers(guild, members);
+          return message.channel.send(response);
+        } else if (command === 'add') {
+          const memberId = args.shift().substring(3).replace('>', '');
+          const response = await userHelper.addMember(guild, members.find(m => m.user.id === memberId));
+          return message.channel.send(response);
+        } else if (command === 'remove') {
+          const memberId = args.shift().substring(3).replace('>', '');
+          const response = await userHelper.removeMember(guild, members.find(m => m.user.id === memberId));
+          return message.channel.send(response);
         }
       } else {
-        return message.send(`Command ${type} not available.`)
+        return message.channel.send(`Command ${type} not available.`)
       }
     } catch (err) {
       console.log(`Command db failed: ${err}`);

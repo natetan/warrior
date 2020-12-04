@@ -76,6 +76,7 @@ client.on('guildMemberAdd', member => {
   let welcome = `Welcome <@${member.user.id}>! ${randomQuote}`;
   console.log(`Member: ${member}`);
   member.guild.channels.cache.get(defaultChannel).send(welcome);
+  userHelper.addMember(member.guild, member);
 });
 
 client.on('guildMemberRemove', member => {
@@ -84,6 +85,7 @@ client.on('guildMemberRemove', member => {
   let farewell = `${member.user.username} has left the guild. ${randomQuote}`;
   console.log(`Member: ${member}`);
   member.guild.channels.cache.get(defaultChannel).send(farewell);
+  userHelper.removeMember(member.guild, member);
 })
 
 client.on('message', async message => {
