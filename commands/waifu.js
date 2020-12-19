@@ -1,6 +1,9 @@
 const discordUtils = require('../utils/discordUtils');
 const displayUtils = require('../utils/displayUtils');
 const embedUtils = require('../utils/embedUtils');
+const toggles = require('../database/toggles');
+
+const aeroId = process.env.aerovertics_id || require('../auth.json').aerovertics_id;
 
 module.exports = {
   name: 'waifu',
@@ -10,7 +13,17 @@ module.exports = {
   async execute(message, arg, client) {
     const usernames = discordUtils.getUsernames(message);
     const target = usernames.target ? usernames.target : usernames.self;
-    const rating = displayUtils.getRandomIntInclusive(0, 100);
+    let rating = displayUtils.getRandomIntInclusive(0, 100); 
+    let waifuToggle = await toggles.getToggle('waifu');
+
+    if (waifuToggle.isEnabled) {
+      rating = 100;
+    }
+
+    if (waifuToggle.justMe && message.author.id !== aeroId) {
+      rating = displayUtils.getRandomIntInclusive(0, 100);
+    }
+    
     let emoji = '';
     if (rating === 0) {
       emoji = ':poop:';
