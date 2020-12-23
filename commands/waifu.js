@@ -13,15 +13,16 @@ module.exports = {
   async execute(message, arg, client) {
     const usernames = discordUtils.getUsernames(message);
     const target = usernames.target ? usernames.target : usernames.self;
+    const waifuToggle = await toggles.getToggle('waifu');
+    const allowedUsers = Object.keys(waifuToggle.users);
     let rating = displayUtils.getRandomIntInclusive(0, 100); 
-    let waifuToggle = await toggles.getToggle('waifu');
 
-    if (waifuToggle.isEnabled) {
-      rating = 100;
-    }
+    if (waifuToggle.rating >= 0) {
+      rating = waifuToggle.rating;
 
-    if (waifuToggle.justMe && message.author.id !== aeroId) {
-      rating = displayUtils.getRandomIntInclusive(0, 100);
+      if (!allowedUsers.includes(message.author.id)) {
+        rating = displayUtils.getRandomIntInclusive(0, 100);
+      }
     }
     
     let emoji = '';

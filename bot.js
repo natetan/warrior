@@ -59,7 +59,7 @@ client.on("guildCreate", guild => {
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
   client.user.setActivity(`Serving ${client.guilds.cache.size} servers`);
   guildHelper.create(guild, guild.name, guild.owner.user);
-  userHelper.setUpMembers(guild.id, guild.members.cache.array());
+  userHelper.setUpMembers(guild, guild.members.cache.array());
 });
 
 /**
