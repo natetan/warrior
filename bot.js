@@ -41,9 +41,6 @@ const logger = createLogger({
 const token = process.env.token || require('./auth.json')['token_warrior'];
 client.login(token);
 
-// This uses SnF's general channel ID
-const defaultChannel = process.env.troll_channel_id || require('./auth.json').bot_test_general_channel_id;
-
 client.on('ready', () => {
   logger.info('Connected');
   logger.info(`Client ID: ${client.user.id}`);
@@ -75,8 +72,12 @@ client.on('guildMemberAdd', member => {
   let randomQuote = quoteUtils.getQuote(retorts);
   let welcome = `Welcome <@${member.user.id}>! ${randomQuote}`;
   console.log(`Member: ${member}`);
-  member.guild.channels.cache.get(defaultChannel).send(welcome);
   userHelper.addMember(member.guild, member);
+  try {
+    member.guild.systemChannel.send(welcome);
+  } catch {
+    console.log(`Could not find system channel for ${member.guild.name}.`)
+  }
 });
 
 client.on('guildMemberRemove', member => {
@@ -84,8 +85,12 @@ client.on('guildMemberRemove', member => {
   let randomQuote = quoteUtils.getQuote(warriorQuotes);
   let farewell = `${member.user.username} has left the guild. ${randomQuote}`;
   console.log(`Member: ${member}`);
-  member.guild.channels.cache.get(defaultChannel).send(farewell);
   userHelper.removeMember(member.guild, member);
+  try {
+    member.guild.systemChannel.send(farewell);
+  } catch {
+    console.log(`Could not find system channel for ${member.guild.name}.`)
+  }
 })
 
 client.on('message', async message => {
