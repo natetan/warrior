@@ -55,8 +55,53 @@ const deleteMessages = async (client, channelId, limit) => {
   }
 }
 
+/**
+ * 
+ * @param {Discord.client} client discord client
+ * @param {string} serverId id of the discord server
+ * @returns {Object} object representing text channels and their ids
+ */
+const getTextChannelIDs = (client, serverId) => {
+  const channels = client.guilds.cache.get(serverId).channels.cache.sort((a, b) => {
+    return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+  }).filter(c => {
+    return c.type === 'text';
+  }).map(c => {
+    return {
+      name: c.name,
+      id: c.id
+    }
+  });
+  return channels;
+}
+
+/**
+ * 
+ * @param {Discord.client} client discord client
+ * @param {string} serverId id of the discord server
+ * @returns {Object} object representing text channels and their ids
+ */
+const getTextChannels = (client, serverId) => {
+  const channels = client.guilds.cache.get(serverId).channels.cache.sort((a, b) => {
+    return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+  }).filter(c => {
+    return c.type === 'text';
+  });
+  return channels;
+}
+
+const getMessagesFromGuildChannel = async (client, serverId, channelId) => {
+  const channels = getTextChannels(client, serverId);
+  const channel = channels.get(channelId);
+
+  const messages = await channel.messages.fetch({ limit: 30 });
+  return messages;
+}
+
 module.exports = {
   getAvatars,
   getUsernames,
-  deleteMessages
+  deleteMessages,
+  getTextChannelIDs,
+  getMessagesFromGuildChannel
 }

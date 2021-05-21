@@ -80,6 +80,8 @@ client.on('guildMemberAdd', member => {
   }
 });
 
+// client.guilds.cache.get('519888924773187586').channels;
+
 client.on('guildMemberRemove', member => {
   let warriorQuotes = quotes.warrior;
   let randomQuote = quoteUtils.getQuote(warriorQuotes);
