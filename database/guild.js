@@ -9,7 +9,9 @@ const displayUtils = require('../utils/displayUtils');
 const exists = async id => {
   try {
     let ref = db.ref(`guilds/${id}`);
-    return await ref.once('value').then((snapshot) => {
+    // TODO: For some reason, the once.value creates a node and makes it not empty when it should've been.
+    return ref.once('value').then((snapshot) => {
+      console.log(snapshot.val());
       return snapshot.exists();
     });
   } catch (err) {
@@ -26,23 +28,18 @@ const exists = async id => {
  */
 const create = async (guild, name, owner) => {
   try {
-    let guildExists = await exists(guild.id);
-    if (!guildExists) {
-      let ref = db.ref(`guilds/${guild.id}`);
-      ref.set({
-        name: name,
-        id: guild.id,
-        dateCreated: displayUtils.dateToShortISO(guild.createdAt),
-        owner: {
-          id: owner.id,
-          username: owner.username,
-          tag: owner.tag,
-          discriminator: owner.discriminator
-        },
-      })
-    } else {
-      console.log(`Guild ${name} already exists (${guild.id})`);
-    }
+    let ref = db.ref(`guilds/${guild.id}`);
+    ref.set({
+      name: name,
+      id: guild.id,
+      dateCreated: displayUtils.dateToShortISO(guild.createdAt),
+      owner: {
+        id: owner.id,
+        username: owner.username,
+        tag: owner.tag,
+        discriminator: owner.discriminator
+      },
+    })
   } catch (err) {
     console.log(`Error trying to create guild: ${err}`);
   }
