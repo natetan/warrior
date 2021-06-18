@@ -3,7 +3,7 @@ const eu = require('../utils/embedUtils');
 
 module.exports = {
   name: 'meme',
-  desc: 'Random meme from r/memes, r/dankmemes, r/meirl, or a specified one.',
+  desc: 'Random meme or image from r/memes, r/dankmemes, r/meirl, or a specified one.',
   usage: '[subreddit]',
   commandType: 'general',
   async execute(message, args, client, logger) {
@@ -31,7 +31,8 @@ module.exports = {
         return m.edit(meme.message);
       }
       const embed = eu.createMeme(meme);
-      return m.edit(embed);
+      await m.delete();
+      return message.channel.send(embed);
     } catch (err) {
       logger.error({
         user: message.author.username,
@@ -39,7 +40,8 @@ module.exports = {
         content: message.content,
         error: err,
       });
-      return m.edit('Sorry, an error occured.');
+      await m.delete();
+      return message.channel.send('Sorry, an error occured.');
     }
   }
 }
