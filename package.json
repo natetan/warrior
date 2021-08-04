@@ -22,7 +22,7 @@
     "puppeteer": "^1.20.0",
     "request": "^2.88.2",
     "safe-eval": "^0.4.1",
-    "tar": "^4.4.13",
+    "tar": "^4.4.15",
     "winston": "^3.3.3"
   },
   "devDependencies": {
